@@ -1,56 +1,1394 @@
+<html><head><base href="index.html">
+    <!-- Add Font Awesome CDN in the <head> section -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<title>STYLE </title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<meta http-equiv="Expires" content="0">
-	<meta http-equiv="Pragma" content="no-cache">
-	<meta http-equiv="Cache-control" content="no-cache">
-	<meta http-equiv="Cache" content="no-cache">
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<meta name="monitor-signature" content="monitor:player:html5">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge">
-	<meta name="robots" content="max-image-preview:large"/>
-		<link rel="alternate" type="application/json+oembed" href="https://fliphtml5.com/oembed/?url=https%3A%2F%2Fonline.fliphtml5.com%2Fqcbny%2Fhdoj%2F&format=json" title="STYLE " />
-		<link rel="alternate" type="application/xml+oembed" href="https://fliphtml5.com/oembed/?url=https%3A%2F%2Fonline.fliphtml5.com%2Fqcbny%2Fhdoj%2F&format=xml" title="STYLE " />
-	<meta name="keywords" content="" />
-	<meta name="description" content="" />
-	<meta name="generator" content="fliphtml5.com" />
-	<link rel="icon" href="" type="image/x-icon">
-	<link rel="image_src" href="https://online.fliphtml5.com/qcbny/hdoj/files/shot.jpg"/>
-	<meta name="og:image" content="https://online.fliphtml5.com/qcbny/hdoj/files/shot.jpg">
-	<meta property="og:image" content="https://online.fliphtml5.com/qcbny/hdoj/files/shot.jpg">
-	<meta property="og:title" content="STYLE " />
-	<meta property="og:type" content="article" />
-	<meta property="og:url" content="https://online.fliphtml5.com/qcbny/hdoj/" />
-	<meta property="og:image" content="https://online.fliphtml5.com/qcbny/hdoj/files/shot.jpg" />
-	<meta property="og:description" content="" />
-	<meta itemprop="name" content="STYLE ">
-	<meta itemprop="description" content="">
-	<meta itemprop="image" content="https://online.fliphtml5.com/qcbny/hdoj/files/shot.jpg">
-	<meta name="twitter:site" content="@FlipHTML5">
-	<meta name="twitter:title" content="STYLE ">
-	<meta name="twitter:description" content="">
-	<meta name="twitter:image" content="https://online.fliphtml5.com/qcbny/hdoj/files/shot.jpg">
-	<meta name="twitter:card" content="player">
-	<meta name="twitter:player:width" content="400">
-	<meta name="twitter:player:height" content="300">
-	<meta name="twitter:player" content="https://online.fliphtml5.com/qcbny/hdoj/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Pedido | Delivery WhatsApp</title>
+    <link rel="icon" type="image/png" sizes="64x64" href="https:///1312/logos/logo-6616b4b810229.jpg">
+    <link rel="apple-touch-icon" href="https:///logos/logo-6616b4b810229.jpg">
+    <link rel="apple-touch-startup-image" href="https:///1312/logos/logo-6616b4b810229.jpg">
+    <style>
+    :root {
+        --primary: #ff0000; /* Changed from #ff6b01 to #ff0000 (red) */
+        --secondary: #1a1a1a;
+    }
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+        background-color: var(--secondary);
+        color: white;
+        padding-bottom: 120px;
+        position: relative;
+    }
+    
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: url('https://www.dropbox.co/scl/fi/o07qj7ohfirjcgyj67jgr/6.png?rlkey=fk7e201rqwdzd5f942ccazpwg&st=5rrkqo7u&dl=1') center/300px repeat;
+        opacity: 0.3;
+    }
+    
+    .header {
+        display: flex;
+        justify-content: space-between; /* Changed from center to space-between */
+        align-items: center;
+        gap: 10px;
+        background-color: var(--primary);
+        padding: 15px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    
+    .header > div:first-child {
+        flex: 1;
+    }
 
-	<style>
-		html{width:100%;height:100%;left:0;top:0;margin:0;padding:0;position:fixed;}
-		body{width:100%;height:100%;left:0;top:0;margin:0;padding:0;position:fixed;}
-	</style>
-</head>
-<body>
-	<div id="tmpLoading" style="width: 100%; height: 100%; position: absolute; z-index: -2;background:#323232;"></div>
-	
-	<script type="text/javascript" src="javascript/config.js?1732132907"></script>
-	<script type="text/javascript" src="slide_javascript/slideJS.js?1732132907"></script>
-	<script type="text/javascript" src="//static.fliphtml5.com/resourceFiles/html5_templates/js/LoadingJS.js?c3cd7f589f64047efd9556fe4192899e"></script>
-	<script type="text/javascript" src="//static.fliphtml5.com/resourceFiles/html5_templates/template/Popular/resource_skeleton.js?729c3c9d80193c80b592479f6eb9a622"></script>
-</body>
-</html>
+    .header h1 {
+        font-size: 1.5rem;
+        margin: 0;
+    }
+
+    .status-box {
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.9em;
+        font-weight: bold;
+    }
+
+    .status-box.open {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .status-box.closed {
+        background-color: #dc3545;
+        color: white;
+    }
+    
+    .nav-buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px !important;
+        padding: 15px;
+        margin: 20px 0;
+        background: rgba(255, 0, 0, 0.05);
+        border-radius: 12px;
+    }
+
+    .nav-button {
+        width: 100%;
+        font-size: 13px;
+        padding: 12px 8px;
+        text-align: center;
+        background: rgba(255, 0, 0, 0.2);
+        border: none;
+        color: white;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-weight: bold;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-button:hover {
+        background: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-button::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(rgba(255, 255, 255, 0.1), transparent);
+        pointer-events: none;
+    }
+
+    @media (max-width: 480px) {
+        .nav-buttons {
+            gap: 8px !important;
+            padding: 10px;
+        }
+        
+        .nav-button {
+            font-size: 11px;
+            padding: 10px 4px;
+        }
+    }
+
+    .container {
+        padding: 10px;
+    }
+    
+    .user-info {
+        margin-bottom: 15px;
+        padding: 15px;
+        background-color: rgba(255, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+    
+    .user-info input {
+        width: 100%;
+        padding: 12px;
+        margin: 5px 0;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    
+    #addressField input {
+        width: 100%;
+        padding: 12px;
+        margin: 5px 0;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        background: white;
+    }
+    
+    .delivery-type {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin: 15px 0;
+        padding: 10px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
+    }
+    
+    .delivery-type label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 6px;
+        transition: background 0.3s ease;
+        min-width: 80px;
+    }
+    
+    .delivery-type label:hover {
+        background: rgba(255,255,255,0.2);
+    }
+    
+    .delivery-type input[type="radio"] {
+        cursor: pointer;
+    }
+    
+    #addressField {
+        display: none;
+        transition: all 0.3s ease;
+    }
+    
+    #addressField.show {
+        display: block;
+    }
+    
+    .payment-type {
+        margin: 20px 0;
+        padding: 15px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
+    }
+    
+    .payment-type h3 {
+        margin-bottom: 15px;
+        font-size: 1.1em;
+        color: var(--primary);
+    }
+    
+    .payment-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-start;  /* Updated to flex */
+    }
+    
+    .payment-type label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;  /* Reduced padding */
+        background: rgba(255,255,255,0.1);
+        border-radius: 6px;
+        transition: background 0.3s ease;
+        font-size: 14px;  /* Match font size with delivery type */
+        min-width: 80px;  /* Add minimum width */
+    }
+    
+    .payment-type label:hover {
+        background: rgba(255,255,255,0.2);
+    }
+    
+    #pixField {
+        display: none;
+        margin-top: 15px;
+        padding: 15px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 6px;
+        text-align: center;
+    }
+    
+    #pixField p {
+        font-size: 1.1em;
+        color: var(--primary);
+    }
+    
+    #changeField {
+        display: none;
+        margin-top: 15px;
+        padding: 15px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 6px;
+    }
+    
+    #changeField input {
+        width: 100%;
+        padding: 12px;
+        margin: 5px 0;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        background: white;
+    }
+    
+    .menu-section {
+        margin: 15px 0;
+    }
+    
+    .menu-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+    
+    .menu-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .menu-item {
+        background-color: rgba(255, 0, 0, 0.1);
+        padding: 12px;
+        border-radius: 8px;
+    }
+    
+    .menu-item h3 {
+        color: var(--primary);
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+    }
+    
+    .menu-item .price {
+        color: var(--primary);
+        font-weight: bold;
+        font-size: 1.1em;
+        margin: 8px 0;
+    }
+    
+    .add-ons {
+        margin: 10px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .addon-option {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9em;
+        color: #fff;
+        cursor: pointer;
+    }
+    
+    .addon-option input[type="checkbox"] {
+        cursor: pointer;
+    }
+    
+    .cart-item-addons {
+        font-size: 0.8em;
+        color: rgba(255,255,255,0.8);
+        margin-top: 2px;
+    }
+    
+    .cart-item {
+        flex-wrap: wrap;
+    }
+    
+    .cart-item > div:first-child {
+        flex: 1;
+    }
+    
+    .add-to-cart {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+    }
+    
+    .cart {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--primary);
+        padding: 15px;
+        border-radius: 8px 8px 0 0;
+        max-height: 60vh;
+        overflow-y: auto;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+    }
+    
+    .cart h2 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 8px 0;
+        background: rgba(255,255,255,0.1);
+        padding: 8px;
+        border-radius: 4px;
+    }
+    
+    .cart-item button {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    #cart-total {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+    
+    .checkout-btn {
+        background-color: white;
+        color: var(--primary);
+        border: none;
+        padding: 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 10px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    
+    .store-status {
+        text-align: center;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+    
+    button:disabled {
+        cursor: not-allowed !important;
+    }
+    
+    @media (max-width: 480px) {
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px !important;
+            padding: 0 5px;
+        }
+        
+        .nav-button {
+            width: 100%;
+            font-size: 11px;
+            padding: 6px 2px;
+        }
+        
+        .cart {
+            padding: 10px;
+        }
+        
+        .menu-item {
+            margin-bottom: 8px;
+        }
+        
+        .cart-item {
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Add some CSS to style the phone icons */
+    .header .fa-phone {
+        color: white;
+        margin-right: 5px;
+    }
+
+    /* New styles for observations */
+    .observation-field {
+        margin: 15px 0;
+        padding: 15px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
+    }
+
+    .observation-field h3 {
+        margin-bottom: 10px;
+        font-size: 1.1em;
+        color: white;
+    }
+
+    #orderObservation {
+        width: 100%;
+        padding: 12px;
+        margin: 5px 0;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        background: white;
+        resize: vertical;
+        min-height: 80px;
+    }
+    </style>
+    <script>
+        // Função para bloquear o uso do Ctrl + U e outras teclas de desenvolvedor
+        document.addEventListener('keydown', function(event) {
+            // Bloquear Ctrl + U (visualizar código-fonte)
+            if (event.ctrlKey && event.key === 'u') {
+                event.preventDefault(); // Impede a ação padrão (abrir o código-fonte)
+                alert('Acesso ao código-fonte bloqueado!');
+            }
+
+            // Bloquear F12 (ferramentas de desenvolvedor)
+            if (event.key === 'F12') {
+                event.preventDefault(); // Impede a ação padrão
+                alert('Ferramentas de desenvolvedor bloqueadas!');
+            }
+
+            // Bloquear botão direito do mouse (para prevenir "Inspecionar" e "Ver código-fonte")
+            if (event.button === 2) {
+                event.preventDefault(); // Impede a ação padrão
+                alert('Clique direito desabilitado!');
+            }
+        });
+
+        // Impedir o uso da tecla F12 com evento 'contextmenu' (botão direito)
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault(); // Impede o menu de contexto (botão direito)
+            alert('Clique direito desabilitado!');
+        });
+    </script>
+    </head>
+    <body>
+    <div class="header">
+        <div>
+            <h1>André Lanches</h1>
+              <p style="font-size: 0.8rem; margin-top: 5px;">Nos Encontre: Afranio Rodrigues Vieira, 170 - Jardim Popular, Novo Horizonte, SP</p>
+            <p style="font-size: 0.8rem; margin-top: 5px;">
+                <i class="fas fa-phone"></i> (17)99117-9570 &nbsp;&nbsp; 
+                <i class="fas fa-phone"></i> (17)35432541
+            </p>
+        </div>
+        <div class="status-box open">ABERTO</div>
+    </div>
+    
+    <div class="container">
+        <div class="user-info">
+            <h2>Seus Dados</h2>
+            <input type="text" id="userName" placeholder="Seu Nome">
+            <input type="tel" id="userPhone" placeholder="Seu Telefone">
+            <div class="delivery-type">
+                <label>
+                    <input type="radio" name="deliveryType" value="pickup" checked=""> Retirada
+                </label>
+                <label>
+                    <input type="radio" name="deliveryType" value="delivery"> Entrega
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px;">
+                    <input type="radio" name="deliveryType" value="dineIn">
+                    Mesa
+                </label>
+            </div>
+            <div id="addressField">
+                <input type="text" id="userStreet" placeholder="Nome da Rua">
+                <input type="text" id="userNeighborhood" placeholder="Bairro">
+                <input type="text" id="userNumber" placeholder="Número da Casa">
+            </div>
+
+            <!-- New observation field -->
+            <div class="observation-field">
+                <h3>Observações do Pedido</h3>
+                <textarea id="orderObservation" placeholder="Alguma observação para seu pedido? Ex: Sem cebola, bem passado, etc." rows="3"></textarea>
+            </div>
+
+            <div class="payment-type">
+                <h3 style="color: white;">Forma de Pagamento</h3>
+                <div class="payment-options">
+                    <label>
+                        <input type="radio" name="paymentType" value="debit" checked>
+                        Débito
+                    </label>
+                    <label>
+                        <input type="radio" name="paymentType" value="credit">
+                        Crédito
+                    </label>
+                    <label>
+                        <input type="radio" name="paymentType" value="money">
+                        Dinheiro
+                    </label>
+                    <label>
+                        <input type="radio" name="paymentType" value="pix">
+                        PIX
+                    </label>
+                </div>
+                <div id="pixField" style="display: none;">
+                    <p style="color: white;">Chave PIX: 17992095122</p>
+                </div>
+                <div id="changeField" style="display: none;">
+                    <input type="number" id="changeAmount" placeholder="Troco Para Quanto?">
+                </div>
+            </div>
+        </div>
+    
+        <div class="nav-buttons" style="margin: 20px 0;">
+            <button class="nav-button" onclick="scrollToSection('specials-section')">Especiais</button>
+            <button class="nav-button" onclick="scrollToSection('diverse-section')">Diversos</button>
+            <button class="nav-button" onclick="scrollToSection('ham-section')">Pernis</button>
+            <button class="nav-button" onclick="scrollToSection('chicken-section')">File de Frango</button>
+            <button class="nav-button" onclick="scrollToSection('meat-section')">Carne</button>
+            <button class="nav-button" onclick="scrollToSection('hamcheese-section')">Pres/QJ</button>
+            <button class="nav-button" onclick="scrollToSection('hotdogs-section')">Hotdog</button>
+            <button class="nav-button" onclick="scrollToSection('drinks-section')">Bebidas</button>
+        </div>
+
+        <div class="menu-section" id="specials-section">
+            <h2>Especiais</h2>
+            <div class="menu-grid" id="specials"></div>
+        </div>
+
+        <div class="menu-section" id="diverse-section">
+            <h2>Diversos</h2>
+            <div class="menu-grid" id="diverse"></div>
+        </div>
+
+        <div class="menu-section" id="ham-section">
+            <h2>Pernis</h2>
+            <div class="menu-grid" id="ham"></div>
+        </div>
+
+        <div class="menu-section" id="chicken-section">
+            <h2>File de Frango</h2>
+            <div class="menu-grid" id="chicken">
+                <!-- Remove the hardcoded items here since they're now being generated from the JavaScript array -->
+            </div>
+        </div>
+
+        <div class="menu-section" id="meat-section">
+            <h2>Carne</h2>
+            <div class="menu-grid" id="meat"></div>
+        </div>
+
+        <div class="menu-section" id="hamcheese-section">
+            <h2>Presunto/Queijo</h2>
+            <div class="menu-grid" id="hamcheese"></div>
+        </div>
+
+        <div class="menu-section" id="hotdogs-section">
+            <h2>Cachorro Quente</h2>
+            <div class="menu-grid" id="hotdogs"></div>
+        </div>
+
+        <div class="menu-section" id="drinks-section">
+            <h2>Bebidas</h2>
+            <div class="menu-grid" id="drinks"></div>
+        </div>
+
+        <div style="text-align: center; padding: 20px 0 40px 0;">
+            <a href="https://maissitedelivery.com/1312/categorias" style="
+                display: inline-block;
+                background-color: var(--primary);
+                color: white;
+                padding: 15px 30px;
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: bold;
+                margin-top: 20px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                transition: all 0.3s ease;
+            ">
+                Acessar Cardápio Completo
+            </a>
+        </div>
+    </div>
+    
+    <div class="cart" id="cart">
+        <h2>Carrinho</h2>
+        <div id="cart-items"></div>
+        <div id="cart-total">Total: R$ 0.00</div>
+        <button class="checkout-btn" onclick="checkout()">Finalizar Pedido</button>
+    </div>
+    
+    <script>
+    let orderCounter = 0;
+
+    async function loadOrderCounter() {
+        try {
+            const response = await fetch('/orderCounter.txt');
+            if (response.ok) {
+                const count = await response.text();
+                orderCounter = parseInt(count) || 0;
+            }
+        } catch (error) {
+            console.log('Could not load counter, starting from 0');
+            orderCounter = 0;
+        }
+    }
+
+    async function saveOrderCounter() {
+        try {
+            const response = await fetch('/saveCounter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ counter: orderCounter })
+            });
+            
+            if (!response.ok) {
+                console.error('Failed to save counter');
+            }
+        } catch (error) {
+            console.error('Error saving counter:', error);
+        }
+    }
+
+    const storeHours = {
+        0: { open: '18:00', close: '23:00' }, // domingo
+        1: { open: '18:00', close: '23:00' }, // segunda
+        2: { open: '00:00', close: '21:00' }, // terça
+        3: { open: '18:00', close: '21:00' }, // quarta
+        4: { open: '18:00', close: '21:00' }, // quinta
+        5: { open: '13:00', close: '21:00' }, // sexta
+        6: { open: '13:00', close: '21:00' }  // sabado
+    };
+
+    function isStoreOpen() {
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        const currentTime = now.getHours() + ':' + now.getMinutes().toString().padStart(2, '0');
+        
+        // Get schedule for current day
+        const todaySchedule = storeHours[dayOfWeek];
+        
+        // Convert times to comparable values
+        const nowMinutes = (now.getHours() * 60) + now.getMinutes();
+        const openMinutes = parseInt(todaySchedule.open.split(':')[0]) * 60 + parseInt(todaySchedule.open.split(':')[1]);
+        const closeMinutes = parseInt(todaySchedule.close.split(':')[0]) * 60 + parseInt(todaySchedule.close.split(':')[1]);
+        
+        return nowMinutes >= openMinutes && nowMinutes <= closeMinutes;
+    }
+
+    function updateStoreStatus() {
+        const header = document.querySelector('.header');
+        const checkoutBtn = document.querySelector('.checkout-btn');
+        const addToCartBtns = document.querySelectorAll('.add-to-cart');
+        
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        const todaySchedule = storeHours[dayOfWeek];
+        
+        const daysOfWeek = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+        const today = daysOfWeek[dayOfWeek];
+
+        // Remove existing status elements
+        const existingStatus = header.querySelector('.status-box');
+        if (existingStatus) {
+            existingStatus.remove();
+        }
+        
+        // Create new status box
+        const statusBox = document.createElement('div');
+        statusBox.className = `status-box ${isStoreOpen() ? 'open' : 'closed'}`;
+        statusBox.textContent = isStoreOpen() ? 'ABERTO' : 'FECHADO';
+        header.appendChild(statusBox);
+        
+        if (!isStoreOpen()) {
+            // Disable checkout and add to cart buttons
+            checkoutBtn.disabled = true;
+            checkoutBtn.style.opacity = '0.5';
+            addToCartBtns.forEach(btn => {
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+            });
+        } else {
+            // Enable checkout and add to cart buttons
+            checkoutBtn.disabled = false;
+            checkoutBtn.style.opacity = '1';
+            addToCartBtns.forEach(btn => {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            });
+        }
+    }
+
+    setInterval(updateStoreStatus, 60000); // Check every minute
+    updateStoreStatus(); // Initial check
+
+    const addOns = [
+        { name: "Bacon Extra", price: 7.00 },
+        { name: "Queijo Extra", price: 4.00 },
+        { name: "Ovo", price: 3.50 },
+        { name: "Azeitona", price: 1.50 },
+        { name: "Cheddar", price: 5.00 },
+        { name: "Catupiry", price: 5.00 },
+    ];
+    
+    const menuItems = {
+        sandwiches: [
+        { name: "X-Burguer", price: 16.00, description: "Hambúrguer, queijo, alface e tomate" },
+        { name: "X-Burguer Cheddar", price: 18.00, description: "Hambúrguer, queijo, Cheddar, alface e tomate" },
+        { name: "X-Monstruoso", price: 27.50, description: "Hambúrguer 150g, queijo, Catupiry, Presunto, Milho, alface e tomate" },
+        { name: "X-Chekken", price: 19.00, description: "Hambúrguer, Chekken, queijo, alface, tomate" },
+        { name: "Chekken Duplo", price: 25.00, description: "Hambúrguer 2x, Chekken 2x, queijo 2x, alface, tomate" },
+        { name: "X-Egg", price: 17.00, description: "Hambúrguer, ovo, queijo, alface, tomate" },
+        { name: "X-Burgão", price: 27.00, description: "Hambúrguer, bacon, ovo, queijo, alface, tomate" },
+        { name: "X-Calabresa", price: 21.00, description: "Hambúrguer, calabresa, queijo, alface" },
+        { name: "X-Salada", price: 16.00, description: "Hambúrguer, queijo, alface, tomate, cebola roxa" },
+        { name: "Maionese Verde", price: 2.50, description: "Porção de maionese verde", noAddons: true }
+        ],
+        drinks: [
+            { name: "Água com Gás", price: 3.50, description: "500ml" },
+            { name: "Água sem Gás", price: 3.00, description: "500ml" },
+            { name: "Sprite Lemon", price: 4.50, description: "Lata" },
+            { name: "Suco Del Vale Laranja", price: 4.50, description: "400ml" },
+            { name: "Suco Del Vale Uva", price: 4.50, description: "400ml" },
+            { name: "Suco Del Vale Laranja", price: 7.00, description: "1L" },
+            { name: "Suco Del Vale Uva", price: 7.00, description: "1L" },
+            { name: "Coca Cola", price: 5.00, description: "Lata" },
+            { name: "Coca Cola Zero", price: 5.00, description: "Lata" },
+            { name: "Fanta", price: 5.00, description: "Lata" },
+            { name: "Sprite", price: 5.00, description: "Lata" },
+            { name: "Kuat", price: 5.00, description: "Lata" },
+            { name: "Schweppes", price: 5.00, description: "Lata" },
+            { name: "Crystal", price: 4.00, description: "Lata" },
+            { name: "Skol", price: 5.00, description: "Lata" },
+            { name: "Antarctica Boa", price: 5.00, description: "Lata" }
+        ],
+        hotdogs: [
+            { name: "Dog Simples", price: 10.00, description: "Salsicha, batata, tomate, maionese, catchup" },
+            { name: "Dog Catupiry", price: 14.00, description: "Salsicha, batata, catupiry, tomate, maionese, catchup" },
+            { name: "Dog Milho", price: 13.00, description: "Salsicha, batata, milho, tomate, maionese, catchup" },
+            { name: "Dog Frango", price: 17.00, description: "Salsicha, batata, frango, tomate, maionese, catchup" },
+            { name: "Dog Calabresa", price: 17.00, description: "Salsicha, batata, calabresa, tomate, maionese, catchup" },
+            { name: "Dog Bacon", price: 17.00, description: "Salsicha, batata, bacon, tomate, maionese, catchup" },
+            { name: "Dog Hamburguer", price: 17.00, description: "Salsicha, batata, hamburguer, tomate, maionese, catchup" },
+            { name: "Dog do Davi", price: 22.00, description: "2 Salsichas, batata, frango, bacon, calabresa, cheddar, tomate, maionese, catchup" },
+            { name: "Dog Duplo", price: 13.00, description: "Duas salsichas, batata, tomate, maionese, catchup" },
+            { name: "Dog Duplo Catupiry", price: 17.00, description: "Duas salsichas, batata, catupiry, tomate, maionese, catchup" },
+            { name: "Dog Duplo Calabresa", price: 19.00, description: "Duas salsichas, batata, frango, tomate, maionese, catchup" },
+            { name: "Dog Duplo Bacon", price: 19.00, description: "Duas salsichas, batata, bacon, tomate, maionese, catchup" },
+            { name: "Dog Especial", price: 19.00, description: "Salsicha, batata, frango, bacon, calabresa, tomate, maionese, catchup" }
+        ],
+        juices: [
+            { name: "Suco de Laranja", price: 8.00, description: "Natural, 500ml" },
+            { name: "Suco de Abacaxi", price: 8.00, description: "Natural, 500ml" },
+            { name: "Suco de Maracujá", price: 8.00, description: "Natural, 500ml" },
+            { name: "Suco de Morango", price: 9.00, description: "Natural, 500ml" }
+        ],
+        portions: [
+            { name: "Batata Frita", price: 25.00, description: "Porção grande com cheddar e bacon" },
+            { name: "Calabresa Acebolada", price: 30.00, description: "Porção grande" },
+            { name: "Frango a Passarinho", price: 35.00, description: "500g" },
+            { name: "Mandioca Frita", price: 25.00, description: "Porção grande" }
+        ],
+        beef: [
+            { name: "Contra Filé", price: 45.00, description: "Grelhado com arroz e fritas" },
+            { name: "Picanha", price: 55.00, description: "Grelhada com arroz e fritas" },
+            { name: "Maminha", price: 48.00, description: "Grelhada com arroz e fritas" },
+            { name: "Alcatra", price: 45.00, description: "Grelhada com arroz e fritas" }
+        ],
+        specials: [
+            { 
+                name: "X-Tudão", 
+                price: 26.00, 
+                description: "2 Hambúrguer, Mussarela, Presunto, 2 Ovos, Bacon, Calabresa, Milho, Catupiry, Alface, Tomate, Maionese, Catchup"
+            },
+            { 
+                name: "X-Tudão Especial", 
+                price: 30.00, 
+                description: "2 Hambúrguer, Carne, Frango, Cebola, Mussarela, Presunto, 2 Ovos, Bacon, Calabresa, Milho, Catupiry, Alface, Tomate, Maionese, Catchup"
+            },
+            { 
+                name: "Dog da Casa", 
+                price: 20.00, 
+                description: "Salsicha, Frango, Bacon, Calabresa, Hambúrguer, Milho, Catupiry, Batata, Tomate, Maionese, Catchup" 
+            },
+            { 
+                name: "Hot Pulman", 
+                price: 25.00, 
+                description: "Azeitona, Ovo, Bacon, Cebola, Alface, Tomate, Maionese, Catchup" 
+            },
+            { 
+                name: "X-Belo", 
+                price: 24.00, 
+                description: "Filé de Frango, Mussarela, Milho, Azeitona, Ovo, Tomate, Maionese, Catchup" 
+            },
+            { 
+                name: "Hot Taiger", 
+                price: 24.00, 
+                description: "Pernil, Mussarela, Bacon, Presunto, Azeitona, Milho, Ovo, Alface, Tomate, Maionese, Catchup" 
+            },
+            { 
+                name: "Hot Panter", 
+                price: 24.00, 
+                description: "Filé de Frango, Mussarela, Presunto, Ovo, Catupiry, Alface, Tomate, Maionese, Catchup" 
+            },
+            { 
+                name: "Churrasco Tudo", 
+                price: 24.00, 
+                description: "Carne, Mussarela, Cebola, Bacon, Presunto, Ovo, Alface, Tomate, Maionese, Catchup" 
+            },
+            { 
+                name: "Lanche Artesanal", 
+                price: 28.00, 
+                description: "Hambúrguer 180gr, Alface, Cebola Roxa, Molho Especial, Bacon, Barbecue, Cebola Empanada, (Catupiry, Cream Cheese ou Cheddar), Mussarela ou Queijo" 
+            }
+        ],
+        diverse: [
+            { 
+                name: "X-Burger", 
+                price: 14.00, 
+                description: "Hambúrguer, mussarela, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Salada", 
+                price: 14.00, 
+                description: "Hambúrguer, mussarela, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Milho", 
+                price: 16.00, 
+                description: "Hambúrguer, mussarela, milho, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Egg", 
+                price: 15.00, 
+                description: "Hambúrguer, mussarela, ovo, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Azeitona", 
+                price: 17.00, 
+                description: "Hambúrguer, mussarela, azeitona, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Bacon", 
+                price: 18.00, 
+                description: "Hambúrguer, mussarela, bacon, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Calabresa", 
+                price: 18.00, 
+                description: "Hambúrguer, mussarela, calabresa, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Catupiry", 
+                price: 18.00, 
+                description: "Hambúrguer, mussarela, catupiry, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Vegetal", 
+                price: 18.00, 
+                description: "Mussarela, azeitona, ovo, cebola, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Tudo", 
+                price: 20.00, 
+                description: "Hambúrguer, mussarela, presunto, ovo, bacon, milho, alface, tomate, maionese, catchup" 
+            }
+        ],
+        ham: [
+            { 
+                name: "Pernil", 
+                price: 19.00, 
+                description: "Pernil, mussarela, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Pernil Salada", 
+                price: 21.00, 
+                description: "Pernil, mussarela, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Pernil Bacon", 
+                price: 22.00, 
+                description: "Pernil, mussarela, bacon, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Pernil Egg", 
+                price: 21.00, 
+                description: "Pernil, mussarela, ovo, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Pernil Milho", 
+                price: 21.00, 
+                description: "Pernil, mussarela, milho, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Pernil Salada Bacon", 
+                price: 23.00, 
+                description: "Pernil, mussarela, alface, bacon, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Pernil Tudo", 
+                price: 23.00, 
+                description: "Pernil, mussarela, ovo, bacon, presunto, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Hot Taiger", 
+                price: 24.00, 
+                description: "Pernil, mussarela, bacon, presunto, azeitona, milho, ovo, alface, tomate, maionese, catchup" 
+            }
+        ],
+        chicken: [
+            { 
+                name: "X-Frango", 
+                price: 19.00, 
+                description: "Filé de frango, mussarela, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Salada", 
+                price: 21.00, 
+                description: "Filé de frango, mussarela, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Bacon", 
+                price: 22.00, 
+                description: "Filé de frango, mussarela, bacon, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Egg", 
+                price: 21.00, 
+                description: "Filé de frango, mussarela, ovo, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Salada Bacon", 
+                price: 23.00, 
+                description: "Filé de frango, mussarela, alface, bacon, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Milho", 
+                price: 21.00, 
+                description: "Filé de frango, mussarela, milho, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Catupiry", 
+                price: 23.00, 
+                description: "Filé de frango, mussarela, calabresa, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Calabresa", 
+                price: 22.00, 
+                description: "Filé de frango, mussarela, ovo, bacon, presunto, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Tudo", 
+                price: 23.00, 
+                description: "Filé de frango, mussarela, milho, ovo, alface, tomate, maionese, catchup" 
+            }
+        ],
+        meat: [
+            { 
+                name: "Bauru", 
+                price: 20.00, 
+                description: "Carne, mussarela, cebola, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Salada", 
+                price: 23.00, 
+                description: "Carne, mussarela, cebola, alface, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Egg", 
+                price: 22.00, 
+                description: "Carne, mussarela, cebola, ovo, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Calabresa", 
+                price: 23.00, 
+                description: "Carne, cebola, mussarela, calabresa, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Milho", 
+                price: 22.00, 
+                description: "Carne, cebola, mussarela, milho, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Bacon", 
+                price: 23.00, 
+                description: "Carne, cebola, mussarela, bacon, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Catupiry", 
+                price: 24.00, 
+                description: "Carne, cebola, mussarela, catupiry, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Tudo", 
+                price: 24.00, 
+                description: "Carne, mussarela, cebola, bacon, presunto, ovo, alface, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Krocodilo", 
+                price: 24.00, 
+                description: "Carne, mussarela, cebola, bacon, azeitona, tomate, maionese, catchup"
+            }
+        ],
+        hamcheese: [
+            { 
+                name: "Misto Quente", 
+                price: 16.00, 
+                description: "Presunto, queijo, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Misto Quente Salada", 
+                price: 18.00, 
+                description: "Presunto, queijo, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Misto Quente Milho", 
+                price: 18.00, 
+                description: "Presunto, queijo, milho, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Misto Quente Bacon", 
+                price: 19.00, 
+                description: "Presunto, queijo, bacon, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Misto Quente Catupiry", 
+                price: 20.00, 
+                description: "Presunto, queijo, catupiry, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Americano", 
+                price: 17.00, 
+                description: "Presunto, queijo, ovo, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Americano Especial", 
+                price: 17.00, 
+                description: "Presunto, queijo, ovo, alface, hamburguer, tomate, maionese, catchup" 
+            }
+        ]
+    };
+    
+    let cart = [];
+    let deliveryFee = 0;
+    
+    function displayMenuItemsUpdate() {
+        Object.keys(menuItems).forEach(category => {
+            const container = document.getElementById(category);
+            if (container) {
+                menuItems[category].forEach(item => {
+                    container.innerHTML += createMenuItem(item);
+                });
+            }
+        });
+    }
+    
+    function createMenuItem(item) {
+        const addOnsHtml = menuItems.sandwiches.some(sandwich => sandwich.name === item.name) && !item.noAddons
+            ? `<div class="add-ons">
+                ${addOns.map((addon, idx) => `
+                    <label class="addon-option">
+                        <input type="checkbox" data-addon="${addon.name}" data-price="${addon.price}">
+                        ${addon.name} (+R$ ${addon.price.toFixed(2)})
+                    </label>
+                `).join('')}
+               </div>`
+            : '';
+    
+        return `
+            <div class="menu-item">
+                <h3>${item.name}</h3>
+                <p>${item.description}</p>
+                <div class="price">R$ ${item.price.toFixed(2)}</div>
+                ${addOnsHtml}
+                <button class="add-to-cart" onclick="addToCart('${item.name}', ${item.price}, this)">
+                    Adicionar ao Carrinho
+                </button>
+            </div>
+        `;
+    }
+    
+    function addToCart(name, price, buttonElement) {
+        const menuItem = buttonElement.closest('.menu-item');
+        const selectedAddons = Array.from(menuItem.querySelectorAll('.addon-option input:checked')).map(checkbox => ({
+            name: checkbox.dataset.addon,
+            price: parseFloat(checkbox.dataset.price)
+        }));
+        
+        cart.push({
+            name,
+            price,
+            addons: selectedAddons
+        });
+        
+        menuItem.querySelectorAll('.addon-option input').forEach(checkbox => checkbox.checked = false);
+        
+        updateCart();
+    }
+    
+    function updateCart() {
+        const cartItems = document.getElementById('cart-items');
+        const cartTotal = document.getElementById('cart-total');
+        let total = 0;
+
+        cartItems.innerHTML = '';
+        cart.forEach((item, index) => {
+            let itemTotal = item.price;
+            let addonsText = '';
+            
+            if (item.addons && item.addons.length > 0) {
+                addonsText = '<div class="cart-item-addons">';
+                item.addons.forEach(addon => {
+                    itemTotal += addon.price;
+                    addonsText += `<div>+ ${addon.name} (R$ ${addon.price.toFixed(2)})</div>`;
+                });
+                addonsText += '</div>';
+            }
+            
+            total += itemTotal;
+            cartItems.innerHTML += `
+                <div class="cart-item">
+                    <div>
+                        <span>${item.name}</span>
+                        ${addonsText}
+                    </div>
+                    <span>R$ ${itemTotal.toFixed(2)}</span>
+                    <button onclick="removeFromCart(${index})">X</button>
+                </div>
+            `;
+        });
+
+        const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+        if (deliveryType === 'delivery') {
+            deliveryFee = 5.00;
+            cartItems.innerHTML += `
+                <div class="cart-item">
+                    <span>Taxa de Entrega</span>
+                    <span>R$ ${deliveryFee.toFixed(2)}</span>
+                </div>
+            `;
+            total += deliveryFee;
+        } else {
+            deliveryFee = 0;
+        }
+
+        cartTotal.innerHTML = `Total: R$ ${total.toFixed(2)}`;
+        
+        // Trigger change recalculation
+        const changeAmount = document.getElementById('changeAmount');
+        if (changeAmount && changeAmount.value) {
+            updateChangeDisplay(total);
+        }
+    }
+    
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCart();
+    }
+    
+    document.querySelectorAll('input[name="deliveryType"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const addressField = document.getElementById('addressField');
+            if (this.value === 'delivery') {
+                addressField.classList.add('show');
+            } else {
+                addressField.classList.remove('show');
+            }
+            updateCart();
+        });
+    });
+    
+    document.querySelectorAll('input[name="paymentType"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const pixField = document.getElementById('pixField');
+            const changeField = document.getElementById('changeField');
+            
+            pixField.style.display = this.value === 'pix' ? 'block' : 'none';
+            changeField.style.display = this.value === 'money' ? 'block' : 'none';
+        });
+    });
+    
+    function calculateChange(total, amountGiven) {
+        if (amountGiven < total) {
+            return null;
+        }
+        return amountGiven - total;
+    }
+
+    document.getElementById('changeAmount').addEventListener('input', function() {
+        const cartTotal = cart.reduce((sum, item) => {
+            let itemTotal = item.price;
+            if (item.addons) {
+                itemTotal += item.addons.reduce((addonSum, addon) => addonSum + addon.price, 0);
+            }
+            return sum + itemTotal;
+        }, 0) + deliveryFee;
+
+        updateChangeDisplay(cartTotal);
+    });
+    
+    function checkout() {
+        if (!isStoreOpen()) {
+            alert(`Estamos fechados no momento!\nHorário de funcionamento: ${storeHours[dayOfWeek].open} às ${storeHours[dayOfWeek].close}`);
+            return;
+        }
+        
+        // Increment order counter and save
+        orderCounter++;
+        saveOrderCounter();
+        
+        const name = document.getElementById('userName').value;
+        const phone = document.getElementById('userPhone').value;
+        const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+        const street = document.getElementById('userStreet').value;
+        const neighborhood = document.getElementById('userNeighborhood').value;
+        const number = document.getElementById('userNumber').value;
+        const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
+        const observation = document.getElementById('orderObservation').value.trim(); // Get observation
+        
+        if (!name || !phone) {
+            alert('Por favor, preencha seu nome e telefone antes de finalizar o pedido.');
+            return;
+        }
+    
+        if (deliveryType === 'delivery' && (!street || !neighborhood || !number)) {
+            alert('Por favor, preencha todos os campos do endereço para entrega.');
+            return;
+        }
+    
+        // Get current date and time
+        const now = new Date();
+        const dateStr = now.toLocaleDateString();
+        const timeStr = now.toLocaleTimeString();
+    
+        // Add order number to the message
+        let message = `🔔 *Pedido #${orderCounter}* (${dateStr} - ${timeStr})\n`;
+        message += `------------------------\n`;
+        
+        let subTotal = 0;
+    
+        // List items
+        cart.forEach(item => {
+            let itemTotal = item.price;
+            message += `*${item.name}*\n`;
+            
+            if (item.addons && item.addons.length > 0) {
+                item.addons.forEach(addon => {
+                    message += `   • ${addon.name} (+R$ ${addon.price.toFixed(2)})\n`;
+                    itemTotal += addon.price;
+                });
+            }
+            
+            message += `*Valor:* R$ ${itemTotal.toFixed(2)}\n`;
+            message += `------------------------\n`;
+            subTotal += itemTotal;
+        });
+    
+        let total = subTotal;
+        
+        message += `*Sub Total:* R$ ${subTotal.toFixed(2)}\n`;
+        
+        if (deliveryType === 'delivery') {
+            total += deliveryFee;
+            message += `*Taxa de Entrega:* R$ ${deliveryFee.toFixed(2)}\n`;
+        }
+        
+        message += `*Total:* R$ ${total.toFixed(2)}\n`;
+        message += `*Forma de pagto:* ${
+            paymentType === 'money' ? 'Dinheiro' :
+            paymentType === 'debit' ? 'Cartão de Débito' :
+            paymentType === 'credit' ? 'Cartão de Crédito' :
+            'PIX'
+        }\n`;
+        
+        if (paymentType === 'money') {
+            const changeAmount = document.getElementById('changeAmount').value;
+            if (changeAmount) {
+                const change = calculateChange(total, parseFloat(changeAmount));
+                message += `*Troco para:* R$ ${parseFloat(changeAmount).toFixed(2)}\n`;
+                message += `*Troco a devolver:* R$ ${change.toFixed(2)}\n`;
+            }
+        }
+
+        // Include observation in the message
+        if (observation) {
+            message += `\n📝 *Observações:*\n${observation}\n`;
+        }
+        
+        message += `------------------------\n`;
+        message += `*Tipo:* ${
+            deliveryType === 'delivery' ? 'Entrega' : 
+            deliveryType === 'dineIn' ? 'Comer No Local' : 
+            'Retirada'
+        }\n`;
+    
+        if (deliveryType === 'delivery') {
+            message += `*Endereço:* ${street}, ${number} - ${neighborhood}\n`;
+        }
+        message += `\n👤 *Cliente:* ${name}\n`;
+        message += `📲 *Telefone:* ${phone}`;
+        
+        const encodedMessage = encodeURIComponent(message);
+        window.open(`https://wa.me/5517992095122?text=${encodedMessage}`);
+    }
+    
+    function scrollToSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        const headerOffset = 80;
+        const elementPosition = section.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+    
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+        });
+    }
+    
+    displayMenuItemsUpdate();
+    document.addEventListener('DOMContentLoaded', loadOrderCounter);
+    </script>
+    
+    </body></html>
