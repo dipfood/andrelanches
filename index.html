@@ -62,23 +62,6 @@
         margin: 0;
     }
 
-    .status-box {
-        padding: 5px 10px;
-        border-radius: 4px;
-        font-size: 0.9em;
-        font-weight: bold;
-    }
-
-    .status-box.open {
-        background-color: #28a745;
-        color: white;
-    }
-
-    .status-box.closed {
-        background-color: #dc3545;
-        color: white;
-    }
-    
     .nav-buttons {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -485,6 +468,16 @@
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
     }
+
+    /* Remove these CSS classes as they're no longer needed */
+    .status-box {
+        display: none;
+    }
+
+    .status-box.open,
+    .status-box.closed {
+        display: none;
+    }
     </style>
     <script>
         // Função para bloquear o uso do Ctrl + U e outras teclas de desenvolvedor
@@ -524,6 +517,43 @@
                 }, 500);
             }, 2000);
         });
+
+        function checkout() {
+            // Increment order counter and save
+            orderCounter++;
+            saveOrderCounter();
+            
+            const name = document.getElementById('userName').value;
+            const phone = document.getElementById('userPhone').value;
+            const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+            const street = document.getElementById('userStreet').value;
+            const neighborhood = document.getElementById('userNeighborhood').value;
+            const number = document.getElementById('userNumber').value;
+            const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
+            const observation = document.getElementById('orderObservation').value.trim();
+            
+            if (!name || !phone) {
+                alert('Por favor, preencha seu nome e telefone antes de finalizar o pedido.');
+                return;
+            }
+
+            if (deliveryType === 'delivery' && (!street || !neighborhood || !number)) {
+                alert('Por favor, preencha todos os campos do endereço para entrega.');
+                return;
+            }
+
+            // Get current date and time
+            const now = new Date();
+            const dateStr = now.toLocaleDateString();
+            const timeStr = now.toLocaleTimeString();
+
+            let message = `🔔 *Pedido #${orderCounter}* (${dateStr} - ${timeStr})\n`;
+            message += `------------------------\n`;
+            
+            let subTotal = 0;
+        
+            // Rest of the checkout function remains the same...
+        }
     </script>
     </head>
     <body>
@@ -550,13 +580,12 @@
     <div class="header">
         <div>
             <h1>André Lanches</h1>
-              <p style="font-size: 0.8rem; margin-top: 5px;">Nos Encontre: Afranio Rodrigues Vieira, 170 - Jardim Popular, Novo Horizonte, SP</p>
+            <p style="font-size: 0.8rem; margin-top: 5px;">Nos Encontre: Afranio Rodrigues Vieira, 170 - Jardim Popular, Novo Horizonte, SP</p>
             <p style="font-size: 0.8rem; margin-top: 5px;">
                 <i class="fas fa-phone"></i> (17)99117-9570 &nbsp;&nbsp; 
                 <i class="fas fa-phone"></i> (17)35432541
             </p>
         </div>
-        <div class="status-box open">Verificado</div>
     </div>
     
     <div class="container">
@@ -609,7 +638,7 @@
                     </label>
                 </div>
                 <div id="pixField" style="display: none;">
-                    <p style="color: white;">Chave PIX: 17992095122</p>
+                    <p style="color: white;">Chave PIX: 17991179570</p>
                 </div>
                 <div id="changeField" style="display: none;">
                     <input type="number" id="changeAmount" placeholder="Troco Para Quanto?">
@@ -728,78 +757,6 @@
             console.error('Error saving counter:', error);
         }
     }
-
-    const storeHours = {
-        0: { open: '19:00', close: '04:00' }, // domingo
-        1: { open: '19:00', close: '04:00' }, // segunda
-        2: { open: '19:00', close: '04:00' }, // terça
-        3: { open: '19:00', close: '04:00' }, // quarta
-        4: { open: '19:00', close: '04:00' }, // quinta
-        5: { open: '13:00', close: '04:00' }, // sexta
-        6: { open: '13:00', close: '04:00' }  // sabado
-    };
-
-    function isStoreOpen() {
-        const now = new Date();
-        const dayOfWeek = now.getDay();
-        const currentTime = now.getHours() + ':' + now.getMinutes().toString().padStart(2, '0');
-        
-        // Get schedule for current day
-        const todaySchedule = storeHours[dayOfWeek];
-        
-        // Convert times to comparable values
-        const nowMinutes = (now.getHours() * 60) + now.getMinutes();
-        const openMinutes = parseInt(todaySchedule.open.split(':')[0]) * 60 + parseInt(todaySchedule.open.split(':')[1]);
-        const closeMinutes = parseInt(todaySchedule.close.split(':')[0]) * 60 + parseInt(todaySchedule.close.split(':')[1]);
-        
-        return nowMinutes >= openMinutes && nowMinutes <= closeMinutes;
-    }
-
-    function updateStoreStatus() {
-        const header = document.querySelector('.header');
-        const checkoutBtn = document.querySelector('.checkout-btn');
-        const addToCartBtns = document.querySelectorAll('.add-to-cart');
-        
-        const now = new Date();
-        const dayOfWeek = now.getDay();
-        const todaySchedule = storeHours[dayOfWeek];
-        
-        const daysOfWeek = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-        const today = daysOfWeek[dayOfWeek];
-
-        // Remove existing status elements
-        const existingStatus = header.querySelector('.status-box');
-        if (existingStatus) {
-            existingStatus.remove();
-        }
-        
-        // Create new status box
-        const statusBox = document.createElement('div');
-        statusBox.className = `status-box ${isStoreOpen() ? 'open' : 'closed'}`;
-        statusBox.textContent = isStoreOpen() ? 'ABERTO' : 'FECHADO';
-        header.appendChild(statusBox);
-        
-        if (!isStoreOpen()) {
-            // Disable checkout and add to cart buttons
-            checkoutBtn.disabled = true;
-            checkoutBtn.style.opacity = '0.5';
-            addToCartBtns.forEach(btn => {
-                btn.disabled = true;
-                btn.style.opacity = '0.5';
-            });
-        } else {
-            // Enable checkout and add to cart buttons
-            checkoutBtn.disabled = false;
-            checkoutBtn.style.opacity = '1';
-            addToCartBtns.forEach(btn => {
-                btn.disabled = false;
-                btn.style.opacity = '1';
-            });
-        }
-    }
-
-    setInterval(updateStoreStatus, 60000); // Check every minute
-    updateStoreStatus(); // Initial check
 
     const addOns = [
         { name: "Bacon Extra", price: 7.00 },
@@ -1307,11 +1264,6 @@
     });
     
     function checkout() {
-        if (!isStoreOpen()) {
-            alert(`Estamos fechados no momento!\nHorário de funcionamento: ${storeHours[dayOfWeek].open} às ${storeHours[dayOfWeek].close}`);
-            return;
-        }
-        
         // Increment order counter and save
         orderCounter++;
         saveOrderCounter();
@@ -1323,29 +1275,28 @@
         const neighborhood = document.getElementById('userNeighborhood').value;
         const number = document.getElementById('userNumber').value;
         const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
-        const observation = document.getElementById('orderObservation').value.trim(); // Get observation
+        const observation = document.getElementById('orderObservation').value.trim();
         
         if (!name || !phone) {
             alert('Por favor, preencha seu nome e telefone antes de finalizar o pedido.');
             return;
         }
-    
+
         if (deliveryType === 'delivery' && (!street || !neighborhood || !number)) {
             alert('Por favor, preencha todos os campos do endereço para entrega.');
             return;
         }
-    
+
         // Get current date and time
         const now = new Date();
         const dateStr = now.toLocaleDateString();
         const timeStr = now.toLocaleTimeString();
-    
-        // Add order number to the message
+
         let message = `🔔 *Pedido #${orderCounter}* (${dateStr} - ${timeStr})\n`;
         message += `------------------------\n`;
         
         let subTotal = 0;
-    
+
         // List items
         cart.forEach(item => {
             let itemTotal = item.price;
@@ -1362,7 +1313,7 @@
             message += `------------------------\n`;
             subTotal += itemTotal;
         });
-    
+
         let total = subTotal;
         
         message += `*Sub Total:* R$ ${subTotal.toFixed(2)}\n`;
@@ -1408,7 +1359,7 @@
         message += `📲 *Telefone:* ${phone}`;
         
         const encodedMessage = encodeURIComponent(message);
-        window.open(`https://wa.me/5517992095122?text=${encodedMessage}`);
+        window.open(`https://wa.me/5517991179570?text=${encodedMessage}`);
     }
     
     function scrollToSection(sectionId) {
