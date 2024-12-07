@@ -759,17 +759,26 @@
     }
 
     const addOns = [
-        { name: "Bacon Extra", price: 7.00 },
-        { name: "Queijo Extra", price: 4.00 },
-        { name: "Ovo", price: 3.50 },
-        { name: "Azeitona", price: 1.50 },
-        { name: "Cheddar", price: 5.00 },
+        { name: "3 fatias de Mussarela", price: 4.00 },
+        { name: "3 fatias de Presunto", price: 4.00 },
+        { name: "alface", price: 2.00 },
+        { name: "Azeitona", price: 3.00 },
+        { name: "Bacon", price: 4.00 },
+        { name: "Calabresa", price: 4.00 },
+        { name: "Carne", price: 6.00 },
+        { name: "Cebola", price: 2.00 },
         { name: "Catupiry", price: 5.00 },
+        { name: "cheddar", price: 5.00 },
+        { name: "Cream Cheese", price: 6.00 },
+        { name: "Frango", price: 6.00 },
+        { name: "hamburguer", price: 4.00 },
+        { name: "Milho", price: 2.00 },
+        { name: "Ovo", price: 2.00 },
     ];
     
     const menuItems = {
         sandwiches: [
-        { name: "X-Burguer", price: 16.00, description: "Hambúrguer, queijo, alface e tomate" },
+        { name: "X-Burguer", price: 16.00, description: "Hambúrguer, queijo, alface e tomate",noAddons: true },
         { name: "X-Burguer Cheddar", price: 18.00, description: "Hambúrguer, queijo, Cheddar, alface e tomate" },
         { name: "X-Monstruoso", price: 27.50, description: "Hambúrguer 150g, queijo, Catupiry, Presunto, Milho, alface e tomate" },
         { name: "X-Chekken", price: 19.00, description: "Hambúrguer, Chekken, queijo, alface, tomate" },
@@ -1120,8 +1129,8 @@
     }
     
     function createMenuItem(item) {
-        const addOnsHtml = menuItems.sandwiches.some(sandwich => sandwich.name === item.name) && !item.noAddons
-            ? `<div class="add-ons">
+        const addOnsHtml = !item.noAddons ? 
+            `<div class="add-ons">
                 ${addOns.map((addon, idx) => `
                     <label class="addon-option">
                         <input type="checkbox" data-addon="${addon.name}" data-price="${addon.price}">
@@ -1130,7 +1139,7 @@
                 `).join('')}
                </div>`
             : '';
-    
+
         return `
             <div class="menu-item">
                 <h3>${item.name}</h3>
