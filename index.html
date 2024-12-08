@@ -516,40 +516,315 @@
             }, 2000);
         });
 
-        let orderCounter = 0;
-
-        async function loadOrderCounter() {
-            try {
-                const response = await fetch('/orderCounter.txt');
-                if (response.ok) {
-                    const count = await response.text();
-                    orderCounter = parseInt(count) || 0;
-                }
-            } catch (error) {
-                console.log('Could not load counter, starting from 0');
-                orderCounter = 0;
+        function checkout() {
+            // Increment order counter and save
+            orderCounter++;
+            saveOrderCounter();
+            
+            const name = document.getElementById('userName').value;
+            const phone = document.getElementById('userPhone').value;
+            const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+            const street = document.getElementById('userStreet').value;
+            const neighborhood = document.getElementById('userNeighborhood').value;
+            const number = document.getElementById('userNumber').value;
+            const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
+            const observation = document.getElementById('orderObservation').value.trim();
+            
+            if (!name || !phone) {
+                alert('Por favor, preencha seu nome e telefone antes de finalizar o pedido.');
+                return;
             }
+
+            if (deliveryType === 'delivery' && (!street || !neighborhood || !number)) {
+                alert('Por favor, preencha todos os campos do endereço para entrega.');
+                return;
+            }
+
+            // Get current date and time
+            const now = new Date();
+            const dateStr = now.toLocaleDateString();
+            const timeStr = now.toLocaleTimeString();
+
+            let message = `🔔 *Pedido #${orderCounter}* (${dateStr} - ${timeStr})\n`;
+            message += `------------------------\n`;
+            
+            let subTotal = 0;
+        
+            // Rest of the checkout function remains the same...
         }
 
-        async function saveOrderCounter() {
-            try {
-                const response = await fetch('/saveCounter', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ counter: orderCounter })
-                });
-                
-                if (!response.ok) {
-                    console.error('Failed to save counter');
-                }
-            } catch (error) {
-                console.error('Error saving counter:', error);
-            }
+        function isDrinkItem(item) {
+            // Check if the item exists in the drinks category
+            return menuItems.drinks.some(drink => drink.name === item.name);
         }
 
-        const addOns = [
+        function createMenuItem(item) {
+            // Don't show add-ons for drinks or items marked with noAddons
+            const addOnsHtml = (!item.noAddons && !isDrinkItem(item)) ? 
+                `<div class="add-ons">
+                    ${addOns.map((addon, idx) => `
+                        <label class="addon-option">
+                            <input type="checkbox" data-addon="${addon.name}" data-price="${addon.price}">
+                            ${addon.name} (+R$ ${addon.price.toFixed(2)})
+                        </label>
+                    `).join('')}
+                   </div>`
+                : '';
+
+            return `
+                <div class="menu-item">
+                    <h3>${item.name}</h3>
+                    <p>${item.description}</p>
+                    <div class="price">R$ ${item.price.toFixed(2)}</div>
+                    ${addOnsHtml}
+                    <button class="add-to-cart" onclick="addToCart('${item.name}', ${item.price}, this)">
+                        Adicionar ao Carrinho
+                    </button>
+                </div>
+            `;
+        }
+    </script>
+    </head>
+    <body>
+    <div id="loading-screen" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white;  /* Changed from var(--secondary) to white */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    ">
+        <div style="text-align: center;">
+            <img src="LOGODIPFOOD.png" 
+                 alt="Loading Logo" 
+                 style="width: 150px; height: auto; margin-bottom: 20px;">
+            <p style="color: #ff6b01; margin-top: 20px; font-size: 18px;">Carregando...</p> <!-- Changed text color to orange (#ff6b01) -->
+        </div>
+    </div>
+    
+    <div class="header">
+        <div>
+            <h1>André Lanches</h1>
+            <p style="font-size: 0.8rem; margin-top: 5px;">Nos Encontre: Afranio Rodrigues Vieira, 170 - Jardim Popular, Novo Horizonte, SP</p>
+            <p style="font-size: 0.8rem; margin-top: 5px;">
+                <i class="fas fa-phone"></i> (17)99117-9570 &nbsp;&nbsp; 
+                <i class="fas fa-phone"></i> (17)35432541
+            </p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="user-info">
+            <h2>Seus Dados</h2>
+            <input type="text" id="userName" placeholder="Seu Nome">
+            <input type="tel" id="userPhone" placeholder="Seu Telefone">
+            <div class="delivery-type">
+                <label>
+                    <input type="radio" name="deliveryType" value="pickup" checked=""> Retirada
+                </label>
+                <label>
+                    <input type="radio" name="deliveryType" value="delivery"> Entrega
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px;">
+                    <input type="radio" name="deliveryType" value="dineIn">
+                    Mesa
+                </label>
+            </div>
+            <div id="addressField">
+                <input type="text" id="userStreet" placeholder="Nome da Rua">
+                <input type="text" id="userNeighborhood" placeholder="Bairro">
+                <input type="text" id="userNumber" placeholder="Número da Casa">
+            </div>
+
+            <!-- New observation field -->
+            <div class="observation-field">
+                <h3>Observações do Pedido</h3>
+                <textarea id="orderObservation" placeholder="Alguma observação para seu pedido? Ex: Sem cebola, bem passado, etc." rows="3"></textarea>
+            </div>
+
+            <div class="payment-type">
+                <h3 style="color: white;">Forma de Pagamento</h3>
+                <div class="payment-options">
+                    <label>
+                        <input type="radio" name="paymentType" value="debit" checked>
+                        Débito
+                    </label>
+                    <label>
+                        <input type="radio" name="paymentType" value="credit">
+                        Crédito
+                    </label>
+                    <label>
+                        <input type="radio" name="paymentType" value="money">
+                        Dinheiro
+                    </label>
+                    <label>
+                        <input type="radio" name="paymentType" value="pix">
+                        PIX
+                    </label>
+                </div>
+                <div id="pixField" style="display: none;">
+                    <p style="color: white;">Chave PIX: 17992095122</p>
+                </div>
+                <div id="changeField" style="display: none;">
+                    <input type="number" id="changeAmount" placeholder="Troco Para Quanto?">
+                </div>
+            </div>
+        </div>
+    
+        <div class="nav-buttons" style="margin: 20px 0;">
+            <button class="nav-button" onclick="scrollToSection('artesanal-section')">Artesanais</button>
+            <button class="nav-button" onclick="scrollToSection('specials-section')">Especiais</button>
+            <button class="nav-button" onclick="scrollToSection('diverse-section')">Diversos</button>
+            <button class="nav-button" onclick="scrollToSection('ham-section')">Pernil</button>
+            <button class="nav-button" onclick="scrollToSection('chicken-section')">File de Frango</button>
+            <button class="nav-button" onclick="scrollToSection('meat-section')">Carne</button>
+            <button class="nav-button" onclick="scrollToSection('hamcheese-section')">Pres/QJ</button>
+            <button class="nav-button" onclick="scrollToSection('hotdogs-section')">Hotdog</button>
+            <button class="nav-button" onclick="scrollToSection('drinks-section')">Bebidas</button>
+        </div>
+
+        <div class="menu-section" id="artesanal-section">
+            <h2>Artesanais</h2>
+            <div class="menu-grid" id="artesanal">
+                <div class="menu-item">
+                    <h3>Artesanal Kids</h3>
+                    <p>Pão gergelim, hambúrguer 90g, maionese, alface e mussarela</p>
+                    <div class="price">R$ 15.00</div>
+                    <button class="add-to-cart" onclick="addToCart('Artesanal Kids', 15.00, this)">Adicionar ao Carrinho</button>
+                </div>
+                <div class="menu-item">
+                    <h3>Artesanal Catupiry</h3>
+                    <p>Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, catupiry e queijo prato</p>
+                    <div class="price">R$ 28.00</div>
+                    <button class="add-to-cart" onclick="addToCart('Artesanal Catupiry', 28.00, this)">Adicionar ao Carrinho</button>
+                </div>
+                <div class="menu-item">
+                    <h3>Artesanal Cheddar</h3>
+                    <p>Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cheddar e queijo prato</p>
+                    <div class="price">R$ 28.00</div>
+                    <button class="add-to-cart" onclick="addToCart('Artesanal Cheddar', 28.00, this)">Adicionar ao Carrinho</button>
+                </div>
+                <div class="menu-item">
+                    <h3>Artesanal Cream Cheese</h3>
+                    <p>Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cream cheese e queijo prato</p>
+                    <div class="price">R$ 30.00</div>
+                    <button class="add-to-cart" onclick="addToCart('Artesanal Cream Cheese', 30.00, this)">Adicionar ao Carrinho</button>
+                </div>
+                <div class="menu-item">
+                    <h3>Lanche Artesanal</h3>
+                    <p>Hambúrguer 180gr, Alface, Cebola Roxa, Molho Especial, Bacon, Barbecue, Cebola Empanada, (Catupiry, Cheddar ou Cream Cheese) Mussarela ou Queijo</p>
+                    <div class="price">R$ 28.00</div>
+                    <button class="add-to-cart" onclick="addToCart('Lanche Artesanal', 28.00, this)">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-section" id="specials-section">
+            <h2>Especiais</h2>
+            <div class="menu-grid" id="specials"></div>
+        </div>
+
+        <div class="menu-section" id="diverse-section">
+            <h2>Diversos</h2>
+            <div class="menu-grid" id="diverse"></div>
+        </div>
+
+        <div class="menu-section" id="ham-section">
+            <h2>Pernis</h2>
+            <div class="menu-grid" id="ham"></div>
+        </div>
+
+        <div class="menu-section" id="chicken-section">
+            <h2>File de Frango</h2>
+            <div class="menu-grid" id="chicken">
+                <!-- Remove the hardcoded items here since they're now being generated from the JavaScript array -->
+            </div>
+        </div>
+
+        <div class="menu-section" id="meat-section">
+            <h2>Carne</h2>
+            <div class="menu-grid" id="meat"></div>
+        </div>
+
+        <div class="menu-section" id="hamcheese-section">
+            <h2>Presunto/Queijo</h2>
+            <div class="menu-grid" id="hamcheese"></div>
+        </div>
+
+        <div class="menu-section" id="hotdogs-section">
+            <h2>Cachorro Quente</h2>
+            <div class="menu-grid" id="hotdogs"></div>
+        </div>
+
+        <div class="menu-section" id="drinks-section">
+            <h2>Bebidas</h2>
+            <div class="menu-grid" id="drinks"></div>
+        </div>
+
+        <div style="text-align: center; padding: 20px 0 40px 0;">
+            <a href="https://maissitedelivery.com/1312/categorias" style="
+                display: inline-block;
+                background-color: var(--primary);
+                color: white;
+                padding: 15px 30px;
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: bold;
+                margin-top: 20px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                transition: all 0.3s ease;
+            ">
+                Acessar Cardápio Completo
+            </a>
+        </div>
+    </div>
+    
+    <div class="cart" id="cart">
+        <h2>Carrinho</h2>
+        <div id="cart-items"></div>
+        <div id="cart-total">Total: R$ 0.00</div>
+        <button class="checkout-btn" onclick="checkout()">Finalizar Pedido</button>
+    </div>
+    
+    <script>
+    let orderCounter = 0;
+
+    async function loadOrderCounter() {
+        try {
+            const response = await fetch('/orderCounter.txt');
+            if (response.ok) {
+                const count = await response.text();
+                orderCounter = parseInt(count) || 0;
+            }
+        } catch (error) {
+            console.log('Could not load counter, starting from 0');
+            orderCounter = 0;
+        }
+    }
+
+    async function saveOrderCounter() {
+        try {
+            const response = await fetch('/saveCounter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ counter: orderCounter })
+            });
+            
+            if (!response.ok) {
+                console.error('Failed to save counter');
+            }
+        } catch (error) {
+            console.error('Error saving counter:', error);
+        }
+    }
+
+    const addOns = [
             { name: "3 fatias de Mussarela", price: 4.00 },
             { name: "3 fatias de Presunto", price: 4.00 },
             { name: "alface", price: 2.00 },
@@ -568,32 +843,17 @@
         ];
 
         const menuItems = {
-            artesanal: [
-                {
-                    name: "Artesanal Kids",
-                    price: 15.00,
-                    description: "Pão gergelim, hambúrguer 90g, maionese, alface e mussarela"
-                },
-                {
-                    name: "Artesanal Catupiry",
-                    price: 28.00,
-                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, catupiry e queijo prato"
-                },
-                {
-                    name: "Artesanal Cheddar",
-                    price: 28.00,
-                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cheddar e queijo prato"
-                },
-                {
-                    name: "Artesanal Cream Cheese",
-                    price: 30.00,
-                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cream cheese e queijo prato"
-                },
-                { 
-                    name: "Lanche Artesanal 1", 
-                    price: 28.00, 
-                    description: "Hambúrguer 180gr, Alface, Cebola Roxa, Molho Especial, Bacon, Barbecue, Cebola Empanada, Catupiry, Mussarela ou Queijo" 
-                }
+            sandwiches: [
+                { name: "X-Burguer", price: 16.00, description: "Hambúrguer, queijo, alface e tomate",noAddons: true },
+                { name: "X-Burguer Cheddar", price: 18.00, description: "Hambúrguer, queijo, Cheddar, alface e tomate" },
+                { name: "X-Monstruoso", price: 27.50, description: "Hambúrguer 150g, queijo, Catupiry, Presunto, Milho, alface e tomate" },
+                { name: "X-Chekken", price: 19.00, description: "Hambúrguer, Chekken, queijo, alface, tomate" },
+                { name: "Chekken Duplo", price: 25.00, description: "Hambúrguer 2x, Chekken 2x, queijo 2x, alface, tomate" },
+                { name: "X-Egg", price: 17.00, description: "Hambúrguer, ovo, queijo, alface, tomate" },
+                { name: "X-Burgão", price: 27.00, description: "Hambúrguer, bacon, ovo, queijo, alface, tomate" },
+                { name: "X-Calabresa", price: 21.00, description: "Hambúrguer, calabresa, queijo, alface" },
+                { name: "X-Salada", price: 16.00, description: "Hambúrguer, queijo, alface, tomate, cebola roxa" },
+                { name: "Maionese Verde", price: 2.50, description: "Porção de maionese verde", noAddons: true }
             ],
             drinks: [
                 { name: "Roller", price: 10.00, description: "2L" },
@@ -629,27 +889,32 @@
                 {
                     name: "Artesanal Kids",
                     price: 15.00,
-                    description: "Pão gergelim, hambúrguer 90g, maionese, alface e mussarela"
+                    description: "Pão gergelim, hambúrguer 90g, maionese, alface e mussarela",
+                    noAddons: true  // Add this line
                 },
                 {
                     name: "Artesanal Catupiry",
                     price: 28.00,
-                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, catupiry e queijo prato"
+                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, catupiry e queijo prato",
+                    noAddons: true  // Add this line
                 },
                 {
                     name: "Artesanal Cheddar",
                     price: 28.00,
-                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cheddar e queijo prato"
+                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cheddar e queijo prato",
+                    noAddons: true  // Add this line
                 },
                 {
                     name: "Artesanal Cream Cheese",
                     price: 30.00,
-                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cream cheese e queijo prato"
+                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cream cheese e queijo prato",
+                    noAddons: true  // Add this line
                 },
                 { 
                     name: "Lanche Artesanal", 
                     price: 28.00, 
-                    description: "Hambúrguer 180gr, Alface, Cebola Roxa, Molho Especial, Bacon, Barbecue, Cebola Empanada, (Catupiry, Cheddar ou Cream Cheese) Mussarela ou Queijo" 
+                    description: "Hambúrguer 180gr, Alface, Cebola Roxa, Molho Especial, Bacon, Barbecue, Cebola Empanada, (Catupiry, Cheddar ou Cream Cheese) Mussarela ou Queijo",
+                    noAddons: true  // Add this line
                 }
             ],
             hotdogs: [
@@ -730,7 +995,7 @@
                 { 
                     name: "X-Salada", 
                     price: 14.00, 
-                    description: "Hambúrguer, mussarela, alface, tomate, maione, catchup" 
+                    description: "Hambúrguer, mussarela, alface, tomate, maionese, catchup" 
                 },
                 { 
                     name: "X-Milho", 
@@ -750,7 +1015,7 @@
                 { 
                     name: "X-Bacon", 
                     price: 18.00, 
-                    description: "Hambúrguer, mussarela, bacon, tomate, maione, catchup" 
+                    description: "Hambúrguer, mussarela, bacon, tomate, maionese, catchup" 
                 },
                 { 
                     name: "X-Calabresa", 
@@ -782,7 +1047,7 @@
                 { 
                     name: "Pernil Salada", 
                     price: 21.00, 
-                    description: "Pernil, mussarela, alface, tomate, maione, catchup" 
+                    description: "Pernil, mussarela, alface, tomate, maionese, catchup" 
                 },
                 { 
                     name: "Pernil Bacon", 
@@ -918,7 +1183,7 @@
                 { 
                     name: "Misto Quente Salada", 
                     price: 18.00, 
-                    description: "Presunto, queijo, alface, tomate, maione, catchup" 
+                    description: "Presunto, queijo, alface, tomate, maionese, catchup" 
                 },
                 { 
                     name: "Misto Quente Milho", 
@@ -945,307 +1210,287 @@
                     price: 20.00, 
                     description: "Presunto, queijo, ovo, alface, hamburguer, tomate, maionese, catchup" 
                 }
+            ],
+            artesanal: [
+                {
+                    name: "Artesanal Kids",
+                    price: 15.00,
+                    description: "Pão gergelim, hambúrguer 90g, maionese, alface e mussarela",
+                    noAddons: true  // Add this line
+                },
+                {
+                    name: "Artesanal Catupiry",
+                    price: 28.00,
+                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, catupiry e queijo prato",
+                    noAddons: true  // Add this line
+                },
+                {
+                    name: "Artesanal Cheddar",
+                    price: 28.00,
+                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cheddar e queijo prato",
+                    noAddons: true  // Add this line
+                },
+                {
+                    name: "Artesanal Cream Cheese",
+                    price: 30.00,
+                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cream cheese e queijo prato",
+                    noAddons: true  // Add this line
+                },
+                { 
+                    name: "Lanche Artesanal", 
+                    price: 28.00, 
+                    description: "Hambúrguer 180gr, Alface, Cebola Roxa, Molho Especial, Bacon, Barbecue, Cebola Empanada, (Catupiry, Cheddar ou Cream Cheese) Mussarela ou Queijo",
+                    noAddons: true  // Add this line
+                }
             ]
         };
     
-        function createMenuItem(item) {
-            // Check if item is a drink or an artesanal item
-            const isDrink = menuItems.drinks.some(drink => drink.name === item.name);
-            const isArtesanal = menuItems.artesanal.some(art => art.name === item.name);
+    let cart = [];
+    let deliveryFee = 0;
+    
+    function displayMenuItemsUpdate() {
+        Object.keys(menuItems).forEach(category => {
+            const container = document.getElementById(category);
+            if (container) {
+                menuItems[category].forEach(item => {
+                    container.innerHTML += createMenuItem(item);
+                });
+            }
+        });
+    }
+    
+    function addToCart(name, price, buttonElement) {
+        const menuItem = buttonElement.closest('.menu-item');
+        const selectedAddons = Array.from(menuItem.querySelectorAll('.addon-option input:checked')).map(checkbox => ({
+            name: checkbox.dataset.addon,
+            price: parseFloat(checkbox.dataset.price)
+        }));
+        
+        cart.push({
+            name,
+            price,
+            addons: selectedAddons
+        });
+        
+        menuItem.querySelectorAll('.addon-option input').forEach(checkbox => checkbox.checked = false);
+        
+        updateCart();
+    }
+    
+    function updateCart() {
+        const cartItems = document.getElementById('cart-items');
+        const cartTotal = document.getElementById('cart-total');
+        let total = 0;
 
-            const addOnsHtml = (!item.noAddons && !isDrink && !isArtesanal) ? 
-                `<div class="add-ons">
-                    ${addOns.map((addon, idx) => `
-                        <label class="addon-option">
-                            <input type="checkbox" data-addon="${addon.name}" data-price="${addon.price}">
-                            ${addon.name} (+R$ ${addon.price.toFixed(2)})
-                        </label>
-                    `).join('')}
-                   </div>`
-                : '';
-
-            return `
-                <div class="menu-item">
-                    <h3>${item.name}</h3>
-                    <p>${item.description}</p>
-                    <div class="price">R$ ${item.price.toFixed(2)}</div>
-                    ${addOnsHtml}
-                    <button class="add-to-cart" onclick="addToCart('${item.name}', ${item.price}, this)">
-                        Adicionar ao Carrinho
-                    </button>
+        cartItems.innerHTML = '';
+        cart.forEach((item, index) => {
+            let itemTotal = item.price;
+            let addonsText = '';
+            
+            if (item.addons && item.addons.length > 0) {
+                addonsText = '<div class="cart-item-addons">';
+                item.addons.forEach(addon => {
+                    itemTotal += addon.price;
+                    addonsText += `<div>+ ${addon.name} (R$ ${addon.price.toFixed(2)})</div>`;
+                });
+                addonsText += '</div>';
+            }
+            
+            total += itemTotal;
+            cartItems.innerHTML += `
+                <div class="cart-item">
+                    <div>
+                        <span>${item.name}</span>
+                        ${addonsText}
+                    </div>
+                    <span>R$ ${itemTotal.toFixed(2)}</span>
+                    <button onclick="removeFromCart(${index})">X</button>
                 </div>
             `;
-        }
-
-        function displayMenuItemsUpdate() {
-            // Clear existing menu items and redisplay them
-            Object.keys(menuItems).forEach(category => {
-                const container = document.getElementById(category);
-                if (container) {
-                    container.innerHTML = '';
-                    menuItems[category].forEach(item => {
-                        container.innerHTML += createMenuItem(item);
-                    });
-                }
-            });
-        }
-    
-        let cart = [];
-        let deliveryFee = 0;
-        
-        function updateCart() {
-            const cartItems = document.getElementById('cart-items');
-            const cartTotal = document.getElementById('cart-total');
-            let total = 0;
-
-            cartItems.innerHTML = '';
-            cart.forEach((item, index) => {
-                let itemTotal = item.price;
-                let addonsText = '';
-                
-                if (item.addons && item.addons.length > 0) {
-                    addonsText = '<div class="cart-item-addons">';
-                    item.addons.forEach(addon => {
-                        itemTotal += addon.price;
-                        addonsText += `<div>+ ${addon.name} (R$ ${addon.price.toFixed(2)})</div>`;
-                    });
-                    addonsText += '</div>';
-                }
-                
-                total += itemTotal;
-                cartItems.innerHTML += `
-                    <div class="cart-item">
-                        <div>
-                            <span>${item.name}</span>
-                            ${addonsText}
-                        </div>
-                        <span>R$ ${itemTotal.toFixed(2)}</span>
-                        <button onclick="removeFromCart(${index})">X</button>
-                    </div>
-                `;
-            });
-
-            const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
-            if (deliveryType === 'delivery') {
-                deliveryFee = 4.00;
-                cartItems.innerHTML += `
-                    <div class="cart-item">
-                        <span>Taxa de Entrega</span>
-                        <span>R$ ${deliveryFee.toFixed(2)}</span>
-                    </div>
-                `;
-                total += deliveryFee;
-            } else {
-                deliveryFee = 0;
-            }
-
-            cartTotal.innerHTML = `Total: R$ ${total.toFixed(2)}`;
-        }
-
-        function addToCart(name, price, buttonElement) {
-            const menuItem = buttonElement.closest('.menu-item');
-            const selectedAddons = Array.from(menuItem.querySelectorAll('.addon-option input:checked')).map(checkbox => ({
-                name: checkbox.dataset.addon,
-                price: parseFloat(checkbox.dataset.price)
-            }));
-            
-            cart.push({
-                name,
-                price,
-                addons: selectedAddons
-            });
-            
-            menuItem.querySelectorAll('.addon-option input').forEach(checkbox => checkbox.checked = false);
-            
-            updateCart();
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            displayMenuItemsUpdate();
-            loadOrderCounter();
         });
-    </script>
-    
-    </head>
-    <body>
-    <div id="loading-screen" style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: white;  /* Changed from var(--secondary) to white */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-    ">
-        <div style="text-align: center;">
-            <img src="LOGODIPFOOD.png" 
-                 alt="Loading Logo" 
-                 style="width: 150px; height: auto; margin-bottom: 20px;">
-            <p style="color: #ff6b01; margin-top: 20px; font-size: 18px;">Carregando...</p> <!-- Changed text color to orange (#ff6b01) -->
-        </div>
-    </div>
-    
-    <div class="header">
-        <div>
-            <h1>André Lanches</h1>
-            <p style="font-size: 0.8rem; margin-top: 5px;">Nos Encontre: Afranio Rodrigues Vieira, 170 - Jardim Popular, Novo Horizonte, SP</p>
-            <p style="font-size: 0.8rem; margin-top: 5px;">
-                <i class="fas fa-phone"></i> (17)99117-9570 &nbsp;&nbsp; 
-                <i class="fas fa-phone"></i> (17)35432541
-            </p>
-        </div>
-    </div>
-    
-    <div class="container">
-        <div class="user-info">
-            <h2>Seus Dados</h2>
-            <input type="text" id="userName" placeholder="Seu Nome">
-            <input type="tel" id="userPhone" placeholder="Seu Telefone">
-            <div class="delivery-type">
-                <label>
-                    <input type="radio" name="deliveryType" value="pickup" checked=""> Retirada
-                </label>
-                <label>
-                    <input type="radio" name="deliveryType" value="delivery"> Entrega
-                </label>
-                <label style="display: flex; align-items: center; gap: 5px;">
-                    <input type="radio" name="deliveryType" value="dineIn">
-                    Mesa
-                </label>
-            </div>
-            <div id="addressField">
-                <input type="text" id="userStreet" placeholder="Nome da Rua">
-                <input type="text" id="userNeighborhood" placeholder="Bairro">
-                <input type="text" id="userNumber" placeholder="Número da Casa">
-            </div>
 
-            <!-- New observation field -->
-            <div class="observation-field">
-                <h3>Observações do Pedido</h3>
-                <textarea id="orderObservation" placeholder="Alguma observação para seu pedido? Ex: Sem cebola, bem passado, etc." rows="3"></textarea>
-            </div>
-
-            <div class="payment-type">
-                <h3 style="color: white;">Forma de Pagamento</h3>
-                <div class="payment-options">
-                    <label>
-                        <input type="radio" name="paymentType" value="debit" checked>
-                        Débito
-                    </label>
-                    <label>
-                        <input type="radio" name="paymentType" value="credit">
-                        Crédito
-                    </label>
-                    <label>
-                        <input type="radio" name="paymentType" value="money">
-                        Dinheiro
-                    </label>
-                    <label>
-                        <input type="radio" name="paymentType" value="pix">
-                        PIX
-                    </label>
+        const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+        if (deliveryType === 'delivery') {
+            deliveryFee = 4.00;
+            cartItems.innerHTML += `
+                <div class="cart-item">
+                    <span>Taxa de Entrega</span>
+                    <span>R$ ${deliveryFee.toFixed(2)}</span>
                 </div>
-                <div id="pixField" style="display: none;">
-                    <p style="color: white;">Chave PIX: 17992095122</p>
-                </div>
-                <div id="changeField" style="display: none;">
-                    <input type="number" id="changeAmount" placeholder="Troco Para Quanto?">
-                </div>
-            </div>
-        </div>
+            `;
+            total += deliveryFee;
+        } else {
+            deliveryFee = 0;
+        }
+
+        cartTotal.innerHTML = `Total: R$ ${total.toFixed(2)}`;
+        
+        // Trigger change recalculation
+        const changeAmount = document.getElementById('changeAmount');
+        if (changeAmount && changeAmount.value) {
+            updateChangeDisplay(total);
+        }
+    }
     
-        <div class="nav-buttons" style="margin: 20px 0;">
-            <button class="nav-button" onclick="scrollToSection('artesanal-section')">Artesanais</button>
-            <button class="nav-button" onclick="scrollToSection('specials-section')">Especiais</button>
-            <button class="nav-button" onclick="scrollToSection('diverse-section')">Diversos</button>
-            <button class="nav-button" onclick="scrollToSection('ham-section')">Pernil</button>
-            <button class="nav-button" onclick="scrollToSection('chicken-section')">File de Frango</button>
-            <button class="nav-button" onclick="scrollToSection('meat-section')">Carne</button>
-            <button class="nav-button" onclick="scrollToSection('hamcheese-section')">Pres/QJ</button>
-            <button class="nav-button" onclick="scrollToSection('hotdogs-section')">Hotdog</button>
-            <button class="nav-button" onclick="scrollToSection('drinks-section')">Bebidas</button>
-        </div>
-
-        <div class="menu-section" id="artesanal-section">
-            <h2>Artesanais</h2>
-            <div class="menu-grid" id="artesanal"></div>
-        </div>
-
-        <div class="menu-section" id="specials-section">
-            <h2>Especiais</h2>
-            <div class="menu-grid" id="specials"></div>
-        </div>
-
-        <div class="menu-section" id="diverse-section">
-            <h2>Diversos</h2>
-            <div class="menu-grid" id="diverse"></div>
-        </div>
-
-        <div class="menu-section" id="ham-section">
-            <h2>Pernis</h2>
-            <div class="menu-grid" id="ham"></div>
-        </div>
-
-        <div class="menu-section" id="chicken-section">
-            <h2>File de Frango</h2>
-            <div class="menu-grid" id="chicken">
-                <!-- Remove the hardcoded items here since they're now being generated from the JavaScript array -->
-            </div>
-        </div>
-
-        <div class="menu-section" id="meat-section">
-            <h2>Carne</h2>
-            <div class="menu-grid" id="meat"></div>
-        </div>
-
-        <div class="menu-section" id="hamcheese-section">
-            <h2>Presunto/Queijo</h2>
-            <div class="menu-grid" id="hamcheese"></div>
-        </div>
-
-        <div class="menu-section" id="hotdogs-section">
-            <h2>Cachorro Quente</h2>
-            <div class="menu-grid" id="hotdogs"></div>
-        </div>
-
-        <div class="menu-section" id="drinks-section">
-            <h2>Bebidas</h2>
-            <div class="menu-grid" id="drinks"></div>
-        </div>
-
-        <div style="text-align: center; padding: 20px 0 40px 0;">
-            <a href="https://maissitedelivery.com/1312/categorias" style="
-                display: inline-block;
-                background-color: var(--primary);
-                color: white;
-                padding: 15px 30px;
-                border-radius: 8px;
-                text-decoration: none;
-                font-weight: bold;
-                margin-top: 20px;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-                transition: all 0.3s ease;
-            ">
-                Acessar Cardápio Completo
-            </a>
-        </div>
-    </div>
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCart();
+    }
     
-    <div class="cart" id="cart">
-        <h2>Carrinho</h2>
-        <div id="cart-items"></div>
-        <div id="cart-total">Total: R$ 0.00</div>
-        <button class="checkout-btn" onclick="checkout()">Finalizar Pedido</button>
-    </div>
-    
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        displayMenuItemsUpdate();
-        loadOrderCounter();
+    document.querySelectorAll('input[name="deliveryType"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const addressField = document.getElementById('addressField');
+            if (this.value === 'delivery') {
+                addressField.classList.add('show');
+            } else {
+                addressField.classList.remove('show');
+            }
+            updateCart();
+        });
     });
+    
+    document.querySelectorAll('input[name="paymentType"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const pixField = document.getElementById('pixField');
+            const changeField = document.getElementById('changeField');
+            
+            pixField.style.display = this.value === 'pix' ? 'block' : 'none';
+            changeField.style.display = this.value === 'money' ? 'block' : 'none';
+        });
+    });
+    
+    function calculateChange(total, amountGiven) {
+        if (amountGiven < total) {
+            return null;
+        }
+        return amountGiven - total;
+    }
+
+    document.getElementById('changeAmount').addEventListener('input', function() {
+        const cartTotal = cart.reduce((sum, item) => {
+            let itemTotal = item.price;
+            if (item.addons) {
+                itemTotal += item.addons.reduce((addonSum, addon) => addonSum + addon.price, 0);
+            }
+            return sum + itemTotal;
+        }, 0) + deliveryFee;
+
+        updateChangeDisplay(cartTotal);
+    });
+    
+    function checkout() {
+        // Increment order counter and save
+        orderCounter++;
+        saveOrderCounter();
+        
+        const name = document.getElementById('userName').value;
+        const phone = document.getElementById('userPhone').value;
+        const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+        const street = document.getElementById('userStreet').value;
+        const neighborhood = document.getElementById('userNeighborhood').value;
+        const number = document.getElementById('userNumber').value;
+        const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
+        const observation = document.getElementById('orderObservation').value.trim();
+        
+        if (!name || !phone) {
+            alert('Por favor, preencha seu nome e telefone antes de finalizar o pedido.');
+            return;
+        }
+
+        if (deliveryType === 'delivery' && (!street || !neighborhood || !number)) {
+            alert('Por favor, preencha todos os campos do endereço para entrega.');
+            return;
+        }
+
+        // Get current date and time
+        const now = new Date();
+        const dateStr = now.toLocaleDateString();
+        const timeStr = now.toLocaleTimeString();
+
+        let message = `🔔 *Pedido #${orderCounter}* (${dateStr} - ${timeStr})\n`;
+        message += `------------------------\n`;
+        
+        let subTotal = 0;
+
+        // List items
+        cart.forEach(item => {
+            let itemTotal = item.price;
+            message += `*${item.name}*\n`;
+            
+            if (item.addons && item.addons.length > 0) {
+                item.addons.forEach(addon => {
+                    message += `   • ${addon.name} (+R$ ${addon.price.toFixed(2)})\n`;
+                    itemTotal += addon.price;
+                });
+            }
+            
+            message += `*Valor:* R$ ${itemTotal.toFixed(2)}\n`;
+            message += `------------------------\n`;
+            subTotal += itemTotal;
+        });
+
+        let total = subTotal;
+        
+        message += `*Sub Total:* R$ ${subTotal.toFixed(2)}\n`;
+        
+        if (deliveryType === 'delivery') {
+            total += deliveryFee;
+            message += `*Taxa de Entrega:* R$ ${deliveryFee.toFixed(2)}\n`;
+        }
+        
+        message += `*Total:* R$ ${total.toFixed(2)}\n`;
+        message += `*Forma de pagto:* ${
+            paymentType === 'money' ? 'Dinheiro' :
+            paymentType === 'debit' ? 'Cartão de Débito' :
+            paymentType === 'credit' ? 'Cartão de Crédito' :
+            'PIX'
+        }\n`;
+        
+        if (paymentType === 'money') {
+            const changeAmount = document.getElementById('changeAmount').value;
+            if (changeAmount) {
+                const change = calculateChange(total, parseFloat(changeAmount));
+                message += `*Troco para:* R$ ${parseFloat(changeAmount).toFixed(2)}\n`;
+                message += `*Troco a devolver:* R$ ${change.toFixed(2)}\n`;
+            }
+        }
+
+        // Include observation in the message
+        if (observation) {
+            message += `\n📝 *Observações:*\n${observation}\n`;
+        }
+        
+        message += `------------------------\n`;
+        message += `*Tipo:* ${
+            deliveryType === 'delivery' ? 'Entrega' : 
+            deliveryType === 'dineIn' ? 'Comer No Local' : 
+            'Retirada'
+        }\n`;
+    
+        if (deliveryType === 'delivery') {
+            message += `*Endereço:* ${street}, ${number} - ${neighborhood}\n`;
+        }
+        message += `\n👤 *Cliente:* ${name}\n`;
+        message += `📲 *Telefone:* ${phone}`;
+        
+        const encodedMessage = encodeURIComponent(message);
+        window.open(`https://wa.me/5517992095122?text=${encodedMessage}`);
+    }
+    
+    function scrollToSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        const headerOffset = 80;
+        const elementPosition = section.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+    
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+        });
+    }
+    
+    displayMenuItemsUpdate();
+    document.addEventListener('DOMContentLoaded', loadOrderCounter);
     </script>
     
     </body></html>
