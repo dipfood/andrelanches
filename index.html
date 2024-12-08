@@ -277,7 +277,7 @@
     
     .menu-item {
         background-color: rgba(255, 0, 0, 0.1);
-        padding: 12px;
+        padding: 15px;
         border-radius: 8px;
     }
     
@@ -297,21 +297,19 @@
     .add-ons {
         margin: 10px 0;
         display: flex;
-        flex-direction: column;
-        gap: 5px;
+        flex-direction: column;  /* Makes items stack vertically */
+        gap: 8px;  /* Adds space between items */
     }
-    
+
     .addon-option {
         display: flex;
         align-items: center;
-        gap: 5px;
-        font-size: 0.9em;
-        color: #fff;
-        cursor: pointer;
+        gap: 8px;
+        padding: 4px 0;
     }
-    
+
     .addon-option input[type="checkbox"] {
-        cursor: pointer;
+        margin-right: 8px;
     }
     
     .cart-item-addons {
@@ -570,17 +568,32 @@
         ];
 
         const menuItems = {
-            sandwiches: [
-                { name: "X-Burguer", price: 16.00, description: "Hambúrguer, queijo, alface e tomate",noAddons: true },
-                { name: "X-Burguer Cheddar", price: 18.00, description: "Hambúrguer, queijo, Cheddar, alface e tomate" },
-                { name: "X-Monstruoso", price: 27.50, description: "Hambúrguer 150g, queijo, Catupiry, Presunto, Milho, alface e tomate" },
-                { name: "X-Chekken", price: 19.00, description: "Hambúrguer, Chekken, queijo, alface, tomate" },
-                { name: "Chekken Duplo", price: 25.00, description: "Hambúrguer 2x, Chekken 2x, queijo 2x, alface, tomate" },
-                { name: "X-Egg", price: 17.00, description: "Hambúrguer, ovo, queijo, alface, tomate" },
-                { name: "X-Burgão", price: 27.00, description: "Hambúrguer, bacon, ovo, queijo, alface, tomate" },
-                { name: "X-Calabresa", price: 21.00, description: "Hambúrguer, calabresa, queijo, alface" },
-                { name: "X-Salada", price: 16.00, description: "Hambúrguer, queijo, alface, tomate, cebola roxa" },
-                { name: "Maionese Verde", price: 2.50, description: "Porção de maionese verde", noAddons: true }
+            artesanal: [
+                {
+                    name: "Artesanal Kids",
+                    price: 15.00,
+                    description: "Pão gergelim, hambúrguer 90g, maionese, alface e mussarela"
+                },
+                {
+                    name: "Artesanal Catupiry",
+                    price: 28.00,
+                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, catupiry e queijo prato"
+                },
+                {
+                    name: "Artesanal Cheddar",
+                    price: 28.00,
+                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cheddar e queijo prato"
+                },
+                {
+                    name: "Artesanal Cream Cheese",
+                    price: 30.00,
+                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cream cheese e queijo prato"
+                },
+                { 
+                    name: "Lanche Artesanal 1", 
+                    price: 28.00, 
+                    description: "Hambúrguer 180gr, Alface, Cebola Roxa, Molho Especial, Bacon, Barbecue, Cebola Empanada, Catupiry, Mussarela ou Queijo" 
+                }
             ],
             drinks: [
                 { name: "Roller", price: 10.00, description: "2L" },
@@ -611,6 +624,33 @@
                 { name: "Crystal", price: 4.00, description: "Lata" },
                 { name: "Skol", price: 5.00, description: "Lata" },
                 { name: "Antarctica Boa", price: 5.00, description: "Lata" }
+            ],
+            artesanal: [
+                {
+                    name: "Artesanal Kids",
+                    price: 15.00,
+                    description: "Pão gergelim, hambúrguer 90g, maionese, alface e mussarela"
+                },
+                {
+                    name: "Artesanal Catupiry",
+                    price: 28.00,
+                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, catupiry e queijo prato"
+                },
+                {
+                    name: "Artesanal Cheddar",
+                    price: 28.00,
+                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cheddar e queijo prato"
+                },
+                {
+                    name: "Artesanal Cream Cheese",
+                    price: 30.00,
+                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cream cheese e queijo prato"
+                },
+                { 
+                    name: "Lanche Artesanal", 
+                    price: 28.00, 
+                    description: "Hambúrguer 180gr, Alface, Cebola Roxa, Molho Especial, Bacon, Barbecue, Cebola Empanada, (Catupiry, Cheddar ou Cream Cheese) Mussarela ou Queijo" 
+                }
             ],
             hotdogs: [
                 { name: "Dog Simples", price: 10.00, description: "Salsicha, batata, tomate, maionese, catchup" },
@@ -690,7 +730,7 @@
                 { 
                     name: "X-Salada", 
                     price: 14.00, 
-                    description: "Hambúrguer, mussarela, alface, tomate, maionese, catchup" 
+                    description: "Hambúrguer, mussarela, alface, tomate, maione, catchup" 
                 },
                 { 
                     name: "X-Milho", 
@@ -710,7 +750,7 @@
                 { 
                     name: "X-Bacon", 
                     price: 18.00, 
-                    description: "Hambúrguer, mussarela, bacon, tomate, maionese, catchup" 
+                    description: "Hambúrguer, mussarela, bacon, tomate, maione, catchup" 
                 },
                 { 
                     name: "X-Calabresa", 
@@ -742,12 +782,12 @@
                 { 
                     name: "Pernil Salada", 
                     price: 21.00, 
-                    description: "Pernil, mussarela, alface, tomate, maionese, catchup" 
+                    description: "Pernil, mussarela, alface, tomate, maione, catchup" 
                 },
                 { 
                     name: "Pernil Bacon", 
                     price: 22.00, 
-                    description: "Pernil, mussarela, bacon, tomate, maionese, catchup" 
+                    description: "Pernil, mussarela, bacon, tomate, maione, catchup" 
                 },
                 { 
                     name: "Pernil Egg", 
@@ -757,7 +797,7 @@
                 { 
                     name: "Pernil Milho", 
                     price: 21.00, 
-                    description: "Pernil, mussarela, milho, tomate, maionese, catchup" 
+                    description: "Pernil, mussarela, milho, tomate, maione, catchup" 
                 },
                 { 
                     name: "Pernil Salada Bacon", 
@@ -878,7 +918,7 @@
                 { 
                     name: "Misto Quente Salada", 
                     price: 18.00, 
-                    description: "Presunto, queijo, alface, tomate, maionese, catchup" 
+                    description: "Presunto, queijo, alface, tomate, maione, catchup" 
                 },
                 { 
                     name: "Misto Quente Milho", 
@@ -905,52 +945,15 @@
                     price: 20.00, 
                     description: "Presunto, queijo, ovo, alface, hamburguer, tomate, maionese, catchup" 
                 }
-            ],
-            artesanal: [
-                {
-                    name: "Artesanal Kids",
-                    price: 15.00,
-                    description: "Pão gergelim, hambúrguer 90g, maionese, alface e mussarela"
-                },
-                {
-                    name: "Artesanal Catupiry",
-                    price: 28.00,
-                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, catupiry e queijo prato"
-                },
-                {
-                    name: "Artesanal Cheddar",
-                    price: 28.00,
-                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cheddar e queijo prato"
-                },
-                {
-                    name: "Artesanal Cream Cheese",
-                    price: 30.00,
-                    description: "Pão gergelim, hambúrguer 180g, alface, cebola roxa, molho especial, bacon, barbecue, cebola empanada, cream cheese e queijo prato"
-                },
-                { 
-                    name: "Lanche Artesanal 1", 
-                    price: 28.00, 
-                    description: "Hambúrguer 180gr, Alface, Cebola Roxa, Molho Especial, Bacon, Barbecue, Cebola Empanada, Catupiry, Mussarela ou Queijo" 
-                },
-                { 
-                    name: "Lanche Artesanal 2", 
-                    price: 28.00, 
-                    description: "Hambúrguer 180gr, Alface, Cebola Roxa, Molho Especial, Bacon, Barbecue, Cebola Empanada, Cream Cheese, Mussarela ou Queijo" 
-                },
-                { 
-                    name: "Lanche Artesanal 3", 
-                    price: 28.00, 
-                    description: "Hambúrguer 180gr, Alface, Cebola Roxa, Molho Especial, Bacon, Barbecue, Cebola Empanada, Cheddar, Mussarela ou Queijo" 
-                },
             ]
         };
-
+    
         function createMenuItem(item) {
-            // Check if this item is from the drinks category
+            // Check if item is a drink or an artesanal item
             const isDrink = menuItems.drinks.some(drink => drink.name === item.name);
+            const isArtesanal = menuItems.artesanal.some(art => art.name === item.name);
 
-            // Only show add-ons if it's not a drink and not explicitly marked as noAddons
-            const addOnsHtml = (!isDrink && !item.noAddons) ? 
+            const addOnsHtml = (!item.noAddons && !isDrink && !isArtesanal) ? 
                 `<div class="add-ons">
                     ${addOns.map((addon, idx) => `
                         <label class="addon-option">
@@ -973,38 +976,22 @@
                 </div>
             `;
         }
-        
-        let cart = [];
-        let deliveryFee = 0;
-        
+
         function displayMenuItemsUpdate() {
+            // Clear existing menu items and redisplay them
             Object.keys(menuItems).forEach(category => {
                 const container = document.getElementById(category);
                 if (container) {
+                    container.innerHTML = '';
                     menuItems[category].forEach(item => {
                         container.innerHTML += createMenuItem(item);
                     });
                 }
             });
         }
-        
-        function addToCart(name, price, buttonElement) {
-            const menuItem = buttonElement.closest('.menu-item');
-            const selectedAddons = Array.from(menuItem.querySelectorAll('.addon-option input:checked')).map(checkbox => ({
-                name: checkbox.dataset.addon,
-                price: parseFloat(checkbox.dataset.price)
-            }));
-            
-            cart.push({
-                name,
-                price,
-                addons: selectedAddons
-            });
-            
-            menuItem.querySelectorAll('.addon-option input').forEach(checkbox => checkbox.checked = false);
-            
-            updateCart();
-        }
+    
+        let cart = [];
+        let deliveryFee = 0;
         
         function updateCart() {
             const cartItems = document.getElementById('cart-items');
@@ -1053,174 +1040,32 @@
             }
 
             cartTotal.innerHTML = `Total: R$ ${total.toFixed(2)}`;
-            
-            // Trigger change recalculation
-            const changeAmount = document.getElementById('changeAmount');
-            if (changeAmount && changeAmount.value) {
-                updateChangeDisplay(total);
-            }
         }
-        
-        function removeFromCart(index) {
-            cart.splice(index, 1);
+
+        function addToCart(name, price, buttonElement) {
+            const menuItem = buttonElement.closest('.menu-item');
+            const selectedAddons = Array.from(menuItem.querySelectorAll('.addon-option input:checked')).map(checkbox => ({
+                name: checkbox.dataset.addon,
+                price: parseFloat(checkbox.dataset.price)
+            }));
+            
+            cart.push({
+                name,
+                price,
+                addons: selectedAddons
+            });
+            
+            menuItem.querySelectorAll('.addon-option input').forEach(checkbox => checkbox.checked = false);
+            
             updateCart();
         }
-        
-        document.querySelectorAll('input[name="deliveryType"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                const addressField = document.getElementById('addressField');
-                if (this.value === 'delivery') {
-                    addressField.classList.add('show');
-                } else {
-                    addressField.classList.remove('show');
-                }
-                updateCart();
-            });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            displayMenuItemsUpdate();
+            loadOrderCounter();
         });
-        
-        document.querySelectorAll('input[name="paymentType"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                const pixField = document.getElementById('pixField');
-                const changeField = document.getElementById('changeField');
-                
-                pixField.style.display = this.value === 'pix' ? 'block' : 'none';
-                changeField.style.display = this.value === 'money' ? 'block' : 'none';
-            });
-        });
-        
-        function calculateChange(total, amountGiven) {
-            if (amountGiven < total) {
-                return null;
-            }
-            return amountGiven - total;
-        }
-
-        document.getElementById('changeAmount').addEventListener('input', function() {
-            const cartTotal = cart.reduce((sum, item) => {
-                let itemTotal = item.price;
-                if (item.addons) {
-                    itemTotal += item.addons.reduce((addonSum, addon) => addonSum + addon.price, 0);
-                }
-                return sum + itemTotal;
-            }, 0) + deliveryFee;
-
-            updateChangeDisplay(cartTotal);
-        });
-        
-        function checkout() {
-            // Increment order counter and save
-            orderCounter++;
-            saveOrderCounter();
-            
-            const name = document.getElementById('userName').value;
-            const phone = document.getElementById('userPhone').value;
-            const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
-            const street = document.getElementById('userStreet').value;
-            const neighborhood = document.getElementById('userNeighborhood').value;
-            const number = document.getElementById('userNumber').value;
-            const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
-            const observation = document.getElementById('orderObservation').value.trim();
-            
-            if (!name || !phone) {
-                alert('Por favor, preencha seu nome e telefone antes de finalizar o pedido.');
-                return;
-            }
-
-            if (deliveryType === 'delivery' && (!street || !neighborhood || !number)) {
-                alert('Por favor, preencha todos os campos do endereço para entrega.');
-                return;
-            }
-
-            // Get current date and time
-            const now = new Date();
-            const dateStr = now.toLocaleDateString();
-            const timeStr = now.toLocaleTimeString();
-
-            let message = `🔔 *Pedido #${orderCounter}* (${dateStr} - ${timeStr})\n`;
-            message += `------------------------\n`;
-            
-            let subTotal = 0;
-
-            // List items
-            cart.forEach(item => {
-                let itemTotal = item.price;
-                message += `*${item.name}*\n`;
-                
-                if (item.addons && item.addons.length > 0) {
-                    item.addons.forEach(addon => {
-                        message += `   • ${addon.name} (+R$ ${addon.price.toFixed(2)})\n`;
-                        itemTotal += addon.price;
-                    });
-                }
-                
-                message += `*Valor:* R$ ${itemTotal.toFixed(2)}\n`;
-                message += `------------------------\n`;
-                subTotal += itemTotal;
-            });
-
-            let total = subTotal;
-            
-            message += `*Sub Total:* R$ ${subTotal.toFixed(2)}\n`;
-            
-            if (deliveryType === 'delivery') {
-                total += deliveryFee;
-                message += `*Taxa de Entrega:* R$ ${deliveryFee.toFixed(2)}\n`;
-            }
-            
-            message += `*Total:* R$ ${total.toFixed(2)}\n`;
-            message += `*Forma de pagto:* ${
-                paymentType === 'money' ? 'Dinheiro' :
-                paymentType === 'debit' ? 'Cartão de Débito' :
-                paymentType === 'credit' ? 'Cartão de Crédito' :
-                'PIX'
-            }\n`;
-            
-            if (paymentType === 'money') {
-                const changeAmount = document.getElementById('changeAmount').value;
-                if (changeAmount) {
-                    const change = calculateChange(total, parseFloat(changeAmount));
-                    message += `*Troco para:* R$ ${parseFloat(changeAmount).toFixed(2)}\n`;
-                    message += `*Troco a devolver:* R$ ${change.toFixed(2)}\n`;
-                }
-            }
-
-            // Include observation in the message
-            if (observation) {
-                message += `\n📝 *Observações:*\n${observation}\n`;
-            }
-            
-            message += `------------------------\n`;
-            message += `*Tipo:* ${
-                deliveryType === 'delivery' ? 'Entrega' : 
-                deliveryType === 'dineIn' ? 'Comer No Local' : 
-                'Retirada'
-            }\n`;
-        
-            if (deliveryType === 'delivery') {
-                message += `*Endereço:* ${street}, ${number} - ${neighborhood}\n`;
-            }
-            message += `\n👤 *Cliente:* ${name}\n`;
-            message += `📲 *Telefone:* ${phone}`;
-            
-            const encodedMessage = encodeURIComponent(message);
-            window.open(`https://wa.me/5517991179570?text=${encodedMessage}`);
-        }
-        
-        function scrollToSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            const headerOffset = 80;
-            const elementPosition = section.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-        
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth"
-            });
-        }
-        
-        displayMenuItemsUpdate();
-        document.addEventListener('DOMContentLoaded', loadOrderCounter);
     </script>
+    
     </head>
     <body>
     <div id="loading-screen" style="
@@ -1239,7 +1084,7 @@
             <img src="LOGODIPFOOD.png" 
                  alt="Loading Logo" 
                  style="width: 150px; height: auto; margin-bottom: 20px;">
-            <p style="color: #ff6b01; margin-top: 20px; font-size: 18px;">DIPFOOD COM VOCÊ</p> <!-- Changed text color to orange (#ff6b01) -->
+            <p style="color: #ff6b01; margin-top: 20px; font-size: 18px;">Carregando...</p> <!-- Changed text color to orange (#ff6b01) -->
         </div>
     </div>
     
@@ -1304,7 +1149,7 @@
                     </label>
                 </div>
                 <div id="pixField" style="display: none;">
-                    <p style="color: white;">Chave PIX: 17991179570</p>
+                    <p style="color: white;">Chave PIX: 17992095122</p>
                 </div>
                 <div id="changeField" style="display: none;">
                     <input type="number" id="changeAmount" placeholder="Troco Para Quanto?">
@@ -1340,7 +1185,7 @@
         </div>
 
         <div class="menu-section" id="ham-section">
-            <h2>Pernil</h2>
+            <h2>Pernis</h2>
             <div class="menu-grid" id="ham"></div>
         </div>
 
@@ -1372,7 +1217,7 @@
         </div>
 
         <div style="text-align: center; padding: 20px 0 40px 0;">
-            <a href="https://api.whatsapp.com/send/?phone=5517992095122&text=Ol%C3%A1%21+Gostaria+de+adquirir+O+Cardapio+Digital&type=phone_number&app_absent=0" style="
+            <a href="https://maissitedelivery.com/1312/categorias" style="
                 display: inline-block;
                 background-color: var(--primary);
                 color: white;
@@ -1384,7 +1229,7 @@
                 box-shadow: 0 4px 8px rgba(0,0,0,0.2);
                 transition: all 0.3s ease;
             ">
-                Crie Tambem Seu Cardápio Premium
+                Acessar Cardápio Completo
             </a>
         </div>
     </div>
@@ -1397,7 +1242,10 @@
     </div>
     
     <script>
-    displayMenuItemsUpdate();
+    document.addEventListener('DOMContentLoaded', () => {
+        displayMenuItemsUpdate();
+        loadOrderCounter();
+    });
     </script>
     
     </body></html>
