@@ -267,14 +267,51 @@
             inicializarApp();
         });
 
-        async function inicializarApp() {
-            carregarInformacoesEmpresa();
-            verificarHorarioFuncionamento();
-            carregarCategorias();
-            carregarProdutos();
-            carregarFormasPagamento();
-            atualizarCarrinho();
-        }
+// Modificar a função inicializarApp para recarregar dados sempre
+async function inicializarApp() {
+    // Sempre carregar configurações mais recentes
+    carregarConfiguracoes()
+    
+    carregarInformacoesEmpresa();
+    verificarHorarioFuncionamento();
+    carregarCategorias();
+    carregarProdutos();
+    carregarFormasPagamento();
+    atualizarCarrinho();
+}
+
+// Adicionar listener para detectar mudanças nas configurações
+window.addEventListener('storage', function(e) {
+    if (e.key === 'menuConfig' || e.key === 'menuItems') {
+        // Recarregar página quando configurações mudarem
+        location.reload();
+    }
+});
+
+// Adicionar listener para evento customizado
+window.addEventListener('configUpdated', function(e) {
+    // Atualizar configurações locais
+    Object.assign(CONFIG, e.detail.config);
+    Object.assign(menuItems, e.detail.menuItems);
+    
+    // Reinicializar a aplicação
+    inicializarApp();
+});
+
+// Adicionar verificação periódica de atualizações
+setInterval(function() {
+    const lastUpdate = localStorage.getItem('lastUpdate');
+    const currentUpdate = window.lastKnownUpdate || '';
+    
+    if (lastUpdate && lastUpdate !== currentUpdate) {
+        window.lastKnownUpdate = lastUpdate;
+        carregarConfiguracoes();
+        inicializarApp();
+    }
+}, 2000); // Verificar a cada 2 segundos
+
+// Inicializar lastKnownUpdate
+window.lastKnownUpdate = localStorage.getItem('lastUpdate') || '';
 
         function carregarInformacoesEmpresa() {
             document.getElementById('page-title').textContent = `${CONFIG.empresa.nome} - Cardápio Digital`;

@@ -551,6 +551,10 @@
         function toggleHorarioFuncionamento() {
             const ativo = document.getElementById('horario-ativo').checked;
             CONFIG.horarioFuncionamento.ativo = ativo;
+            
+            // Salvar automaticamente
+            salvarConfiguracoes();
+            localStorage.setItem('lastUpdate', new Date().toISOString());
         }
 
         function toggleDiaFuncionamento(dia) {
@@ -586,7 +590,9 @@
             });
 
             if (salvarConfiguracoes()) {
-                showNotification('Horários salvos com sucesso!', 'success');
+                showNotification('Horários salvos com sucesso! Atualizando cardápio...', 'success');
+                // Forçar atualização do localStorage
+                localStorage.setItem('lastUpdate', new Date().toISOString());
             } else {
                 showNotification('Erro ao salvar horários!', 'error');
             }
@@ -662,6 +668,10 @@
                     item.disponivel = produto.disponivel;
                 }
                 
+                // Salvar automaticamente
+                salvarConfiguracoes();
+                localStorage.setItem('lastUpdate', new Date().toISOString());
+                
                 loadProdutos(); // Recarregar para atualizar contadores
             }
         }
@@ -700,7 +710,9 @@
 
         function salvarProdutos() {
             if (salvarConfiguracoes()) {
-                showNotification('Alterações nos produtos salvas com sucesso!', 'success');
+                showNotification('Alterações nos produtos salvas com sucesso! Atualizando cardápio...', 'success');
+                // Forçar atualização do localStorage
+                localStorage.setItem('lastUpdate', new Date().toISOString());
             } else {
                 showNotification('Erro ao salvar produtos!', 'error');
             }
@@ -725,7 +737,9 @@
             CONFIG.empresa.facebook = document.getElementById('empresa-facebook').value;
 
             if (salvarConfiguracoes()) {
-                showNotification('Informações da empresa salvas com sucesso!', 'success');
+                showNotification('Informações da empresa salvas com sucesso! Atualizando cardápio...', 'success');
+                // Forçar atualização do localStorage
+                localStorage.setItem('lastUpdate', new Date().toISOString());
             } else {
                 showNotification('Erro ao salvar informações!', 'error');
             }
@@ -747,6 +761,10 @@
         function togglePagamento(tipo) {
             const ativo = document.getElementById(`${tipo}-ativo`).checked;
             CONFIG.pagamento[tipo].ativo = ativo;
+            
+            // Salvar automaticamente
+            salvarConfiguracoes();
+            localStorage.setItem('lastUpdate', new Date().toISOString());
         }
 
         function salvarPagamento() {
@@ -755,7 +773,9 @@
             CONFIG.pagamento.delivery.tempoEntrega = document.getElementById('delivery-tempo').value;
 
             if (salvarConfiguracoes()) {
-                showNotification('Configurações de pagamento salvas com sucesso!', 'success');
+                showNotification('Configurações de pagamento salvas com sucesso! Atualizando cardápio...', 'success');
+                // Forçar atualização do localStorage
+                localStorage.setItem('lastUpdate', new Date().toISOString());
             } else {
                 showNotification('Erro ao salvar pagamento!', 'error');
             }
@@ -792,6 +812,32 @@
                 closeImportModal();
             }
         }
+        
+        // Adicionar função para atualizar automaticamente quando salvar
+        function forcarAtualizacaoCardapio() {
+            // Disparar evento para outras abas/janelas
+            localStorage.setItem('forceReload', Date.now().toString());
+            
+            // Tentar comunicar com outras janelas
+            if (window.opener && !window.opener.closed) {
+                window.opener.postMessage('configUpdated', '*');
+            }
+        }
+        
+        // Adicionar listener para detectar quando a aba ganha foco
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                // Recarregar dados quando a aba voltar ao foco
+                loadAdminData();
+            }
+        });
+
+        // Adicionar listener para mensagens entre janelas
+        window.addEventListener('message', function(event) {
+            if (event.data === 'configUpdated') {
+                loadAdminData();
+            }
+        });
     </script>
 </body>
 </html>

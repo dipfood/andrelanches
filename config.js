@@ -199,20 +199,7 @@ function convertMenuItemsToProducts() {
   return produtos
 }
 
-// Função para salvar configurações no localStorage
-function salvarConfiguracoes() {
-  try {
-    localStorage.setItem("menuConfig", JSON.stringify(CONFIG))
-    localStorage.setItem("menuItems", JSON.stringify(menuItems))
-    localStorage.setItem("lastUpdate", new Date().toISOString())
-    return true
-  } catch (error) {
-    console.error("Erro ao salvar configurações:", error)
-    return false
-  }
-}
-
-// Função para carregar configurações do localStorage
+// Modificar a função carregarConfiguracoes para garantir que sempre atualize CONFIG
 function carregarConfiguracoes() {
   try {
     const configSalva = localStorage.getItem("menuConfig")
@@ -220,12 +207,21 @@ function carregarConfiguracoes() {
 
     if (configSalva) {
       const configCarregada = JSON.parse(configSalva)
-      Object.assign(CONFIG, configCarregada)
+      // Usar Object.assign para manter a referência mas atualizar os valores
+      Object.keys(configCarregada).forEach((key) => {
+        if (typeof configCarregada[key] === "object" && configCarregada[key] !== null) {
+          CONFIG[key] = { ...CONFIG[key], ...configCarregada[key] }
+        } else {
+          CONFIG[key] = configCarregada[key]
+        }
+      })
     }
 
     if (menuItemsSalvo) {
       const menuCarregado = JSON.parse(menuItemsSalvo)
-      Object.assign(menuItems, menuCarregado)
+      Object.keys(menuCarregado).forEach((key) => {
+        menuItems[key] = menuCarregado[key]
+      })
     }
 
     CONFIG.produtos = convertMenuItemsToProducts()
@@ -236,7 +232,39 @@ function carregarConfiguracoes() {
   }
 }
 
-// Função para exportar configurações em formato .ini
+// Adicionar função para forçar atualização
+function forcarAtualizacao() {
+  carregarConfiguracoes()
+  CONFIG.produtos = convertMenuItemsToProducts()
+
+  // Disparar evento customizado para notificar outras páginas
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(
+      new CustomEvent("configUpdated", {
+        detail: { config: CONFIG, menuItems: menuItems },
+      }),
+    )
+  }
+}
+
+// Modificar função salvarConfiguracoes para forçar atualização
+function salvarConfiguracoes() {
+  try {
+    localStorage.setItem("menuConfig", JSON.stringify(CONFIG))
+    localStorage.setItem("menuItems", JSON.stringify(menuItems))
+    localStorage.setItem("lastUpdate", new Date().toISOString())
+
+    // Forçar atualização após salvar
+    forcarAtualizacao()
+
+    return true
+  } catch (error) {
+    console.error("Erro ao salvar configurações:", error)
+    return false
+  }
+}
+
+// Função para exportar configurações no formato .ini
 function exportarConfigINI() {
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-")
   let iniContent = `; Configurações do Cardápio Digital - ${CONFIG.empresa.nome}\n`
