@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Cardápio Digital</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin-style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="admin-body">
+    <!-- Tela de Login -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <i class="fas fa-shield-alt"></i>
+                <h2>Painel Administrativo</h2>
+                <p>Acesso restrito ao proprietário</p>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="usuario">Usuário:</label>
+                    <input type="text" id="usuario" name="usuario" required>
+                </div>
+                <div class="form-group">
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" name="senha" required>
+                </div>
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Entrar
+                </button>
+            </form>
+            <div class="login-footer">
+                <a href="index.html">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar ao Cardápio
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Painel Administrativo -->
+    <div id="admin-panel" class="admin-panel" style="display: none;">
+        <!-- Header Admin -->
+        <header class="admin-header">
+            <div class="admin-header-content">
+                <div class="admin-logo">
+                    <i class="fas fa-cogs"></i>
+                    <h1>Painel Administrativo</h1>
+                </div>
+                <div class="admin-actions">
+                    <button class="preview-btn" onclick="window.open('index.html', '_blank')">
+                        <i class="fas fa-eye"></i>
+                        Ver Cardápio
+                    </button>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sair
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="admin-nav">
+            <button class="nav-tab active" onclick="showTab('horarios')">
+                <i class="fas fa-clock"></i>
+                Horários
+            </button>
+            <button class="nav-tab" onclick="showTab('produtos')">
+                <i class="fas fa-hamburger"></i>
+                Produtos
+            </button>
+            <button class="nav-tab" onclick="showTab('empresa')">
+                <i class="fas fa-building"></i>
+                Empresa
+            </button>
+            <button class="nav-tab" onclick="showTab('pagamento')">
+                <i class="fas fa-credit-card"></i>
+                Pagamento
+            </button>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="admin-content">
+            <!-- Tab Horários -->
+            <div id="tab-horarios" class="tab-content active">
+                <div class="content-header">
+                    <h2><i class="fas fa-clock"></i> Gerenciar Horários</h2>
+                    <p>Configure os horários de funcionamento do seu estabelecimento</p>
+                </div>
+
+                <div class="horarios-container">
+                    <div class="horario-toggle">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="horario-ativo" onchange="toggleHorarioFuncionamento()">
+                            <span class="toggle-slider"></span>
+                            Verificação de horário ativa
+                        </label>
+                    </div>
+
+                    <div id="horarios-grid" class="horarios-grid">
+                        <!-- Horários serão inseridos aqui via JavaScript -->
+                    </div>
+
+                    <div class="save-section">
+                        <button class="save-btn" onclick="salvarHorarios()">
+                            <i class="fas fa-save"></i>
+                            Salvar Horários
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Produtos -->
+            <div id="tab-produtos" class="tab-content">
+                <div class="content-header">
+                    <h2><i class="fas fa-hamburger"></i> Gerenciar Produtos</h2>
+                    <p>Ative ou desative produtos do seu cardápio</p>
+                </div>
+
+                <div class="produtos-container">
+                    <div class="produtos-stats">
+                        <div class="stat-card">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <span class="stat-number" id="produtos-ativos">0</span>
+                                <span class="stat-label">Produtos Ativos</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-times-circle"></i>
+                            <div>
+                                <span class="stat-number" id="produtos-inativos">0</span>
+                                <span class="stat-label">Produtos Inativos</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="produtos-actions">
+                        <button class="action-btn success" onclick="ativarTodosProdutos()">
+                            <i class="fas fa-check-double"></i>
+                            Ativar Todos
+                        </button>
+                        <button class="action-btn danger" onclick="desativarTodosProdutos()">
+                            <i class="fas fa-ban"></i>
+                            Desativar Todos
+                        </button>
+                    </div>
+
+                    <div id="produtos-list" class="produtos-list">
+                        <!-- Produtos serão inseridos aqui via JavaScript -->
+                    </div>
+
+                    <div class="save-section">
+                        <button class="save-btn" onclick="salvarProdutos()">
+                            <i class="fas fa-save"></i>
+                            Salvar Alterações
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Empresa -->
+            <div id="tab-empresa" class="tab-content">
+                <div class="content-header">
+                    <h2><i class="fas fa-building"></i> Informações da Empresa</h2>
+                    <p>Edite as informações básicas do seu estabelecimento</p>
+                </div>
+
+                <div class="empresa-container">
+                    <form id="empresa-form" class="empresa-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="empresa-nome">Nome da Empresa:</label>
+                                <input type="text" id="empresa-nome" name="nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="empresa-telefone">Telefone:</label>
+                                <input type="tel" id="empresa-telefone" name="telefone" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="empresa-endereco">Endereço:</label>
+                            <input type="text" id="empresa-endereco" name="endereco" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="empresa-instagram">Instagram:</label>
+                                <input type="text" id="empresa-instagram" name="instagram" placeholder="@seuinstagram">
+                            </div>
+                            <div class="form-group">
+                                <label for="empresa-facebook">Facebook:</label>
+                                <input type="text" id="empresa-facebook" name="facebook" placeholder="seufacebook">
+                            </div>
+                        </div>
+
+                        <div class="save-section">
+                            <button type="submit" class="save-btn">
+                                <i class="fas fa-save"></i>
+                                Salvar Informações
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tab Pagamento -->
+            <div id="tab-pagamento" class="tab-content">
+                <div class="content-header">
+                    <h2><i class="fas fa-credit-card"></i> Formas de Pagamento</h2>
+                    <p>Configure as formas de pagamento aceitas</p>
+                </div>
+
+                <div class="pagamento-container">
+                    <div class="payment-section">
+                        <h3><i class="fas fa-qrcode"></i> PIX</h3>
+                        <div class="payment-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="pix-ativo" onchange="togglePagamento('pix')">
+                                <span class="toggle-slider"></span>
+                                PIX Ativo
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="pix-chave">Chave PIX:</label>
+                            <input type="text" id="pix-chave" placeholder="sua@chave.pix">
+                        </div>
+                    </div>
+
+                    <div class="payment-section">
+                        <h3><i class="fas fa-money-bill-wave"></i> Dinheiro</h3>
+                        <div class="payment-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="dinheiro-ativo" onchange="togglePagamento('dinheiro')">
+                                <span class="toggle-slider"></span>
+                                Dinheiro Ativo
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="payment-section">
+                        <h3><i class="fas fa-credit-card"></i> Cartão</h3>
+                        <div class="payment-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="cartao-ativo" onchange="togglePagamento('cartao')">
+                                <span class="toggle-slider"></span>
+                                Cartão Ativo
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="payment-section">
+                        <h3><i class="fas fa-truck"></i> Delivery</h3>
+                        <div class="payment-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="delivery-ativo" onchange="togglePagamento('delivery')">
+                                <span class="toggle-slider"></span>
+                                Delivery Ativo
+                            </label>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="delivery-taxa">Taxa de Entrega (R$):</label>
+                                <input type="number" id="delivery-taxa" step="0.01" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="delivery-tempo">Tempo de Entrega:</label>
+                                <input type="text" id="delivery-tempo" placeholder="45-60 min">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="save-section">
+                        <button class="save-btn" onclick="salvarPagamento()">
+                            <i class="fas fa-save"></i>
+                            Salvar Configurações
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification -->
+    <div id="admin-notification" class="admin-notification">
+        <div class="notification-content">
+            <i class="notification-icon"></i>
+            <span class="notification-message"></span>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        // Variáveis globais do admin
+        let isLoggedIn = false;
+        let currentTab = 'horarios';
+
+        // Inicializar painel admin
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAdmin();
+        });
+
+        function initializeAdmin() {
+            // Verificar se já está logado
+            const loginStatus = sessionStorage.getItem('adminLoggedIn');
+            if (loginStatus === 'true') {
+                showAdminPanel();
+            }
+
+            // Event listeners
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+            document.getElementById('empresa-form').addEventListener('submit', handleEmpresaSubmit);
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const usuario = document.getElementById('usuario').value;
+            const senha = document.getElementById('senha').value;
+
+            if (usuario === ADMIN_CONFIG.login.usuario && senha === ADMIN_CONFIG.login.senha) {
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                showAdminPanel();
+                showNotification('Login realizado com sucesso!', 'success');
+            } else {
+                showNotification('Usuário ou senha incorretos!', 'error');
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('adminLoggedIn');
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('admin-panel').style.display = 'none';
+            document.getElementById('login-form').reset();
+            showNotification('Logout realizado com sucesso!', 'success');
+        }
+
+        function showAdminPanel() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+            loadAdminData();
+        }
+
+        function loadAdminData() {
+            loadHorarios();
+            loadProdutos();
+            loadEmpresaInfo();
+            loadPagamentoInfo();
+        }
+
+        function showTab(tabName) {
+            // Remover classe active de todas as tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Ativar tab selecionada
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            
+            currentTab = tabName;
+        }
+
+        // GERENCIAMENTO DE HORÁRIOS
+        function loadHorarios() {
+            const horarioAtivo = document.getElementById('horario-ativo');
+            horarioAtivo.checked = CONFIG.horarioFuncionamento.ativo;
+
+            const horariosGrid = document.getElementById('horarios-grid');
+            const diasSemana = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo'];
+            const diasNomes = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
+
+            horariosGrid.innerHTML = diasSemana.map((dia, index) => {
+                const horario = CONFIG.horarioFuncionamento.horarios[dia];
+                return `
+                    <div class="horario-card">
+                        <div class="horario-header">
+                            <h4>${diasNomes[index]}</h4>
+                            <label class="toggle-label">
+                                <input type="checkbox" id="aberto-${dia}" ${horario.aberto ? 'checked' : ''} 
+                                       onchange="toggleDiaFuncionamento('${dia}')">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="horario-inputs ${!horario.aberto ? 'disabled' : ''}">
+                            <div class="time-group">
+                                <label>Abertura:</label>
+                                <input type="time" id="abertura-${dia}" value="${horario.abertura}" 
+                                       ${!horario.aberto ? 'disabled' : ''}>
+                            </div>
+                            <div class="time-group">
+                                <label>Fechamento:</label>
+                                <input type="time" id="fechamento-${dia}" value="${horario.fechamento}" 
+                                       ${!horario.aberto ? 'disabled' : ''}>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleHorarioFuncionamento() {
+            const ativo = document.getElementById('horario-ativo').checked;
+            CONFIG.horarioFuncionamento.ativo = ativo;
+        }
+
+        function toggleDiaFuncionamento(dia) {
+            const aberto = document.getElementById(`aberto-${dia}`).checked;
+            const inputs = document.querySelector(`#horarios-grid .horario-card:has(#aberto-${dia}) .horario-inputs`);
+            const abertura = document.getElementById(`abertura-${dia}`);
+            const fechamento = document.getElementById(`fechamento-${dia}`);
+
+            CONFIG.horarioFuncionamento.horarios[dia].aberto = aberto;
+            
+            if (aberto) {
+                inputs.classList.remove('disabled');
+                abertura.disabled = false;
+                fechamento.disabled = false;
+            } else {
+                inputs.classList.add('disabled');
+                abertura.disabled = true;
+                fechamento.disabled = true;
+            }
+        }
+
+        function salvarHorarios() {
+            const diasSemana = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo'];
+            
+            diasSemana.forEach(dia => {
+                const abertura = document.getElementById(`abertura-${dia}`).value;
+                const fechamento = document.getElementById(`fechamento-${dia}`).value;
+                
+                if (CONFIG.horarioFuncionamento.horarios[dia].aberto) {
+                    CONFIG.horarioFuncionamento.horarios[dia].abertura = abertura;
+                    CONFIG.horarioFuncionamento.horarios[dia].fechamento = fechamento;
+                }
+            });
+
+            salvarConfiguracoes();
+            showNotification('Horários salvos com sucesso!', 'success');
+        }
+
+        // GERENCIAMENTO DE PRODUTOS
+        function loadProdutos() {
+            const produtosList = document.getElementById('produtos-list');
+            const categoriasNomes = {
+                'burgers': 'Sanduíches',
+                'bebidas': 'Bebidas',
+                'porcoes': 'Porções',
+                'sobremesas': 'Sobremesas'
+            };
+
+            let produtosAtivos = 0;
+            let produtosInativos = 0;
+
+            const produtosPorCategoria = {};
+            CONFIG.produtos.forEach(produto => {
+                if (!produtosPorCategoria[produto.categoria]) {
+                    produtosPorCategoria[produto.categoria] = [];
+                }
+                produtosPorCategoria[produto.categoria].push(produto);
+                
+                if (produto.disponivel) {
+                    produtosAtivos++;
+                } else {
+                    produtosInativos++;
+                }
+            });
+
+            document.getElementById('produtos-ativos').textContent = produtosAtivos;
+            document.getElementById('produtos-inativos').textContent = produtosInativos;
+
+            produtosList.innerHTML = Object.keys(produtosPorCategoria).map(categoria => `
+                <div class="categoria-section">
+                    <h3 class="categoria-title">
+                        <i class="fas fa-${categoria === 'burgers' ? 'hamburger' : categoria === 'bebidas' ? 'glass-water' : categoria === 'porcoes' ? 'french-fries' : 'cake-candles'}"></i>
+                        ${categoriasNomes[categoria] || categoria}
+                    </h3>
+                    <div class="produtos-grid">
+                        ${produtosPorCategoria[categoria].map(produto => `
+                            <div class="produto-item ${!produto.disponivel ? 'disabled' : ''}">
+                                <div class="produto-info">
+                                    <h4>${produto.nome}</h4>
+                                    <p>${produto.descricao}</p>
+                                    <span class="produto-preco">R$ ${produto.preco.toFixed(2).replace('.', ',')}</span>
+                                </div>
+                                <div class="produto-toggle">
+                                    <label class="toggle-label">
+                                        <input type="checkbox" ${produto.disponivel ? 'checked' : ''} 
+                                               onchange="toggleProduto(${produto.id})">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleProduto(produtoId) {
+            const produto = CONFIG.produtos.find(p => p.id === produtoId);
+            if (produto) {
+                produto.disponivel = !produto.disponivel;
+                loadProdutos(); // Recarregar para atualizar contadores
+            }
+        }
+
+        function ativarTodosProdutos() {
+            CONFIG.produtos.forEach(produto => produto.disponivel = true);
+            loadProdutos();
+            showNotification('Todos os produtos foram ativados!', 'success');
+        }
+
+        function desativarTodosProdutos() {
+            if (confirm('Tem certeza que deseja desativar todos os produtos?')) {
+                CONFIG.produtos.forEach(produto => produto.disponivel = false);
+                loadProdutos();
+                showNotification('Todos os produtos foram desativados!', 'warning');
+            }
+        }
+
+        function salvarProdutos() {
+            salvarConfiguracoes();
+            showNotification('Alterações nos produtos salvas com sucesso!', 'success');
+        }
+
+        // GERENCIAMENTO DE EMPRESA
+        function loadEmpresaInfo() {
+            document.getElementById('empresa-nome').value = CONFIG.empresa.nome;
+            document.getElementById('empresa-telefone').value = CONFIG.empresa.telefone;
+            document.getElementById('empresa-endereco').value = CONFIG.empresa.endereco;
+            document.getElementById('empresa-instagram').value = CONFIG.empresa.instagram;
+            document.getElementById('empresa-facebook').value = CONFIG.empresa.facebook;
+        }
+
+        function handleEmpresaSubmit(e) {
+            e.preventDefault();
+            
+            CONFIG.empresa.nome = document.getElementById('empresa-nome').value;
+            CONFIG.empresa.telefone = document.getElementById('empresa-telefone').value;
+            CONFIG.empresa.endereco = document.getElementById('empresa-endereco').value;
+            CONFIG.empresa.instagram = document.getElementById('empresa-instagram').value;
+            CONFIG.empresa.facebook = document.getElementById('empresa-facebook').value;
+
+            salvarConfiguracoes();
+            showNotification('Informações da empresa salvas com sucesso!', 'success');
+        }
+
+        // GERENCIAMENTO DE PAGAMENTO
+        function loadPagamentoInfo() {
+            document.getElementById('pix-ativo').checked = CONFIG.pagamento.pix.ativo;
+            document.getElementById('pix-chave').value = CONFIG.pagamento.pix.chave;
+            
+            document.getElementById('dinheiro-ativo').checked = CONFIG.pagamento.dinheiro.ativo;
+            document.getElementById('cartao-ativo').checked = CONFIG.pagamento.cartao.ativo;
+            
+            document.getElementById('delivery-ativo').checked = CONFIG.pagamento.delivery.ativo;
+            document.getElementById('delivery-taxa').value = CONFIG.pagamento.delivery.taxa;
+            document.getElementById('delivery-tempo').value = CONFIG.pagamento.delivery.tempoEntrega;
+        }
+
+        function togglePagamento(tipo) {
+            const ativo = document.getElementById(`${tipo}-ativo`).checked;
+            CONFIG.pagamento[tipo].ativo = ativo;
+        }
+
+        function salvarPagamento() {
+            CONFIG.pagamento.pix.chave = document.getElementById('pix-chave').value;
+            CONFIG.pagamento.delivery.taxa = parseFloat(document.getElementById('delivery-taxa').value) || 0;
+            CONFIG.pagamento.delivery.tempoEntrega = document.getElementById('delivery-tempo').value;
+
+            salvarConfiguracoes();
+            showNotification('Configurações de pagamento salvas com sucesso!', 'success');
+        }
+
+        // SISTEMA DE NOTIFICAÇÕES
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('admin-notification');
+            const icon = notification.querySelector('.notification-icon');
+            const messageEl = notification.querySelector('.notification-message');
+
+            // Definir ícone baseado no tipo
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                warning: 'fas fa-exclamation-triangle',
+                info: 'fas fa-info-circle'
+            };
+
+            icon.className = `notification-icon ${icons[type]}`;
+            messageEl.textContent = message;
+            notification.className = `admin-notification ${type} show`;
+
+            // Remover notificação após 4 segundos
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
