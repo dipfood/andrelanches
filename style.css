@@ -1126,6 +1126,76 @@ body {
   color: var(--primary-color);
 }
 
+/* PIX Info Container */
+.pix-info-container {
+  background: var(--background-color);
+  border: 2px solid var(--primary-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.pix-info-container h4 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.pix-key-container {
+  margin-bottom: 1rem;
+}
+
+.pix-key-container label {
+  color: var(--text-primary);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.pix-key-input {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pix-key-input input {
+  flex: 1;
+  background: var(--surface-color);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 0.75rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-family: monospace;
+}
+
+.copy-pix-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.copy-pix-btn:hover {
+  background: var(--accent-color);
+  transform: translateY(-2px);
+}
+
+.copy-pix-btn.copied {
+  background: var(--success-color);
+  transform: scale(1.05);
+}
+
 /* Order Summary */
 .order-summary {
   background: var(--background-color);
@@ -1261,6 +1331,14 @@ body {
   .checkout-actions {
     flex-direction: column;
   }
+
+  .pix-key-input {
+    flex-direction: column;
+  }
+
+  .copy-pix-btn {
+    justify-content: center;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1285,6 +1363,10 @@ body {
 
   .item-price {
     align-self: flex-end;
+  }
+
+  .pix-info-container {
+    padding: 1rem;
   }
 }
 
@@ -1327,106 +1409,139 @@ body {
   transform: none;
 }
 
-/* Modal de Acréscimos */
+/* Modal de Acréscimos - Otimizado */
 .acrescimos-modal-content {
-  max-width: 700px;
-  max-height: 90vh;
-  overflow-y: auto;
+  max-width: 450px;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .acrescimos-header {
   text-align: center;
-  padding: 2rem 2rem 1rem;
+  padding: 1rem 1.5rem 0.75rem;
   border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .acrescimos-header h2 {
   color: var(--text-primary);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  font-size: 1.1rem;
 }
 
 .acrescimos-header p {
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .acrescimos-body {
-  padding: 2rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-}
-
-/* Produto Selecionado */
-.produto-selecionado {
-  background: var(--background-color);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: 1.5rem;
-}
-
-.produto-info {
-  display: flex;
   gap: 1rem;
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 0;
+}
+
+/* Quantidade - Compacta */
+.quantidade-section {
+  display: flex;
   align-items: center;
-}
-
-.produto-img {
-  width: 80px;
-  height: 80px;
-  border-radius: var(--border-radius);
-  object-fit: cover;
-}
-
-.produto-details h3 {
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
-}
-
-.produto-details p {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-}
-
-.produto-preco-base {
-  color: var(--primary-color);
-  font-weight: bold;
-}
-
-/* Seção de Acréscimos */
-.acrescimos-section {
+  justify-content: space-between;
   background: var(--background-color);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  padding: 1.5rem;
+  padding: 0.75rem;
+  flex-shrink: 0;
+}
+
+.quantidade-section label {
+  color: var(--text-primary);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.quantidade-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quantidade-controls button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: bold;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantidade-controls button:hover {
+  background: var(--accent-color);
+  transform: scale(1.05);
+}
+
+.quantidade-controls input {
+  width: 40px;
+  text-align: center;
+  background: var(--surface-color);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 0.25rem;
+  color: var(--text-primary);
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* Seção de Acréscimos - Compacta */
+.acrescimos-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .acrescimos-section h3 {
   color: var(--text-primary);
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 0.5rem;
+  flex-shrink: 0;
 }
 
 .acrescimos-lista-disponivel {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  display: grid;
+  gap: 0.5rem;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  flex: 1;
 }
 
 .acrescimo-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   padding: 0.75rem;
   background: var(--surface-color);
   border: 2px solid var(--border-color);
@@ -1438,15 +1553,18 @@ body {
 .acrescimo-item:hover {
   border-color: var(--primary-color);
   background: rgba(255, 107, 53, 0.05);
+  transform: translateY(-1px);
 }
 
 .acrescimo-item.selected {
   border-color: var(--primary-color);
   background: rgba(255, 107, 53, 0.1);
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
 }
 
 .acrescimo-checkbox {
   position: relative;
+  flex-shrink: 0;
 }
 
 .acrescimo-checkbox input[type="checkbox"] {
@@ -1454,13 +1572,14 @@ body {
 }
 
 .checkbox-custom {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border: 2px solid var(--border-color);
   border-radius: 4px;
   position: relative;
   transition: var(--transition);
   display: block;
+  background: var(--background-color);
 }
 
 .acrescimo-checkbox input[type="checkbox"]:checked + .checkbox-custom {
@@ -1489,169 +1608,39 @@ body {
 .acrescimo-nome {
   color: var(--text-primary);
   font-weight: 500;
+  font-size: 0.85rem;
 }
 
 .acrescimo-preco {
   color: var(--primary-color);
   font-weight: bold;
-  font-size: 0.9rem;
-}
-
-/* Acréscimos Selecionados */
-.acrescimos-selecionados {
-  background: var(--background-color);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: 1.5rem;
-}
-
-.acrescimos-selecionados h3 {
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.acrescimos-lista {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  font-size: 0.8rem;
 }
 
 .nenhum-acrescimo {
   color: var(--text-secondary);
   font-style: italic;
   text-align: center;
-  padding: 1rem;
-}
-
-.acrescimo-selecionado {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem;
-  background: var(--surface-color);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-}
-
-.acrescimo-selecionado .acrescimo-nome {
-  color: var(--text-primary);
-}
-
-.acrescimo-selecionado .acrescimo-preco {
-  color: var(--primary-color);
-  font-weight: bold;
-}
-
-.remove-acrescimo {
-  background: var(--error-color);
-  color: white;
-  border: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-}
-
-.remove-acrescimo:hover {
-  background: #c0392b;
-}
-
-/* Quantidade */
-.quantidade-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  padding: 1.5rem;
   background: var(--background-color);
-  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  padding: 1rem;
 }
 
-.quantidade-section label {
-  color: var(--text-primary);
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.quantidade-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.quantidade-controls button {
-  background: var(--primary-color);
-  color: white;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: var(--transition);
-  font-weight: bold;
-  font-size: 1.2rem;
-}
-
-.quantidade-controls button:hover {
-  background: var(--accent-color);
-}
-
-.quantidade-controls input {
-  width: 60px;
-  text-align: center;
-  background: var(--surface-color);
-  border: 2px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: 0.5rem;
-  color: var(--text-primary);
-  font-weight: bold;
-}
-
-/* Observações do Produto */
-.observacoes-produto {
+/* Footer do Modal - Fixo e Compacto */
+.acrescimos-footer {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  border-top: 1px solid var(--border-color);
+  padding: 1rem;
+  background: var(--surface-color);
+  flex-shrink: 0;
 }
 
-.observacoes-produto label {
-  color: var(--text-primary);
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.observacoes-produto textarea {
-  background: var(--background-color);
-  border: 2px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: 0.75rem;
-  color: var(--text-primary);
-  resize: vertical;
-  min-height: 60px;
-}
-
-.observacoes-produto textarea:focus {
-  outline: none;
-  border-color: var(--primary-color);
-}
-
-/* Total do Produto */
 .total-produto {
   background: var(--primary-color);
   color: white;
-  padding: 1.5rem;
+  padding: 0.75rem;
   border-radius: var(--border-radius);
   text-align: center;
 }
@@ -1660,14 +1649,153 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   font-weight: bold;
 }
 
-/* Ações dos Acréscimos */
 .acrescimos-actions {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
+}
+
+.btn-secondary,
+.btn-primary {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-secondary {
+  background: var(--border-color);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--surface-color);
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: var(--success-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #219a52;
+  transform: translateY(-2px);
+}
+
+/* Scrollbar para lista de acréscimos */
+.acrescimos-lista-disponivel::-webkit-scrollbar {
+  width: 4px;
+}
+
+.acrescimos-lista-disponivel::-webkit-scrollbar-track {
+  background: var(--background-color);
+  border-radius: 2px;
+}
+
+.acrescimos-lista-disponivel::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 2px;
+}
+
+.acrescimos-lista-disponivel::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
+
+/* Responsive para Modal de Acréscimos */
+@media (max-width: 768px) {
+  .acrescimos-modal-content {
+    width: 95%;
+    margin: 5% auto;
+    max-height: 85vh;
+  }
+
+  .acrescimos-header,
+  .acrescimos-body {
+    padding: 0.75rem;
+  }
+
+  .acrescimos-footer {
+    padding: 0.75rem;
+  }
+
+  .acrescimos-body {
+    gap: 0.75rem;
+  }
+
+  .quantidade-section {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  .acrescimos-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .acrescimo-item {
+    padding: 0.5rem;
+  }
+
+  .total-info {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .acrescimos-header h2 {
+    font-size: 1rem;
+  }
+
+  .acrescimo-nome {
+    font-size: 0.8rem;
+  }
+
+  .acrescimo-preco {
+    font-size: 0.75rem;
+  }
+
+  .quantidade-controls button {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+
+  .quantidade-controls input {
+    width: 35px;
+    padding: 0.2rem;
+  }
+}
+
+/* Animação para o modal otimizado */
+.acrescimos-modal-content {
+  animation: modalSlideIn 0.3s ease;
+}
+
+/* Estados hover melhorados */
+.acrescimo-item:hover .acrescimo-nome {
+  color: var(--primary-color);
+}
+
+.acrescimo-item:hover .checkbox-custom {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.1);
+}
+
+.acrescimo-item.selected .acrescimo-nome {
+  color: var(--primary-color);
 }
 
 /* Carrinho - Acréscimos */
@@ -1695,73 +1823,4 @@ body {
   display: flex;
   align-items: center;
   gap: 0.25rem;
-}
-
-/* Responsive para Modal de Acréscimos */
-@media (max-width: 768px) {
-  .acrescimos-modal-content {
-    width: 95%;
-    margin: 5% auto;
-    max-height: 95vh;
-  }
-
-  .acrescimos-header,
-  .acrescimos-body {
-    padding: 1.5rem;
-  }
-
-  .produto-info {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .produto-img {
-    width: 100px;
-    height: 100px;
-  }
-
-  .quantidade-section {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
-
-  .acrescimos-actions {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 480px) {
-  .acrescimos-header,
-  .acrescimos-body {
-    padding: 1rem;
-  }
-
-  .acrescimos-body {
-    gap: 1.5rem;
-  }
-
-  .produto-selecionado,
-  .acrescimos-section,
-  .acrescimos-selecionados {
-    padding: 1rem;
-  }
-
-  .total-info {
-    font-size: 1.3rem;
-  }
-}
-
-/* Animação para o modal de acréscimos */
-.acrescimos-modal-content {
-  animation: modalSlideIn 0.3s ease;
-}
-
-/* Estados hover para melhor UX */
-.acrescimo-item:hover .acrescimo-nome {
-  color: var(--primary-color);
-}
-
-.acrescimo-item:hover .checkbox-custom {
-  border-color: var(--primary-color);
 }

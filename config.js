@@ -43,39 +43,27 @@ const CONFIG = {
   },
   categorias: [
     {
-      id: "lanches",
-      nome: "Lanches",
+      id: "burgers",
+      nome: "Sanduíches",
       icone: "🍔",
-      ativo: true,
-    },
-    {
-      id: "artesanais",
-      nome: "Artesanais",
-      icone: "🍟",
-      ativo: true,
-    },
-    {
-      id: "frango",
-      nome: "Frango",
-      icone: "🍗",
-      ativo: true,
-    },
-    {
-      id: "carne",
-      nome: "Carne",
-      icone: "🥩",
-      ativo: true,
-    },
-    {
-      id: "hotdog",
-      nome: "Hot Dog",
-      icone: "🌭",
       ativo: true,
     },
     {
       id: "bebidas",
       nome: "Bebidas",
       icone: "🥤",
+      ativo: true,
+    },
+    {
+      id: "porcoes",
+      nome: "Porções",
+      icone: "🍟",
+      ativo: true,
+    },
+    {
+      id: "sobremesas",
+      nome: "Sobremesas",
+      icone: "🍰",
       ativo: true,
     },
   ],
@@ -187,7 +175,14 @@ const CONFIG = {
 }
 
 const menuItems = {
-  lanches: [
+  sandwiches: [
+    {
+      name: "Misto Quente",
+      price: 14.0,
+      description: "Hambúrguer, queijo, Presunto, tomate e Maionese da Casa",
+      noAddons: false,
+      disponivel: true,
+    },
     {
       name: "X-Burguer",
       price: 12.0,
@@ -201,19 +196,30 @@ const menuItems = {
       disponivel: true,
     },
     {
+      name: "X-Catupiry",
+      price: 18.0,
+      description: "Hambúrguer, Catupiry, queijo, alface, tomate e Maionese da Casa",
+      disponivel: true,
+    },
+    {
+      name: "X-Calabresa",
+      price: 17.0,
+      description: "Hambúrguer, Calabresa, queijo, alface, tomate e Maionese da Casa",
+      disponivel: true,
+    },
+    {
+      name: "X-Bacon",
+      price: 18.0,
+      description: "Hambúrguer, Bacon, queijo, alface, tomate e Maionese da Casa",
+      disponivel: true,
+    },
+    { name: "X-Milho", price: 14.0, description: "Hambúrguer, milho, salada e mussarela", disponivel: true },
+    {
       name: "X-Egg",
       price: 14.0,
       description: "Hambúrguer, Ovo, queijo, alface, tomate e Maionese da Casa",
       disponivel: true,
     },
-    {
-      name: "Misto Quente",
-      price: 14.0,
-      description: "Hambúrguer, queijo, Presunto, tomate e Maionese da Casa",
-      disponivel: true,
-    },
-  ],
-  artesanais: [
     {
       name: "X-Tudo",
       price: 20.0,
@@ -228,64 +234,34 @@ const menuItems = {
       disponivel: true,
     },
   ],
-  frango: [
-    {
-      name: "X-Frango",
-      price: 16.0,
-      description: "Hambúrguer, Frango desfiado, queijo, alface, tomate e Maionese da Casa",
-      disponivel: true,
-    },
-    {
-      name: "X-Frango Catupiry",
-      price: 19.0,
-      description: "Hambúrguer, Frango desfiado, Catupiry, queijo, alface, tomate e Maionese da Casa",
-      disponivel: true,
-    },
-  ],
-  carne: [
-    {
-      name: "X-Bacon",
-      price: 18.0,
-      description: "Hambúrguer, Bacon, queijo, alface, tomate e Maionese da Casa",
-      disponivel: true,
-    },
-    {
-      name: "X-Calabresa",
-      price: 17.0,
-      description: "Hambúrguer, Calabresa, queijo, alface, tomate e Maionese da Casa",
-      disponivel: true,
-    },
-    {
-      name: "X-Catupiry",
-      price: 18.0,
-      description: "Hambúrguer, Catupiry, queijo, alface, tomate e Maionese da Casa",
-      disponivel: true,
-    },
-  ],
-  hotdog: [
-    {
-      name: "Hot Dog Simples",
-      price: 8.0,
-      description: "Salsicha, molho especial, batata palha",
-      disponivel: true,
-    },
-    {
-      name: "Hot Dog Completo",
-      price: 12.0,
-      description: "Salsicha, queijo, milho, ervilha, batata palha, molho especial",
-      disponivel: true,
-    },
-    {
-      name: "Hot Dog Especial",
-      price: 15.0,
-      description: "2 Salsichas, queijo, bacon, milho, ervilha, batata palha, molho especial",
-      disponivel: true,
-    },
-  ],
   bebidas: [
     { name: "Refrigerante Lata", price: 5.9, description: "Coca-Cola, Guaraná, Fanta - 350ml", disponivel: true },
     { name: "Suco Natural", price: 8.9, description: "Laranja, Limão, Maracujá - 400ml", disponivel: true },
     { name: "Água Mineral", price: 3.5, description: "Água mineral 500ml", disponivel: true },
+  ],
+  porcoes: [
+    {
+      name: "Batata Frita",
+      price: 18.9,
+      description: "Batata rústica com casca, tempero especial - serve 2 pessoas",
+      disponivel: true,
+    },
+    {
+      name: "Onion Rings",
+      price: 16.9,
+      description: "Anéis de cebola empanados e fritos - 12 unidades",
+      disponivel: true,
+    },
+    { name: "Nuggets", price: 15.9, description: "Nuggets de frango crocantes - 10 unidades", disponivel: true },
+  ],
+  sobremesas: [
+    {
+      name: "Brownie com Sorvete",
+      price: 14.9,
+      description: "Brownie de chocolate com sorvete de baunilha e calda",
+      disponivel: true,
+    },
+    { name: "Petit Gateau", price: 16.9, description: "Bolinho de chocolate quente com sorvete", disponivel: true },
   ],
 }
 
@@ -306,7 +282,7 @@ function convertMenuItemsToProducts() {
     menuItems[categoria].forEach((item) => {
       produtos.push({
         id: id++,
-        categoria: categoria,
+        categoria: categoria === "sandwiches" ? "burgers" : categoria,
         nome: item.name,
         descricao: item.description,
         preco: item.price,

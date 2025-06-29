@@ -63,17 +63,6 @@
         <!-- Main Content -->
         <main class="main">
             <div class="container">
-                <!-- Produtos em Destaque -->
-                <section id="destaques" class="section">
-                    <h2 class="section-title">
-                        <i class="fas fa-star"></i>
-                        Destaques
-                    </h2>
-                    <div id="produtos-destaque" class="products-grid">
-                        <!-- Produtos em destaque serão inseridos aqui -->
-                    </div>
-                </section>
-
                 <!-- Categorias de Produtos -->
                 <div id="categorias-produtos">
                     <!-- Seções de categorias serão inseridas aqui -->
@@ -118,80 +107,57 @@
 
         <!-- Modal de Acréscimos -->
         <div id="acrescimos-modal" class="modal">
-            <div class="modal-content acrescimos-modal-content">
-                <span class="close-modal" onclick="closeAcrescimosModal()">&times;</span>
-                <div class="acrescimos-header">
-                    <h2><i class="fas fa-plus-circle"></i> Personalizar Produto</h2>
-                    <p>Selecione os acréscimos desejados</p>
+    <div class="modal-content acrescimos-modal-content">
+        <span class="close-modal" onclick="closeAcrescimosModal()">&times;</span>
+        <div class="acrescimos-header">
+            <h2><i class="fas fa-plus-circle"></i> <span id="acrescimos-produto-nome-header">Personalizar Produto</span></h2>
+            <p>Selecione os acréscimos desejados</p>
+        </div>
+        <div class="acrescimos-body">
+            <!-- Quantidade -->
+            <div class="quantidade-section">
+                <label for="produto-quantidade">
+                    <i class="fas fa-hashtag"></i>
+                    Quantidade:
+                </label>
+                <div class="quantidade-controls">
+                    <button type="button" onclick="alterarQuantidadeModal(-1)">-</button>
+                    <input type="number" id="produto-quantidade" value="1" min="1" readonly>
+                    <button type="button" onclick="alterarQuantidadeModal(1)">+</button>
                 </div>
-                <div class="acrescimos-body">
-                    <div class="produto-selecionado">
-                        <div class="produto-info">
-                            <img id="acrescimos-produto-img" src="/placeholder.svg" alt="" class="produto-img">
-                            <div class="produto-details">
-                                <h3 id="acrescimos-produto-nome"></h3>
-                                <p id="acrescimos-produto-desc"></p>
-                                <div class="produto-preco-base">
-                                    Preço base: R$ <span id="acrescimos-produto-preco">0,00</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            </div>
 
-                    <div class="acrescimos-section">
-                        <h3><i class="fas fa-plus"></i> Acréscimos Disponíveis</h3>
-                        <div id="acrescimos-lista-disponivel" class="acrescimos-lista-disponivel">
-                            <!-- Acréscimos serão inseridos aqui -->
-                        </div>
-                    </div>
+            <!-- Acréscimos Disponíveis -->
+            <div class="acrescimos-section">
+                <h3><i class="fas fa-plus"></i> Acréscimos Disponíveis</h3>
+                <div id="acrescimos-lista-disponivel" class="acrescimos-lista-disponivel">
+                    <!-- Acréscimos serão inseridos aqui -->
+                </div>
+            </div>
 
-                    <div class="acrescimos-selecionados">
-                        <h3><i class="fas fa-list"></i> Acréscimos Selecionados</h3>
-                        <div id="acrescimos-lista" class="acrescimos-lista">
-                            <div class="nenhum-acrescimo">Nenhum acréscimo selecionado</div>
-                        </div>
+            <!-- Total e Ações -->
+            <div class="acrescimos-footer">
+                <div class="total-produto">
+                    <div class="total-info">
+                        <span class="total-label">Total:</span>
+                        <span class="total-valor">R$ <span id="total-produto-valor">0,00</span></span>
                     </div>
+                </div>
 
-                    <div class="quantidade-section">
-                        <label for="produto-quantidade">
-                            <i class="fas fa-hashtag"></i>
-                            Quantidade:
-                        </label>
-                        <div class="quantidade-controls">
-                            <button type="button" onclick="alterarQuantidadeModal(-1)">-</button>
-                            <input type="number" id="produto-quantidade" value="1" min="1" readonly>
-                            <button type="button" onclick="alterarQuantidadeModal(1)">+</button>
-                        </div>
-                    </div>
-
-                    <div class="observacoes-produto">
-                        <label for="produto-observacoes">
-                            <i class="fas fa-comment"></i>
-                            Observações (opcional):
-                        </label>
-                        <textarea id="produto-observacoes" placeholder="Ex: sem cebola, ponto da carne, etc..." rows="2"></textarea>
-                    </div>
-
-                    <div class="total-produto">
-                        <div class="total-info">
-                            <span class="total-label">Total:</span>
-                            <span class="total-valor">R$ <span id="total-produto-valor">0,00</span></span>
-                        </div>
-                    </div>
-
-                    <div class="acrescimos-actions">
-                        <button type="button" class="btn-secondary" onclick="closeAcrescimosModal()">
-                            <i class="fas fa-arrow-left"></i>
-                            Cancelar
-                        </button>
-                        <button type="button" class="btn-primary" onclick="adicionarProdutoComAcrescimos()">
-                            <i class="fas fa-cart-plus"></i>
-                            Adicionar ao Carrinho
-                        </button>
-                    </div>
+                <div class="acrescimos-actions">
+                    <button type="button" class="btn-secondary" onclick="closeAcrescimosModal()">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn-primary" onclick="adicionarProdutoComAcrescimos()">
+                        <i class="fas fa-cart-plus"></i>
+                        Adicionar ao Carrinho
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
         <!-- Modal de Checkout -->
         <div id="checkout-modal" class="modal">
@@ -270,6 +236,27 @@
                             </label>
                             <div class="radio-group" id="pagamento-options">
                                 <!-- Opções serão inseridas via JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Informações do PIX (inicialmente oculta) -->
+                        <div class="form-group" id="pix-info-group" style="display: none;">
+                            <div class="pix-info-container">
+                                <h4><i class="fas fa-qrcode"></i> Informações do PIX</h4>
+                                <div class="pix-key-container">
+                                    <label>Chave PIX:</label>
+                                    <div class="pix-key-input">
+                                        <input type="text" id="pix-key-display" readonly>
+                                        <button type="button" class="copy-pix-btn" onclick="copiarChavePix()">
+                                            <i class="fas fa-copy"></i>
+                                            Copiar
+                                        </button>
+                                    </div>
+                                </div>
+                                <small class="form-help">
+                                    <i class="fas fa-info-circle"></i>
+                                    Após realizar o pagamento, envie o comprovante junto com o pedido
+                                </small>
                             </div>
                         </div>
 
@@ -493,17 +480,6 @@
                 <!-- Main Content -->
                 <main class="main">
                     <div class="container">
-                        <!-- Produtos em Destaque -->
-                        <section id="destaques" class="section">
-                            <h2 class="section-title">
-                                <i class="fas fa-star"></i>
-                                Destaques
-                            </h2>
-                            <div id="produtos-destaque" class="products-grid">
-                                <!-- Produtos em destaque serão inseridos aqui -->
-                            </div>
-                        </section>
-
                         <!-- Categorias de Produtos -->
                         <div id="categorias-produtos">
                             <!-- Seções de categorias serão inseridas aqui -->
@@ -678,17 +654,6 @@
         }
 
         function carregarProdutos() {
-            // Carregar produtos em destaque
-            const produtosDestaque = CONFIG.produtos.filter(produto => produto.destaque && produto.disponivel);
-            const containerDestaque = document.getElementById('produtos-destaque');
-            
-            if (produtosDestaque.length > 0) {
-                containerDestaque.innerHTML = produtosDestaque.map(produto => criarCardProduto(produto)).join('');
-                document.getElementById('destaques').style.display = 'block';
-            } else {
-                document.getElementById('destaques').style.display = 'none';
-            }
-
             // Carregar produtos por categoria
             const containerCategorias = document.getElementById('categorias-produtos');
             const categoriasAtivas = CONFIG.categorias.filter(cat => cat.ativo);
@@ -715,6 +680,8 @@
         }
 
         function criarCardProduto(produto) {
+            const isBebida = produto.categoria === 'bebidas';
+            
             return `
                 <div class="product-card" onclick="openProductModal(${produto.id})">
                     <div class="product-image">
@@ -727,7 +694,7 @@
                         ${CONFIG.configuracoes.mostraPrecos ? `
                             <div class="product-price">R$ ${produto.preco.toFixed(2).replace('.', ',')}</div>
                         ` : ''}
-                        <button class="add-to-cart-btn" onclick="event.stopPropagation(); openAcrescimosModal(${produto.id})">
+                        <button class="add-to-cart-btn" onclick="event.stopPropagation(); ${isBebida ? `adicionarBebidaDiretamente(${produto.id})` : `openAcrescimosModal(${produto.id})`}">
                             <i class="fas fa-plus"></i>
                             Adicionar
                         </button>
@@ -774,6 +741,8 @@
             const modal = document.getElementById('product-modal');
             const modalBody = document.getElementById('modal-body');
 
+            const isBebida = produto.categoria === 'bebidas';
+
             modalBody.innerHTML = `
                 <div class="modal-product">
                     <img src="${produto.imagem}" alt="${produto.nome}" class="modal-product-image">
@@ -784,7 +753,7 @@
                             <div class="modal-product-price">R$ ${produto.preco.toFixed(2).replace('.', ',')}</div>
                         ` : ''}
                         <div class="modal-actions">
-                            <button class="modal-add-btn" onclick="openAcrescimosModal(${produto.id}); closeProductModal();">
+                            <button class="modal-add-btn" onclick="${isBebida ? `adicionarBebidaDiretamente(${produto.id}); closeProductModal();` : `openAcrescimosModal(${produto.id}); closeProductModal();`}">
                                 <i class="fas fa-plus"></i>
                                 Adicionar ao Pedido
                             </button>
@@ -801,32 +770,27 @@
         }
 
         function openAcrescimosModal(produtoId) {
-            const produto = CONFIG.produtos.find(p => p.id === produtoId);
-            if (!produto) return;
+    const produto = CONFIG.produtos.find(p => p.id === produtoId);
+    if (!produto) return;
 
-            produtoSelecionado = produto;
-            acrescimosSelecionados = [];
-            quantidadeProduto = 1;
+    produtoSelecionado = produto;
+    acrescimosSelecionados = [];
+    quantidadeProduto = 1;
 
-            const modal = document.getElementById('acrescimos-modal');
-            
-            // Preencher informações do produto
-            document.getElementById('acrescimos-produto-img').src = produto.imagem;
-            document.getElementById('acrescimos-produto-img').alt = produto.nome;
-            document.getElementById('acrescimos-produto-nome').textContent = produto.nome;
-            document.getElementById('acrescimos-produto-desc').textContent = produto.descricao;
-            document.getElementById('acrescimos-produto-preco').textContent = produto.preco.toFixed(2).replace('.', ',');
-            document.getElementById('produto-quantidade').value = quantidadeProduto;
-            document.getElementById('produto-observacoes').value = '';
+    const modal = document.getElementById('acrescimos-modal');
+    
+    // Preencher nome do produto no header
+    document.getElementById('acrescimos-produto-nome-header').textContent = produto.nome;
+    document.getElementById('produto-quantidade').value = quantidadeProduto;
 
-            // Carregar acréscimos
-            loadAcrescimos();
-            
-            // Atualizar total
-            updateTotalProduto();
-            
-            modal.style.display = 'block';
-        }
+    // Carregar acréscimos
+    loadAcrescimos();
+    
+    // Atualizar total
+    updateTotalProduto();
+    
+    modal.style.display = 'block';
+}
 
         function closeAcrescimosModal() {
             document.getElementById('acrescimos-modal').style.display = 'none';
@@ -836,15 +800,15 @@
         }
 
         function loadAcrescimos() {
-            const container = document.getElementById('acrescimos-lista-disponivel');
-            const acrescimosAtivos = CONFIG.acrescimos?.filter(acr => acr.ativo) || [];
+    const container = document.getElementById('acrescimos-lista-disponivel');
+    const acrescimosAtivos = CONFIG.acrescimos?.filter(acr => acr.ativo) || [];
 
-            if (acrescimosAtivos.length === 0) {
-                container.innerHTML = '<div class="nenhum-acrescimo">Nenhum acréscimo disponível</div>';
-                return;
-            }
+    if (acrescimosAtivos.length === 0) {
+        container.innerHTML = '<div class="nenhum-acrescimo">Nenhum acréscimo disponível</div>';
+        return;
+    }
 
-            container.innerHTML = acrescimosAtivos.map(acrescimo => `
+    container.innerHTML = acrescimosAtivos.map(acrescimo => `
         <div class="acrescimo-item" onclick="toggleAcrescimo(${acrescimo.id})">
             <div class="acrescimo-checkbox">
                 <input type="checkbox" id="acr-${acrescimo.id}" onclick="event.stopPropagation(); toggleAcrescimo(${acrescimo.id})">
@@ -856,13 +820,14 @@
             </div>
         </div>
     `).join('');
-        }
+}
 
-        function toggleAcrescimo(acrescimoId) {
+function toggleAcrescimo(acrescimoId) {
     const acrescimo = CONFIG.acrescimos?.find(a => a.id === acrescimoId);
     if (!acrescimo) return;
 
     const checkbox = document.getElementById(`acr-${acrescimoId}`);
+    const acrescimoItem = checkbox.closest('.acrescimo-item');
     const index = acrescimosSelecionados.findIndex(a => a.id === acrescimoId);
 
     // Se o checkbox foi clicado diretamente, usar seu estado
@@ -878,41 +843,15 @@
             nome: acrescimo.nome,
             preco: acrescimo.preco
         });
+        acrescimoItem.classList.add('selected');
     } else if (!checkbox.checked && index !== -1) {
         // Remover acréscimo
         acrescimosSelecionados.splice(index, 1);
+        acrescimoItem.classList.remove('selected');
     }
 
-    updateAcrescimosList();
     updateTotalProduto();
 }
-
-        function updateAcrescimosList() {
-            const container = document.getElementById('acrescimos-lista');
-            
-            if (acrescimosSelecionados.length === 0) {
-                container.innerHTML = '<div class="nenhum-acrescimo">Nenhum acréscimo selecionado</div>';
-                return;
-            }
-
-            container.innerHTML = acrescimosSelecionados.map(acrescimo => `
-                <div class="acrescimo-selecionado">
-                    <span class="acrescimo-nome">${acrescimo.nome}</span>
-                    <span class="acrescimo-preco">+R$ ${acrescimo.preco.toFixed(2).replace('.', ',')}</span>
-                    <button class="remove-acrescimo" onclick="removeAcrescimo(${acrescimo.id})">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        function removeAcrescimo(acrescimoId) {
-            const checkbox = document.getElementById(`acr-${acrescimoId}`);
-            if (checkbox) {
-                checkbox.checked = false;
-            }
-            toggleAcrescimo(acrescimoId);
-        }
 
         function alterarQuantidadeModal(delta) {
             const novaQuantidade = quantidadeProduto + delta;
@@ -935,46 +874,75 @@
         }
 
         function adicionarProdutoComAcrescimos() {
-            if (!produtoSelecionado) return;
+    if (!produtoSelecionado) return;
 
-            const observacoes = document.getElementById('produto-observacoes').value.trim();
-            const precoBase = produtoSelecionado.preco;
-            const precoAcrescimos = acrescimosSelecionados.reduce((total, acr) => total + acr.preco, 0);
-            const precoUnitario = precoBase + precoAcrescimos;
+    const precoBase = produtoSelecionado.preco;
+    const precoAcrescimos = acrescimosSelecionados.reduce((total, acr) => total + acr.preco, 0);
+    const precoUnitario = precoBase + precoAcrescimos;
 
-            // Criar nome detalhado do produto
-            let nomeCompleto = produtoSelecionado.nome;
-            if (acrescimosSelecionados.length > 0) {
-                const nomesAcrescimos = acrescimosSelecionados.map(a => a.nome).join(', ');
-                nomeCompleto += ` (+ ${nomesAcrescimos})`;
-            }
+    // Criar nome detalhado do produto
+    let nomeCompleto = produtoSelecionado.nome;
+    if (acrescimosSelecionados.length > 0) {
+        const nomesAcrescimos = acrescimosSelecionados.map(a => a.nome).join(', ');
+        nomeCompleto += ` (+ ${nomesAcrescimos})`;
+    }
+
+    // Verificar se já existe um item idêntico no carrinho
+    const itemExistente = carrinho.find(item => 
+        item.produtoId === produtoSelecionado.id &&
+        JSON.stringify(item.acrescimos) === JSON.stringify(acrescimosSelecionados)
+    );
+
+    if (itemExistente) {
+        itemExistente.quantidade += quantidadeProduto;
+    } else {
+        carrinho.push({
+            id: Date.now(), // ID único para o item do carrinho
+            produtoId: produtoSelecionado.id,
+            nome: nomeCompleto,
+            nomeOriginal: produtoSelecionado.nome,
+            preco: precoUnitario,
+            precoBase: precoBase,
+            quantidade: quantidadeProduto,
+            acrescimos: [...acrescimosSelecionados],
+            observacoes: ''
+        });
+    }
+
+    atualizarCarrinho();
+    closeAcrescimosModal();
+    mostrarNotificacao(`${produtoSelecionado.nome} adicionado ao carrinho!`);
+}
+
+        function adicionarBebidaDiretamente(produtoId) {
+            const produto = CONFIG.produtos.find(p => p.id === produtoId);
+            if (!produto) return;
 
             // Verificar se já existe um item idêntico no carrinho
             const itemExistente = carrinho.find(item => 
-                item.produtoId === produtoSelecionado.id &&
-                JSON.stringify(item.acrescimos) === JSON.stringify(acrescimosSelecionados) &&
-                item.observacoes === observacoes
+                item.produtoId === produto.id &&
+                item.acrescimos.length === 0 &&
+                item.observacoes === ''
             );
 
             if (itemExistente) {
-                itemExistente.quantidade += quantidadeProduto;
+                itemExistente.quantidade += 1;
             } else {
                 carrinho.push({
                     id: Date.now(), // ID único para o item do carrinho
-                    produtoId: produtoSelecionado.id,
-                    nome: nomeCompleto,
-                    nomeOriginal: produtoSelecionado.nome,
-                    preco: precoUnitario,
-                    precoBase: precoBase,
-                    quantidade: quantidadeProduto,
-                    acrescimos: [...acrescimosSelecionados],
-                    observacoes: observacoes
+                    produtoId: produto.id,
+                    nome: produto.nome,
+                    nomeOriginal: produto.nome,
+                    preco: produto.preco,
+                    precoBase: produto.preco,
+                    quantidade: 1,
+                    acrescimos: [],
+                    observacoes: ''
                 });
             }
 
             atualizarCarrinho();
-            closeAcrescimosModal();
-            mostrarNotificacao(`${produtoSelecionado.nome} adicionado ao carrinho!`);
+            mostrarNotificacao(`${produto.nome} adicionado ao carrinho!`);
         }
 
         // Atualizar função de remoção do carrinho para usar o ID único
@@ -1095,6 +1063,7 @@
             document.getElementById('troco-group').style.display = 'none';
     document.getElementById('valor-troco-group').style.display = 'none';
     document.getElementById('taxa-entrega-line').style.display = 'none';
+    document.getElementById('pix-info-group').style.display = 'none';
 }
 
 function loadPagamentoOptions() {
@@ -1183,12 +1152,18 @@ function handleTipoPedidoChange() {
 function handlePagamentoChange() {
     const formaPagamento = document.querySelector('input[name="forma-pagamento"]:checked')?.value;
     const trocoGroup = document.getElementById('troco-group');
+    const pixInfoGroup = document.getElementById('pix-info-group');
+    
+    // Esconder todos os grupos primeiro
+    trocoGroup.style.display = 'none';
+    pixInfoGroup.style.display = 'none';
+    document.getElementById('valor-troco-group').style.display = 'none';
     
     if (formaPagamento === 'dinheiro') {
         trocoGroup.style.display = 'block';
-    } else {
-        trocoGroup.style.display = 'none';
-        document.getElementById('valor-troco-group').style.display = 'none';
+    } else if (formaPagamento === 'pix') {
+        pixInfoGroup.style.display = 'block';
+        document.getElementById('pix-key-display').value = CONFIG.pagamento.pix.chave;
     }
 }
 
@@ -1433,6 +1408,34 @@ window.onclick = function(event) {
 
 // Atualizar horário a cada minuto
 setInterval(verificarHorarioFuncionamento, 60000);
+
+function copiarChavePix() {
+    const pixKeyInput = document.getElementById('pix-key-display');
+    const copyBtn = document.querySelector('.copy-pix-btn');
+    
+    // Selecionar e copiar o texto
+    pixKeyInput.select();
+    pixKeyInput.setSelectionRange(0, 99999); // Para mobile
+    
+    try {
+        document.execCommand('copy');
+        
+        // Feedback visual
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+        copyBtn.classList.add('copied');
+        
+        setTimeout(() => {
+            copyBtn.innerHTML = originalText;
+            copyBtn.classList.remove('copied');
+        }, 2000);
+        
+        mostrarNotificacao('Chave PIX copiada!', 'success');
+    } catch (err) {
+        // Fallback para navegadores mais antigos
+        mostrarNotificacao('Erro ao copiar. Selecione e copie manualmente.', 'error');
+    }
+}
     </script>
 </body>
 </html>
