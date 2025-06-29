@@ -160,10 +160,13 @@
 .admin-actions {
   display: flex;
   gap: 1rem;
+  align-items: center;
 }
 
 .preview-btn,
-.logout-btn {
+.logout-btn,
+.backup-btn,
+.import-btn {
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: var(--border-radius);
@@ -191,6 +194,90 @@
 
 .logout-btn:hover {
   background: #c0392b;
+}
+
+.backup-btn {
+  background: var(--accent-color);
+  color: white;
+}
+
+.backup-btn:hover {
+  background: #e67e22;
+}
+
+.import-btn {
+  background: var(--primary-color);
+  color: white;
+}
+
+.import-btn:hover {
+  background: var(--accent-color);
+}
+
+/* Dropdown */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dropdown-toggle:hover {
+  background: #e67e22;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  min-width: 200px;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: var(--transition);
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-menu a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: var(--transition);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dropdown-menu a:last-child {
+  border-bottom: none;
+}
+
+.dropdown-menu a:hover {
+  background: var(--border-color);
+  color: var(--primary-color);
 }
 
 /* Navigation Tabs */
@@ -609,6 +696,121 @@ input:checked + .toggle-slider:before {
   font-weight: 500;
 }
 
+/* Import Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+  background-color: var(--surface-color);
+  margin: 5% auto;
+  border-radius: var(--border-radius);
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.close-modal {
+  color: var(--text-primary);
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: var(--transition);
+}
+
+.close-modal:hover {
+  color: var(--primary-color);
+}
+
+.modal-body {
+  padding: 2rem;
+}
+
+.import-options {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.import-option {
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+}
+
+.import-option h4 {
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.import-option p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.import-option input[type="file"] {
+  display: none;
+}
+
+.file-input-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--primary-color);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 500;
+}
+
+.file-input-label:hover {
+  background: var(--accent-color);
+  transform: translateY(-2px);
+}
+
 /* Save Section */
 .save-section {
   text-align: center;
@@ -711,6 +913,11 @@ input:checked + .toggle-slider:before {
     text-align: center;
   }
 
+  .admin-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
   .admin-nav {
     flex-wrap: wrap;
     padding: 0 1rem;
@@ -751,6 +958,19 @@ input:checked + .toggle-slider:before {
   .admin-notification.show {
     transform: translateY(0);
   }
+
+  .import-options {
+    gap: 1rem;
+  }
+
+  .dropdown-menu {
+    position: fixed;
+    top: auto;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    width: auto;
+  }
 }
 
 @media (max-width: 480px) {
@@ -770,5 +990,15 @@ input:checked + .toggle-slider:before {
 
   .produto-toggle {
     align-self: flex-end;
+  }
+
+  .admin-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .admin-actions button {
+    width: 100%;
+    justify-content: center;
   }
 }

@@ -134,11 +134,140 @@
         let categoriaAtiva = '';
 
         // Inicializar aplicação
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Mostrar loading
+            document.body.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100vh; color: white; font-size: 1.2rem;"><i class="fas fa-spinner fa-spin" style="margin-right: 1rem;"></i>Carregando cardápio...</div>';
+            
+            // Carregar configurações do servidor
+            await carregarConfiguracoes();
+            
+            // Recriar o HTML original
+            document.body.innerHTML = `
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <img id="logo" src="/placeholder.svg?height=60&width=60" alt="Logo" class="logo">
+                    <div class="header-info">
+                        <h1 id="empresa-nome">Carregando...</h1>
+                        <div class="status-container">
+                            <span id="status-funcionamento" class="status"></span>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="cart-btn" onclick="toggleCart()">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span id="cart-count" class="cart-count">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="container">
+                <div id="categorias-nav" class="nav-categories">
+                    <!-- Categorias serão inseridas aqui via JavaScript -->
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Produtos em Destaque -->
+                <section id="destaques" class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-star"></i>
+                        Destaques
+                    </h2>
+                    <div id="produtos-destaque" class="products-grid">
+                        <!-- Produtos em destaque serão inseridos aqui -->
+                    </div>
+                </section>
+
+                <!-- Categorias de Produtos -->
+                <div id="categorias-produtos">
+                    <!-- Seções de categorias serão inseridas aqui -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Carrinho Lateral -->
+        <div id="cart-sidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> Seu Pedido</h3>
+                <button class="close-cart" onclick="toggleCart()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="cart-items" class="cart-items">
+                <!-- Itens do carrinho serão inseridos aqui -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <strong>Total: R$ <span id="cart-total">0,00</span></strong>
+                </div>
+                <button id="checkout-btn" class="checkout-btn" onclick="finalizarPedido()">
+                    <i class="fab fa-whatsapp"></i>
+                    Finalizar Pedido
+                </button>
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div id="overlay" class="overlay" onclick="toggleCart()"></div>
+
+        <!-- Modal de Produto -->
+        <div id="product-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeProductModal()">&times;</span>
+                <div id="modal-body">
+                    <!-- Conteúdo do modal será inserido aqui -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-info">
+                        <h3 id="footer-nome">Nome da Empresa</h3>
+                        <p id="footer-endereco">Endereço</p>
+                        <p id="footer-telefone">Telefone</p>
+                    </div>
+                    <div class="footer-social">
+                        <a id="instagram-link" href="#" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a id="facebook-link" href="#" target="_blank">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+                    <div class="footer-payment">
+                        <h4>Formas de Pagamento</h4>
+                        <div id="payment-methods" class="payment-methods">
+                            <!-- Métodos de pagamento serão inseridos aqui -->
+                        </div>
+                    </div>
+                    <div class="footer-admin">
+                      <a href="admin.html" class="admin-link">
+                        <i class="fas fa-cog"></i>
+                        Painel Admin
+                      </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    `;
+            
+            // Reinicializar a aplicação
             inicializarApp();
         });
 
-        function inicializarApp() {
+        async function inicializarApp() {
             carregarInformacoesEmpresa();
             verificarHorarioFuncionamento();
             carregarCategorias();

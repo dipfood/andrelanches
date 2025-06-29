@@ -50,6 +50,31 @@
                     <h1>Painel Administrativo</h1>
                 </div>
                 <div class="admin-actions">
+                    <div class="dropdown">
+                        <button class="backup-btn dropdown-toggle" onclick="toggleDropdown()">
+                            <i class="fas fa-download"></i>
+                            Exportar
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" id="export-dropdown">
+                            <a href="#" onclick="exportarConfigINI()">
+                                <i class="fas fa-file-alt"></i>
+                                Configurações (.ini)
+                            </a>
+                            <a href="#" onclick="exportarProdutosTXT()">
+                                <i class="fas fa-file-text"></i>
+                                Produtos (.txt)
+                            </a>
+                            <a href="#" onclick="exportarBackupCompleto()">
+                                <i class="fas fa-file-archive"></i>
+                                Backup Completo (.json)
+                            </a>
+                        </div>
+                    </div>
+                    <button class="import-btn" onclick="showImportModal()">
+                        <i class="fas fa-upload"></i>
+                        Importar
+                    </button>
                     <button class="preview-btn" onclick="window.open('index.html', '_blank')">
                         <i class="fas fa-eye"></i>
                         Ver Cardápio
@@ -285,6 +310,49 @@
         </main>
     </div>
 
+    <!-- Modal de Importação -->
+    <div id="import-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-upload"></i> Importar Configurações</h3>
+                <span class="close-modal" onclick="closeImportModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="import-options">
+                    <div class="import-option">
+                        <h4><i class="fas fa-file-alt"></i> Configurações (.ini)</h4>
+                        <p>Importar configurações da empresa, horários e pagamento</p>
+                        <input type="file" id="import-config" accept=".ini" onchange="handleConfigImport(event)">
+                        <label for="import-config" class="file-input-label">
+                            <i class="fas fa-folder-open"></i>
+                            Escolher arquivo .ini
+                        </label>
+                    </div>
+                    
+                    <div class="import-option">
+                        <h4><i class="fas fa-file-text"></i> Produtos (.txt)</h4>
+                        <p>Importar lista de produtos do cardápio</p>
+                        <input type="file" id="import-produtos" accept=".txt" onchange="handleProdutosImport(event)">
+                        <label for="import-produtos" class="file-input-label">
+                            <i class="fas fa-folder-open"></i>
+                            Escolher arquivo .txt
+                        </label>
+                    </div>
+                    
+                    <div class="import-option">
+                        <h4><i class="fas fa-file-archive"></i> Backup Completo (.json)</h4>
+                        <p>Importar backup completo com todas as configurações</p>
+                        <input type="file" id="import-backup" accept=".json" onchange="handleBackupImport(event)">
+                        <label for="import-backup" class="file-input-label">
+                            <i class="fas fa-folder-open"></i>
+                            Escolher arquivo .json
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Notification -->
     <div id="admin-notification" class="admin-notification">
         <div class="notification-content">
@@ -314,6 +382,13 @@
             // Event listeners
             document.getElementById('login-form').addEventListener('submit', handleLogin);
             document.getElementById('empresa-form').addEventListener('submit', handleEmpresaSubmit);
+            
+            // Fechar dropdown ao clicar fora
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.dropdown')) {
+                    closeDropdown();
+                }
+            });
         }
 
         function handleLogin(e) {
@@ -345,6 +420,7 @@
         }
 
         function loadAdminData() {
+            carregarConfiguracoes();
             loadHorarios();
             loadProdutos();
             loadEmpresaInfo();
@@ -361,6 +437,77 @@
             document.getElementById(`tab-${tabName}`).classList.add('active');
             
             currentTab = tabName;
+        }
+
+        // DROPDOWN FUNCTIONS
+        function toggleDropdown() {
+            const dropdown = document.getElementById('export-dropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function closeDropdown() {
+            const dropdown = document.getElementById('export-dropdown');
+            dropdown.classList.remove('show');
+        }
+
+        // IMPORT/EXPORT FUNCTIONS
+        function showImportModal() {
+            document.getElementById('import-modal').style.display = 'block';
+        }
+
+        function closeImportModal() {
+            document.getElementById('import-modal').style.display = 'none';
+        }
+
+        function handleConfigImport(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (importarConfigINI(e.target.result)) {
+                        showNotification('Configurações importadas com sucesso!', 'success');
+                        loadAdminData();
+                        closeImportModal();
+                    } else {
+                        showNotification('Erro ao importar configurações!', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function handleProdutosImport(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (importarProdutosTXT(e.target.result)) {
+                        showNotification('Produtos importados com sucesso!', 'success');
+                        loadAdminData();
+                        closeImportModal();
+                    } else {
+                        showNotification('Erro ao importar produtos!', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function handleBackupImport(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (importarBackupJSON(e.target.result)) {
+                        showNotification('Backup importado com sucesso!', 'success');
+                        loadAdminData();
+                        closeImportModal();
+                    } else {
+                        showNotification('Erro ao importar backup!', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            }
         }
 
         // GERENCIAMENTO DE HORÁRIOS
@@ -438,8 +585,11 @@
                 }
             });
 
-            salvarConfiguracoes();
-            showNotification('Horários salvos com sucesso!', 'success');
+            if (salvarConfiguracoes()) {
+                showNotification('Horários salvos com sucesso!', 'success');
+            } else {
+                showNotification('Erro ao salvar horários!', 'error');
+            }
         }
 
         // GERENCIAMENTO DE PRODUTOS
@@ -504,27 +654,56 @@
             const produto = CONFIG.produtos.find(p => p.id === produtoId);
             if (produto) {
                 produto.disponivel = !produto.disponivel;
+                
+                // Atualizar também no menuItems
+                const categoria = produto.categoria === 'burgers' ? 'sandwiches' : produto.categoria;
+                const item = menuItems[categoria]?.find(item => item.name === produto.nome);
+                if (item) {
+                    item.disponivel = produto.disponivel;
+                }
+                
                 loadProdutos(); // Recarregar para atualizar contadores
             }
         }
 
         function ativarTodosProdutos() {
-            CONFIG.produtos.forEach(produto => produto.disponivel = true);
+            CONFIG.produtos.forEach(produto => {
+                produto.disponivel = true;
+                
+                // Atualizar também no menuItems
+                const categoria = produto.categoria === 'burgers' ? 'sandwiches' : produto.categoria;
+                const item = menuItems[categoria]?.find(item => item.name === produto.nome);
+                if (item) {
+                    item.disponivel = true;
+                }
+            });
             loadProdutos();
             showNotification('Todos os produtos foram ativados!', 'success');
         }
 
         function desativarTodosProdutos() {
             if (confirm('Tem certeza que deseja desativar todos os produtos?')) {
-                CONFIG.produtos.forEach(produto => produto.disponivel = false);
+                CONFIG.produtos.forEach(produto => {
+                    produto.disponivel = false;
+                    
+                    // Atualizar também no menuItems
+                    const categoria = produto.categoria === 'burgers' ? 'sandwiches' : produto.categoria;
+                    const item = menuItems[categoria]?.find(item => item.name === produto.nome);
+                    if (item) {
+                        item.disponivel = false;
+                    }
+                });
                 loadProdutos();
                 showNotification('Todos os produtos foram desativados!', 'warning');
             }
         }
 
         function salvarProdutos() {
-            salvarConfiguracoes();
-            showNotification('Alterações nos produtos salvas com sucesso!', 'success');
+            if (salvarConfiguracoes()) {
+                showNotification('Alterações nos produtos salvas com sucesso!', 'success');
+            } else {
+                showNotification('Erro ao salvar produtos!', 'error');
+            }
         }
 
         // GERENCIAMENTO DE EMPRESA
@@ -545,8 +724,11 @@
             CONFIG.empresa.instagram = document.getElementById('empresa-instagram').value;
             CONFIG.empresa.facebook = document.getElementById('empresa-facebook').value;
 
-            salvarConfiguracoes();
-            showNotification('Informações da empresa salvas com sucesso!', 'success');
+            if (salvarConfiguracoes()) {
+                showNotification('Informações da empresa salvas com sucesso!', 'success');
+            } else {
+                showNotification('Erro ao salvar informações!', 'error');
+            }
         }
 
         // GERENCIAMENTO DE PAGAMENTO
@@ -572,8 +754,11 @@
             CONFIG.pagamento.delivery.taxa = parseFloat(document.getElementById('delivery-taxa').value) || 0;
             CONFIG.pagamento.delivery.tempoEntrega = document.getElementById('delivery-tempo').value;
 
-            salvarConfiguracoes();
-            showNotification('Configurações de pagamento salvas com sucesso!', 'success');
+            if (salvarConfiguracoes()) {
+                showNotification('Configurações de pagamento salvas com sucesso!', 'success');
+            } else {
+                showNotification('Erro ao salvar pagamento!', 'error');
+            }
         }
 
         // SISTEMA DE NOTIFICAÇÕES
@@ -598,6 +783,14 @@
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 4000);
+        }
+
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('import-modal');
+            if (event.target === modal) {
+                closeImportModal();
+            }
         }
     </script>
 </body>

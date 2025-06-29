@@ -1,0 +1,76 @@
+{
+  "empresa": {
+    "nome": "Paris Burger",
+    "logo": "/placeholder.svg?height=80&width=80",
+    "telefone": "(11) 99999-9999",
+    "endereco": "Rua das Flores, 123 - Centro",
+    "instagram": "@parisburguer",
+    "facebook": "parisburguer"
+  },
+  "horarioFuncionamento": {
+    "ativo": true,
+    "horarios": {
+      "segunda": { "aberto": true, "abertura": "18:00", "fechamento": "23:30" },
+      "terca": { "aberto": true, "abertura": "18:00", "fechamento": "23:30" },
+      "quarta": { "aberto": true, "abertura": "18:00", "fechamento": "23:30" },
+      "quinta": { "aberto": true, "abertura": "18:00", "fechamento": "23:30" },
+      "sexta": { "aberto": true, "abertura": "18:00", "fechamento": "23:30" },
+      "sabado": { "aberto": true, "abertura": "18:00", "fechamento": "00:00" },
+      "domingo": { "aberto": true, "abertura": "18:00", "fechamento": "23:30" }
+    }
+  },
+  "pagamento": {
+    "pix": {
+      "ativo": true,
+      "chave": "parisburguer@email.com",
+      "qrcode": "/placeholder.svg?height=200&width=200"
+    },
+    "dinheiro": {
+      "ativo": true,
+      "troco": true
+    },
+    "cartao": {
+      "ativo": true,
+      "credito": true,
+      "debito": true
+    },
+    "delivery": {
+      "ativo": true,
+      "taxa": 5.0,
+      "tempoEntrega": "45-60 min"
+    }
+  },
+  "categorias": [
+    {
+      "id": "burgers",
+      "nome": "Sanduíches",
+      "icone": "🍔",
+      "ativo": true
+    },
+    {
+      "id": "bebidas",
+      "nome": "Bebidas",
+      "icone": "🥤",
+      "ativo": true
+    },
+    {
+      "id": "porcoes",
+      "nome": "Porções",
+      "icone": "🍟",
+      "ativo": true
+    },
+    {
+      "id": "sobremesas",
+      "nome": "Sobremesas",
+      "icone": "🍰",
+      "ativo": true
+    }
+  ],
+  "configuracoes": {
+    "tema": "dark",
+    "mostraPrecos": true,
+    "permiteCarrinho": true,
+    "whatsappPedidos": true,
+    "numeroWhatsapp": "5511999999999"
+  }
+}
