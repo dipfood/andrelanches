@@ -6,6 +6,8 @@
     <title id="page-title">Cardápio Digital</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <!-- Header -->
@@ -127,6 +129,8 @@
         </div>
     </footer>
 
+    <!-- Scripts -->
+    <script src="supabase-config.js"></script>
     <script src="config.js"></script>
     <script>
         // Variáveis globais
@@ -136,182 +140,209 @@
         // Inicializar aplicação
         document.addEventListener('DOMContentLoaded', async function() {
             // Mostrar loading
-            document.body.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100vh; color: white; font-size: 1.2rem;"><i class="fas fa-spinner fa-spin" style="margin-right: 1rem;"></i>Carregando cardápio...</div>';
+            showLoading('Carregando cardápio...');
             
-            // Carregar configurações do servidor
-            await carregarConfiguracoes();
-            
-            // Recriar o HTML original
+            try {
+                // Inicializar Supabase e dados padrão
+                await window.supabaseConfig.inicializarDadosPadrao();
+                
+                // Configurar listeners em tempo real
+                window.supabaseConfig.configurarRealtimeListeners();
+                
+                // Carregar configurações do Supabase
+                await carregarConfiguracoes();
+                
+                // Recriar o HTML original
+                recreateHTML();
+                
+                // Reinicializar a aplicação
+                await inicializarApp();
+                
+                hideLoading();
+                
+                console.log('✅ Aplicação inicializada com sucesso!');
+            } catch (error) {
+                console.error('❌ Erro ao inicializar aplicação:', error);
+                hideLoading();
+                showError('Erro ao carregar o cardápio. Tente novamente.');
+            }
+        });
+
+        function showLoading(message) {
             document.body.innerHTML = `
-        <!-- Header -->
-        <header class="header">
-            <div class="container">
-                <div class="header-content">
-                    <img id="logo" src="/placeholder.svg?height=60&width=60" alt="Logo" class="logo">
-                    <div class="header-info">
-                        <h1 id="empresa-nome">Carregando...</h1>
-                        <div class="status-container">
-                            <span id="status-funcionamento" class="status"></span>
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; color: white; font-size: 1.2rem; background: var(--background-color);">
+                    <i class="fas fa-spinner fa-spin" style="margin-bottom: 1rem; font-size: 2rem; color: var(--primary-color);"></i>
+                    <div>${message}</div>
+                    <div style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);">Conectando ao Supabase...</div>
+                </div>
+            `;
+        }
+
+        function hideLoading() {
+            // Loading será removido quando recreateHTML() for chamada
+        }
+
+        function showError(message) {
+            document.body.innerHTML = `
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; color: white; font-size: 1.2rem; background: var(--background-color);">
+                    <i class="fas fa-exclamation-triangle" style="margin-bottom: 1rem; font-size: 2rem; color: var(--error-color);"></i>
+                    <div>${message}</div>
+                    <button onclick="location.reload()" style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--primary-color); color: white; border: none; border-radius: var(--border-radius); cursor: pointer;">
+                        Tentar Novamente
+                    </button>
+                </div>
+            `;
+        }
+
+        function recreateHTML() {
+            document.body.innerHTML = `
+                <!-- Header -->
+                <header class="header">
+                    <div class="container">
+                        <div class="header-content">
+                            <img id="logo" src="/placeholder.svg?height=60&width=60" alt="Logo" class="logo">
+                            <div class="header-info">
+                                <h1 id="empresa-nome">Carregando...</h1>
+                                <div class="status-container">
+                                    <span id="status-funcionamento" class="status"></span>
+                                </div>
+                            </div>
+                            <div class="header-actions">
+                                <button class="cart-btn" onclick="toggleCart()">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span id="cart-count" class="cart-count">0</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <div class="header-actions">
-                        <button class="cart-btn" onclick="toggleCart()">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span id="cart-count" class="cart-count">0</span>
+                </header>
+
+                <!-- Navigation -->
+                <nav class="nav">
+                    <div class="container">
+                        <div id="categorias-nav" class="nav-categories">
+                            <!-- Categorias serão inseridas aqui via JavaScript -->
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Main Content -->
+                <main class="main">
+                    <div class="container">
+                        <!-- Produtos em Destaque -->
+                        <section id="destaques" class="section">
+                            <h2 class="section-title">
+                                <i class="fas fa-star"></i>
+                                Destaques
+                            </h2>
+                            <div id="produtos-destaque" class="products-grid">
+                                <!-- Produtos em destaque serão inseridos aqui -->
+                            </div>
+                        </section>
+
+                        <!-- Categorias de Produtos -->
+                        <div id="categorias-produtos">
+                            <!-- Seções de categorias serão inseridas aqui -->
+                        </div>
+                    </div>
+                </main>
+
+                <!-- Carrinho Lateral -->
+                <div id="cart-sidebar" class="cart-sidebar">
+                    <div class="cart-header">
+                        <h3><i class="fas fa-shopping-cart"></i> Seu Pedido</h3>
+                        <button class="close-cart" onclick="toggleCart()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="cart-items" class="cart-items">
+                        <!-- Itens do carrinho serão inseridos aqui -->
+                    </div>
+                    <div class="cart-footer">
+                        <div class="cart-total">
+                            <strong>Total: R$ <span id="cart-total">0,00</span></strong>
+                        </div>
+                        <button id="checkout-btn" class="checkout-btn" onclick="finalizarPedido()">
+                            <i class="fab fa-whatsapp"></i>
+                            Finalizar Pedido
                         </button>
                     </div>
                 </div>
-            </div>
-        </header>
 
-        <!-- Navigation -->
-        <nav class="nav">
-            <div class="container">
-                <div id="categorias-nav" class="nav-categories">
-                    <!-- Categorias serão inseridas aqui via JavaScript -->
-                </div>
-            </div>
-        </nav>
+                <!-- Overlay -->
+                <div id="overlay" class="overlay" onclick="toggleCart()"></div>
 
-        <!-- Main Content -->
-        <main class="main">
-            <div class="container">
-                <!-- Produtos em Destaque -->
-                <section id="destaques" class="section">
-                    <h2 class="section-title">
-                        <i class="fas fa-star"></i>
-                        Destaques
-                    </h2>
-                    <div id="produtos-destaque" class="products-grid">
-                        <!-- Produtos em destaque serão inseridos aqui -->
-                    </div>
-                </section>
-
-                <!-- Categorias de Produtos -->
-                <div id="categorias-produtos">
-                    <!-- Seções de categorias serão inseridas aqui -->
-                </div>
-            </div>
-        </main>
-
-        <!-- Carrinho Lateral -->
-        <div id="cart-sidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-cart"></i> Seu Pedido</h3>
-                <button class="close-cart" onclick="toggleCart()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div id="cart-items" class="cart-items">
-                <!-- Itens do carrinho serão inseridos aqui -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <strong>Total: R$ <span id="cart-total">0,00</span></strong>
-                </div>
-                <button id="checkout-btn" class="checkout-btn" onclick="finalizarPedido()">
-                    <i class="fab fa-whatsapp"></i>
-                    Finalizar Pedido
-                </button>
-            </div>
-        </div>
-
-        <!-- Overlay -->
-        <div id="overlay" class="overlay" onclick="toggleCart()"></div>
-
-        <!-- Modal de Produto -->
-        <div id="product-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-modal" onclick="closeProductModal()">&times;</span>
-                <div id="modal-body">
-                    <!-- Conteúdo do modal será inserido aqui -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="container">
-                <div class="footer-content">
-                    <div class="footer-info">
-                        <h3 id="footer-nome">Nome da Empresa</h3>
-                        <p id="footer-endereco">Endereço</p>
-                        <p id="footer-telefone">Telefone</p>
-                    </div>
-                    <div class="footer-social">
-                        <a id="instagram-link" href="#" target="_blank">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a id="facebook-link" href="#" target="_blank">
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                    </div>
-                    <div class="footer-payment">
-                        <h4>Formas de Pagamento</h4>
-                        <div id="payment-methods" class="payment-methods">
-                            <!-- Métodos de pagamento serão inseridos aqui -->
+                <!-- Modal de Produto -->
+                <div id="product-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-modal" onclick="closeProductModal()">&times;</span>
+                        <div id="modal-body">
+                            <!-- Conteúdo do modal será inserido aqui -->
                         </div>
                     </div>
-                    <div class="footer-admin">
-                      <a href="admin.html" class="admin-link">
-                        <i class="fas fa-cog"></i>
-                        Painel Admin
-                      </a>
-                    </div>
                 </div>
-            </div>
-        </footer>
-    `;
-            
-            // Reinicializar a aplicação
-            inicializarApp();
+
+                <!-- Footer -->
+                <footer class="footer">
+                    <div class="container">
+                        <div class="footer-content">
+                            <div class="footer-info">
+                                <h3 id="footer-nome">Nome da Empresa</h3>
+                                <p id="footer-endereco">Endereço</p>
+                                <p id="footer-telefone">Telefone</p>
+                            </div>
+                            <div class="footer-social">
+                                <a id="instagram-link" href="#" target="_blank">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a id="facebook-link" href="#" target="_blank">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                            </div>
+                            <div class="footer-payment">
+                                <h4>Formas de Pagamento</h4>
+                                <div id="payment-methods" class="payment-methods">
+                                    <!-- Métodos de pagamento serão inseridos aqui -->
+                                </div>
+                            </div>
+                            <div class="footer-admin">
+                              <a href="admin.html" class="admin-link">
+                                <i class="fas fa-cog"></i>
+                                Painel Admin
+                              </a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            `;
+        }
+
+        // Modificar a função inicializarApp para ser async
+        async function inicializarApp() {
+            carregarInformacoesEmpresa();
+            verificarHorarioFuncionamento();
+            carregarCategorias();
+            carregarProdutos();
+            carregarFormasPagamento();
+            atualizarCarrinho();
+        }
+
+        // Adicionar listeners para atualizações em tempo real
+        window.addEventListener('configUpdated', function(e) {
+            console.log('🔄 Configurações atualizadas via Supabase:', e.detail);
+            if (e.detail.source === 'supabase') {
+                inicializarApp();
+                mostrarNotificacao('Configurações atualizadas!', 'info');
+            }
         });
 
-// Modificar a função inicializarApp para recarregar dados sempre
-async function inicializarApp() {
-    // Sempre carregar configurações mais recentes
-    carregarConfiguracoes()
-    
-    carregarInformacoesEmpresa();
-    verificarHorarioFuncionamento();
-    carregarCategorias();
-    carregarProdutos();
-    carregarFormasPagamento();
-    atualizarCarrinho();
-}
-
-// Adicionar listener para detectar mudanças nas configurações
-window.addEventListener('storage', function(e) {
-    if (e.key === 'menuConfig' || e.key === 'menuItems') {
-        // Recarregar página quando configurações mudarem
-        location.reload();
-    }
-});
-
-// Adicionar listener para evento customizado
-window.addEventListener('configUpdated', function(e) {
-    // Atualizar configurações locais
-    Object.assign(CONFIG, e.detail.config);
-    Object.assign(menuItems, e.detail.menuItems);
-    
-    // Reinicializar a aplicação
-    inicializarApp();
-});
-
-// Adicionar verificação periódica de atualizações
-setInterval(function() {
-    const lastUpdate = localStorage.getItem('lastUpdate');
-    const currentUpdate = window.lastKnownUpdate || '';
-    
-    if (lastUpdate && lastUpdate !== currentUpdate) {
-        window.lastKnownUpdate = lastUpdate;
-        carregarConfiguracoes();
-        inicializarApp();
-    }
-}, 2000); // Verificar a cada 2 segundos
-
-// Inicializar lastKnownUpdate
-window.lastKnownUpdate = localStorage.getItem('lastUpdate') || '';
+        window.addEventListener('menuItemsUpdated', function(e) {
+            console.log('🔄 Menu items atualizados via Supabase:', e.detail);
+            if (e.detail.source === 'supabase') {
+                inicializarApp();
+                mostrarNotificacao('Cardápio atualizado!', 'info');
+            }
+        });
 
         function carregarInformacoesEmpresa() {
             document.getElementById('page-title').textContent = `${CONFIG.empresa.nome} - Cardápio Digital`;
@@ -389,6 +420,7 @@ window.lastKnownUpdate = localStorage.getItem('lastUpdate') || '';
             
             if (produtosDestaque.length > 0) {
                 containerDestaque.innerHTML = produtosDestaque.map(produto => criarCardProduto(produto)).join('');
+                document.getElementById('destaques').style.display = 'block';
             } else {
                 document.getElementById('destaques').style.display = 'none';
             }
@@ -616,11 +648,14 @@ window.lastKnownUpdate = localStorage.getItem('lastUpdate') || '';
             window.open(whatsappUrl, '_blank');
         }
 
-        function mostrarNotificacao(mensagem) {
+        function mostrarNotificacao(mensagem, tipo = 'success') {
             // Criar elemento de notificação
             const notificacao = document.createElement('div');
-            notificacao.className = 'notification';
-            notificacao.textContent = mensagem;
+            notificacao.className = `notification ${tipo}`;
+            notificacao.innerHTML = `
+                <i class="fas fa-${tipo === 'success' ? 'check-circle' : tipo === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${mensagem}</span>
+            `;
             
             document.body.appendChild(notificacao);
             
@@ -630,7 +665,11 @@ window.lastKnownUpdate = localStorage.getItem('lastUpdate') || '';
             // Remover notificação após 3 segundos
             setTimeout(() => {
                 notificacao.classList.remove('show');
-                setTimeout(() => document.body.removeChild(notificacao), 300);
+                setTimeout(() => {
+                    if (document.body.contains(notificacao)) {
+                        document.body.removeChild(notificacao);
+                    }
+                }, 300);
             }, 3000);
         }
 

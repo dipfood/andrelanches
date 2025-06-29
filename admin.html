@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="admin-style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 <body class="admin-body">
     <!-- Tela de Login -->
@@ -48,6 +50,10 @@
                 <div class="admin-logo">
                     <i class="fas fa-cogs"></i>
                     <h1>Painel Administrativo</h1>
+                    <div class="connection-status" id="connection-status">
+                        <i class="fas fa-circle" id="status-icon"></i>
+                        <span id="status-text">Conectando...</span>
+                    </div>
                 </div>
                 <div class="admin-actions">
                     <div class="dropdown">
@@ -361,22 +367,25 @@
         </div>
     </div>
 
+    <!-- Scripts -->
+    <script src="supabase-config.js"></script>
     <script src="config.js"></script>
     <script>
         // Variáveis globais do admin
         let isLoggedIn = false;
         let currentTab = 'horarios';
+        let isSupabaseConnected = false;
 
         // Inicializar painel admin
         document.addEventListener('DOMContentLoaded', function() {
             initializeAdmin();
         });
 
-        function initializeAdmin() {
+        async function initializeAdmin() {
             // Verificar se já está logado
             const loginStatus = sessionStorage.getItem('adminLoggedIn');
             if (loginStatus === 'true') {
-                showAdminPanel();
+                await showAdminPanel();
             }
 
             // Event listeners
@@ -413,18 +422,70 @@
             showNotification('Logout realizado com sucesso!', 'success');
         }
 
-        function showAdminPanel() {
+        async function showAdminPanel() {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('admin-panel').style.display = 'block';
-            loadAdminData();
+            
+            // Inicializar Supabase
+            await initializeSupabase();
+            
+            // Carregar dados
+            await loadAdminData();
         }
 
-        function loadAdminData() {
-            carregarConfiguracoes();
-            loadHorarios();
-            loadProdutos();
-            loadEmpresaInfo();
-            loadPagamentoInfo();
+        async function initializeSupabase() {
+            try {
+                updateConnectionStatus('connecting', 'Conectando ao Supabase...');
+                
+                // Inicializar dados padrão
+                await window.supabaseConfig.inicializarDadosPadrao();
+                
+                // Configurar listeners em tempo real
+                window.supabaseConfig.configurarRealtimeListeners();
+                
+                isSupabaseConnected = true;
+                updateConnectionStatus('connected', 'Conectado ao Supabase');
+                
+                console.log('✅ Supabase inicializado com sucesso!');
+            } catch (error) {
+                console.error('❌ Erro ao inicializar Supabase:', error);
+                isSupabaseConnected = false;
+                updateConnectionStatus('error', 'Erro de conexão');
+                showNotification('Erro ao conectar com o Supabase. Usando modo offline.', 'warning');
+            }
+        }
+
+        function updateConnectionStatus(status, text) {
+            const statusIcon = document.getElementById('status-icon');
+            const statusText = document.getElementById('status-text');
+            
+            statusIcon.className = 'fas fa-circle';
+            statusText.textContent = text;
+            
+            switch (status) {
+                case 'connecting':
+                    statusIcon.style.color = '#f39c12';
+                    break;
+                case 'connected':
+                    statusIcon.style.color = '#27ae60';
+                    break;
+                case 'error':
+                    statusIcon.style.color = '#e74c3c';
+                    break;
+            }
+        }
+
+        async function loadAdminData() {
+            try {
+                await carregarConfiguracoes();
+                loadHorarios();
+                loadProdutos();
+                loadEmpresaInfo();
+                loadPagamentoInfo();
+            } catch (error) {
+                console.error('❌ Erro ao carregar dados do admin:', error);
+                showNotification('Erro ao carregar dados. Tente novamente.', 'error');
+            }
         }
 
         function showTab(tabName) {
@@ -548,13 +609,13 @@
             }).join('');
         }
 
-        function toggleHorarioFuncionamento() {
+        async function toggleHorarioFuncionamento() {
             const ativo = document.getElementById('horario-ativo').checked;
             CONFIG.horarioFuncionamento.ativo = ativo;
             
             // Salvar automaticamente
-            salvarConfiguracoes();
-            localStorage.setItem('lastUpdate', new Date().toISOString());
+            await salvarConfiguracoes();
+            showNotification('Configuração de horário atualizada!', 'success');
         }
 
         function toggleDiaFuncionamento(dia) {
@@ -576,7 +637,7 @@
             }
         }
 
-        function salvarHorarios() {
+        async function salvarHorarios() {
             const diasSemana = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo'];
             
             diasSemana.forEach(dia => {
@@ -589,10 +650,9 @@
                 }
             });
 
-            if (salvarConfiguracoes()) {
-                showNotification('Horários salvos com sucesso! Atualizando cardápio...', 'success');
-                // Forçar atualização do localStorage
-                localStorage.setItem('lastUpdate', new Date().toISOString());
+            const sucesso = await salvarConfiguracoes();
+            if (sucesso) {
+                showNotification('Horários salvos com sucesso! Cardápio atualizado automaticamente.', 'success');
             } else {
                 showNotification('Erro ao salvar horários!', 'error');
             }
@@ -656,7 +716,7 @@
             `).join('');
         }
 
-        function toggleProduto(produtoId) {
+        async function toggleProduto(produtoId) {
             const produto = CONFIG.produtos.find(p => p.id === produtoId);
             if (produto) {
                 produto.disponivel = !produto.disponivel;
@@ -669,14 +729,14 @@
                 }
                 
                 // Salvar automaticamente
-                salvarConfiguracoes();
-                localStorage.setItem('lastUpdate', new Date().toISOString());
+                await salvarConfiguracoes();
                 
                 loadProdutos(); // Recarregar para atualizar contadores
+                showNotification(`Produto ${produto.disponivel ? 'ativado' : 'desativado'} com sucesso!`, 'success');
             }
         }
 
-        function ativarTodosProdutos() {
+        async function ativarTodosProdutos() {
             CONFIG.produtos.forEach(produto => {
                 produto.disponivel = true;
                 
@@ -687,11 +747,13 @@
                     item.disponivel = true;
                 }
             });
+            
+            await salvarConfiguracoes();
             loadProdutos();
             showNotification('Todos os produtos foram ativados!', 'success');
         }
 
-        function desativarTodosProdutos() {
+        async function desativarTodosProdutos() {
             if (confirm('Tem certeza que deseja desativar todos os produtos?')) {
                 CONFIG.produtos.forEach(produto => {
                     produto.disponivel = false;
@@ -703,16 +765,17 @@
                         item.disponivel = false;
                     }
                 });
+                
+                await salvarConfiguracoes();
                 loadProdutos();
                 showNotification('Todos os produtos foram desativados!', 'warning');
             }
         }
 
-        function salvarProdutos() {
-            if (salvarConfiguracoes()) {
-                showNotification('Alterações nos produtos salvas com sucesso! Atualizando cardápio...', 'success');
-                // Forçar atualização do localStorage
-                localStorage.setItem('lastUpdate', new Date().toISOString());
+        async function salvarProdutos() {
+            const sucesso = await salvarConfiguracoes();
+            if (sucesso) {
+                showNotification('Alterações nos produtos salvas com sucesso! Cardápio atualizado automaticamente.', 'success');
             } else {
                 showNotification('Erro ao salvar produtos!', 'error');
             }
@@ -727,7 +790,7 @@
             document.getElementById('empresa-facebook').value = CONFIG.empresa.facebook;
         }
 
-        function handleEmpresaSubmit(e) {
+        async function handleEmpresaSubmit(e) {
             e.preventDefault();
             
             CONFIG.empresa.nome = document.getElementById('empresa-nome').value;
@@ -736,10 +799,9 @@
             CONFIG.empresa.instagram = document.getElementById('empresa-instagram').value;
             CONFIG.empresa.facebook = document.getElementById('empresa-facebook').value;
 
-            if (salvarConfiguracoes()) {
-                showNotification('Informações da empresa salvas com sucesso! Atualizando cardápio...', 'success');
-                // Forçar atualização do localStorage
-                localStorage.setItem('lastUpdate', new Date().toISOString());
+            const sucesso = await salvarConfiguracoes();
+            if (sucesso) {
+                showNotification('Informações da empresa salvas com sucesso! Cardápio atualizado automaticamente.', 'success');
             } else {
                 showNotification('Erro ao salvar informações!', 'error');
             }
@@ -758,24 +820,23 @@
             document.getElementById('delivery-tempo').value = CONFIG.pagamento.delivery.tempoEntrega;
         }
 
-        function togglePagamento(tipo) {
+        async function togglePagamento(tipo) {
             const ativo = document.getElementById(`${tipo}-ativo`).checked;
             CONFIG.pagamento[tipo].ativo = ativo;
             
             // Salvar automaticamente
-            salvarConfiguracoes();
-            localStorage.setItem('lastUpdate', new Date().toISOString());
+            await salvarConfiguracoes();
+            showNotification(`Pagamento via ${tipo} ${ativo ? 'ativado' : 'desativado'}!`, 'success');
         }
 
-        function salvarPagamento() {
+        async function salvarPagamento() {
             CONFIG.pagamento.pix.chave = document.getElementById('pix-chave').value;
             CONFIG.pagamento.delivery.taxa = parseFloat(document.getElementById('delivery-taxa').value) || 0;
             CONFIG.pagamento.delivery.tempoEntrega = document.getElementById('delivery-tempo').value;
 
-            if (salvarConfiguracoes()) {
-                showNotification('Configurações de pagamento salvas com sucesso! Atualizando cardápio...', 'success');
-                // Forçar atualização do localStorage
-                localStorage.setItem('lastUpdate', new Date().toISOString());
+            const sucesso = await salvarConfiguracoes();
+            if (sucesso) {
+                showNotification('Configurações de pagamento salvas com sucesso! Cardápio atualizado automaticamente.', 'success');
             } else {
                 showNotification('Erro ao salvar pagamento!', 'error');
             }
@@ -812,32 +873,6 @@
                 closeImportModal();
             }
         }
-        
-        // Adicionar função para atualizar automaticamente quando salvar
-        function forcarAtualizacaoCardapio() {
-            // Disparar evento para outras abas/janelas
-            localStorage.setItem('forceReload', Date.now().toString());
-            
-            // Tentar comunicar com outras janelas
-            if (window.opener && !window.opener.closed) {
-                window.opener.postMessage('configUpdated', '*');
-            }
-        }
-        
-        // Adicionar listener para detectar quando a aba ganha foco
-        document.addEventListener('visibilitychange', function() {
-            if (!document.hidden) {
-                // Recarregar dados quando a aba voltar ao foco
-                loadAdminData();
-            }
-        });
-
-        // Adicionar listener para mensagens entre janelas
-        window.addEventListener('message', function(event) {
-            if (event.data === 'configUpdated') {
-                loadAdminData();
-            }
-        });
     </script>
 </body>
 </html>

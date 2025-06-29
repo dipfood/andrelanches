@@ -1,4 +1,4 @@
-// Configuração do Cardápio Digital
+// Configuração do Cardápio Digital com Supabase
 const CONFIG = {
   empresa: {
     nome: "Paris Burger",
@@ -199,67 +199,60 @@ function convertMenuItemsToProducts() {
   return produtos
 }
 
-// Modificar a função carregarConfiguracoes para garantir que sempre atualize CONFIG
-function carregarConfiguracoes() {
+// Função para carregar configurações do Supabase
+async function carregarConfiguracoes() {
   try {
-    const configSalva = localStorage.getItem("menuConfig")
-    const menuItemsSalvo = localStorage.getItem("menuItems")
+    console.log("🔄 Carregando configurações do Supabase...")
 
-    if (configSalva) {
-      const configCarregada = JSON.parse(configSalva)
-      // Usar Object.assign para manter a referência mas atualizar os valores
-      Object.keys(configCarregada).forEach((key) => {
-        if (typeof configCarregada[key] === "object" && configCarregada[key] !== null) {
-          CONFIG[key] = { ...CONFIG[key], ...configCarregada[key] }
-        } else {
-          CONFIG[key] = configCarregada[key]
-        }
-      })
+    if (typeof window !== "undefined" && window.supabaseConfig) {
+      const configCarregada = await window.supabaseConfig.carregarConfigSupabase()
+      const menuCarregado = await window.supabaseConfig.carregarMenuItemsSupabase()
+
+      // Atualizar CONFIG e menuItems
+      Object.assign(CONFIG, configCarregada)
+      Object.assign(menuItems, menuCarregado)
+
+      CONFIG.produtos = convertMenuItemsToProducts()
+
+      console.log("✅ Configurações carregadas do Supabase!")
+      return true
+    } else {
+      console.log("⚠️ Supabase não disponível, usando configurações locais")
+      CONFIG.produtos = convertMenuItemsToProducts()
+      return false
     }
-
-    if (menuItemsSalvo) {
-      const menuCarregado = JSON.parse(menuItemsSalvo)
-      Object.keys(menuCarregado).forEach((key) => {
-        menuItems[key] = menuCarregado[key]
-      })
-    }
-
-    CONFIG.produtos = convertMenuItemsToProducts()
-    return true
   } catch (error) {
-    console.error("Erro ao carregar configurações:", error)
+    console.error("❌ Erro ao carregar configurações:", error)
+    CONFIG.produtos = convertMenuItemsToProducts()
     return false
   }
 }
 
-// Adicionar função para forçar atualização
-function forcarAtualizacao() {
-  carregarConfiguracoes()
-  CONFIG.produtos = convertMenuItemsToProducts()
-
-  // Disparar evento customizado para notificar outras páginas
-  if (typeof window !== "undefined") {
-    window.dispatchEvent(
-      new CustomEvent("configUpdated", {
-        detail: { config: CONFIG, menuItems: menuItems },
-      }),
-    )
-  }
-}
-
-// Modificar função salvarConfiguracoes para forçar atualização
-function salvarConfiguracoes() {
+// Função para salvar configurações no Supabase
+async function salvarConfiguracoes() {
   try {
-    localStorage.setItem("menuConfig", JSON.stringify(CONFIG))
-    localStorage.setItem("menuItems", JSON.stringify(menuItems))
-    localStorage.setItem("lastUpdate", new Date().toISOString())
+    console.log("💾 Salvando configurações no Supabase...")
 
-    // Forçar atualização após salvar
-    forcarAtualizacao()
+    if (typeof window !== "undefined" && window.supabaseConfig) {
+      const configSalva = await window.supabaseConfig.salvarConfigSupabase(CONFIG)
+      const menuSalvo = await window.supabaseConfig.salvarMenuItemsSupabase(menuItems)
 
-    return true
+      if (configSalva && menuSalvo) {
+        console.log("✅ Configurações salvas no Supabase!")
+        return true
+      } else {
+        console.error("❌ Erro ao salvar no Supabase")
+        return false
+      }
+    } else {
+      console.log("⚠️ Supabase não disponível, salvando localmente")
+      localStorage.setItem("menuConfig", JSON.stringify(CONFIG))
+      localStorage.setItem("menuItems", JSON.stringify(menuItems))
+      localStorage.setItem("lastUpdate", new Date().toISOString())
+      return true
+    }
   } catch (error) {
-    console.error("Erro ao salvar configurações:", error)
+    console.error("❌ Erro ao salvar configurações:", error)
     return false
   }
 }
@@ -537,7 +530,6 @@ function importarBackupJSON(fileContent) {
 }
 
 // Inicializar configurações
-carregarConfiguracoes()
 CONFIG.produtos = convertMenuItemsToProducts()
 
 // Exportar configuração
