@@ -1,6 +1,7 @@
 // Configuração do Supabase
 const SUPABASE_URL = "https://bzzkdbgcufmrlinbkepc.supabase.co"
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ6emtkYmdjdWZtcmxpbmJrZXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyNzM4MzIsImV4cCI6MjA2NTg0OTgzMn0.3Gx_KcM6ufevjUr215XJ2IGQNOllX-PH5MK0FU15nvg"
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ6emtkYmdjdWZtcmxpbmJrZXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyNzM4MzIsImV4cCI6MjA2NTg0OTgzMn0.3Gx_KcM6ufevjUr215XJ2IGQNOllX-PH5MK0FU15nvg"
 
 // Inicializar cliente Supabase
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
@@ -50,27 +51,39 @@ const DEFAULT_CONFIG = {
   },
   categorias: [
     {
-      id: "burgers",
-      nome: "Sanduíches",
+      id: "lanches",
+      nome: "Lanches",
       icone: "🍔",
+      ativo: true,
+    },
+    {
+      id: "artesanais",
+      nome: "Artesanais",
+      icone: "🍖",
+      ativo: true,
+    },
+    {
+      id: "frango",
+      nome: "Frango",
+      icone: "🍗",
+      ativo: true,
+    },
+    {
+      id: "carne",
+      nome: "Carne",
+      icone: "🥩",
+      ativo: true,
+    },
+    {
+      id: "hotdog",
+      nome: "Hot Dog",
+      icone: "🌭",
       ativo: true,
     },
     {
       id: "bebidas",
       nome: "Bebidas",
       icone: "🥤",
-      ativo: true,
-    },
-    {
-      id: "porcoes",
-      nome: "Porções",
-      icone: "🍟",
-      ativo: true,
-    },
-    {
-      id: "sobremesas",
-      nome: "Sobremesas",
-      icone: "🍰",
       ativo: true,
     },
   ],
@@ -84,14 +97,7 @@ const DEFAULT_CONFIG = {
 }
 
 const DEFAULT_MENU_ITEMS = {
-  sandwiches: [
-    {
-      name: "Misto Quente",
-      price: 14.0,
-      description: "Hambúrguer, queijo, Presunto, tomate e Maionese da Casa",
-      noAddons: false,
-      disponivel: true,
-    },
+  lanches: [
     {
       name: "X-Burguer",
       price: 12.0,
@@ -105,30 +111,41 @@ const DEFAULT_MENU_ITEMS = {
       disponivel: true,
     },
     {
-      name: "X-Catupiry",
-      price: 18.0,
-      description: "Hambúrguer, Catupiry, queijo, alface, tomate e Maionese da Casa",
-      disponivel: true,
-    },
-    {
-      name: "X-Calabresa",
-      price: 17.0,
-      description: "Hambúrguer, Calabresa, queijo, alface, tomate e Maionese da Casa",
-      disponivel: true,
-    },
-    {
       name: "X-Bacon",
       price: 18.0,
       description: "Hambúrguer, Bacon, queijo, alface, tomate e Maionese da Casa",
       disponivel: true,
     },
-    { name: "X-Milho", price: 14.0, description: "Hambúrguer, milho, salada e mussarela", disponivel: true },
+  ],
+  artesanais: [
     {
-      name: "X-Egg",
-      price: 14.0,
-      description: "Hambúrguer, Ovo, queijo, alface, tomate e Maionese da Casa",
+      name: "Burger Artesanal",
+      price: 25.0,
+      description: "Hambúrguer artesanal 180g, queijo especial, rúcula e tomate seco",
       disponivel: true,
     },
+    {
+      name: "Smash Burger",
+      price: 22.0,
+      description: "Dois hambúrgueres smash, queijo cheddar, cebola caramelizada",
+      disponivel: true,
+    },
+  ],
+  frango: [
+    {
+      name: "X-Frango",
+      price: 16.0,
+      description: "Peito de frango grelhado, queijo, alface, tomate e maionese",
+      disponivel: true,
+    },
+    {
+      name: "Chicken Crispy",
+      price: 18.0,
+      description: "Frango empanado crocante, queijo, alface e molho especial",
+      disponivel: true,
+    },
+  ],
+  carne: [
     {
       name: "X-Tudo",
       price: 20.0,
@@ -143,34 +160,24 @@ const DEFAULT_MENU_ITEMS = {
       disponivel: true,
     },
   ],
+  hotdog: [
+    {
+      name: "Hot Dog Tradicional",
+      price: 8.0,
+      description: "Salsicha, batata palha, milho, ervilha, queijo ralado e molhos",
+      disponivel: true,
+    },
+    {
+      name: "Hot Dog Especial",
+      price: 12.0,
+      description: "Salsicha, bacon, queijo derretido, batata palha e molhos especiais",
+      disponivel: true,
+    },
+  ],
   bebidas: [
     { name: "Refrigerante Lata", price: 5.9, description: "Coca-Cola, Guaraná, Fanta - 350ml", disponivel: true },
     { name: "Suco Natural", price: 8.9, description: "Laranja, Limão, Maracujá - 400ml", disponivel: true },
     { name: "Água Mineral", price: 3.5, description: "Água mineral 500ml", disponivel: true },
-  ],
-  porcoes: [
-    {
-      name: "Batata Frita",
-      price: 18.9,
-      description: "Batata rústica com casca, tempero especial - serve 2 pessoas",
-      disponivel: true,
-    },
-    {
-      name: "Onion Rings",
-      price: 16.9,
-      description: "Anéis de cebola empanados e fritos - 12 unidades",
-      disponivel: true,
-    },
-    { name: "Nuggets", price: 15.9, description: "Nuggets de frango crocantes - 10 unidades", disponivel: true },
-  ],
-  sobremesas: [
-    {
-      name: "Brownie com Sorvete",
-      price: 14.9,
-      description: "Brownie de chocolate com sorvete de baunilha e calda",
-      disponivel: true,
-    },
-    { name: "Petit Gateau", price: 16.9, description: "Bolinho de chocolate quente com sorvete", disponivel: true },
   ],
 }
 

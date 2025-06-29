@@ -10,124 +10,376 @@
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <img id="logo" src="/placeholder.svg?height=60&width=60" alt="Logo" class="logo">
-                <div class="header-info">
-                    <h1 id="empresa-nome">Carregando...</h1>
-                    <div class="status-container">
-                        <span id="status-funcionamento" class="status"></span>
-                    </div>
+    <!-- Tela de Splash -->
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-content">
+            <img src="/placeholder.svg?height=200&width=200" alt="Logo" class="splash-logo">
+            <div class="splash-text">
+                <h1>Paris Burger</h1>
+                <p>Bem-vindo ao nosso cardápio digital</p>
+            </div>
+            <div class="loading-animation">
+                <div class="loading-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
-                <div class="header-actions">
-                    <button class="cart-btn" onclick="toggleCart()">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span id="cart-count" class="cart-count">0</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="nav">
-        <div class="container">
-            <div id="categorias-nav" class="nav-categories">
-                <!-- Categorias serão inseridas aqui via JavaScript -->
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="main">
-        <div class="container">
-            <!-- Produtos em Destaque -->
-            <section id="destaques" class="section">
-                <h2 class="section-title">
-                    <i class="fas fa-star"></i>
-                    Destaques
-                </h2>
-                <div id="produtos-destaque" class="products-grid">
-                    <!-- Produtos em destaque serão inseridos aqui -->
-                </div>
-            </section>
-
-            <!-- Categorias de Produtos -->
-            <div id="categorias-produtos">
-                <!-- Seções de categorias serão inseridas aqui -->
-            </div>
-        </div>
-    </main>
-
-    <!-- Carrinho Lateral -->
-    <div id="cart-sidebar" class="cart-sidebar">
-        <div class="cart-header">
-            <h3><i class="fas fa-shopping-cart"></i> Seu Pedido</h3>
-            <button class="close-cart" onclick="toggleCart()">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div id="cart-items" class="cart-items">
-            <!-- Itens do carrinho serão inseridos aqui -->
-        </div>
-        <div class="cart-footer">
-            <div class="cart-total">
-                <strong>Total: R$ <span id="cart-total">0,00</span></strong>
-            </div>
-            <button id="checkout-btn" class="checkout-btn" onclick="finalizarPedido()">
-                <i class="fab fa-whatsapp"></i>
-                Finalizar Pedido
-            </button>
-        </div>
-    </div>
-
-    <!-- Overlay -->
-    <div id="overlay" class="overlay" onclick="toggleCart()"></div>
-
-    <!-- Modal de Produto -->
-    <div id="product-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeProductModal()">&times;</span>
-            <div id="modal-body">
-                <!-- Conteúdo do modal será inserido aqui -->
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-info">
-                    <h3 id="footer-nome">Nome da Empresa</h3>
-                    <p id="footer-endereco">Endereço</p>
-                    <p id="footer-telefone">Telefone</p>
-                </div>
-                <div class="footer-social">
-                    <a id="instagram-link" href="#" target="_blank">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a id="facebook-link" href="#" target="_blank">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-                </div>
-                <div class="footer-payment">
-                    <h4>Formas de Pagamento</h4>
-                    <div id="payment-methods" class="payment-methods">
-                        <!-- Métodos de pagamento serão inseridos aqui -->
+    <!-- Conteúdo Principal (inicialmente oculto) -->
+    <div id="main-content" class="main-content-hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <img id="logo" src="/placeholder.svg?height=60&width=60" alt="Logo" class="logo">
+                    <div class="header-info">
+                        <h1 id="empresa-nome">Carregando...</h1>
+                        <div class="status-container">
+                            <span id="status-funcionamento" class="status"></span>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="cart-btn" onclick="toggleCart()">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span id="cart-count" class="cart-count">0</span>
+                        </button>
                     </div>
                 </div>
-                <div class="footer-admin">
-                  <a href="admin.html" class="admin-link">
-                    <i class="fas fa-cog"></i>
-                    Painel Admin
-                  </a>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="container">
+                <div id="categorias-nav" class="nav-categories">
+                    <!-- Categorias serão inseridas aqui via JavaScript -->
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Produtos em Destaque -->
+                <section id="destaques" class="section">
+                    <h2 class="section-title">
+                        <i class="fas fa-star"></i>
+                        Destaques
+                    </h2>
+                    <div id="produtos-destaque" class="products-grid">
+                        <!-- Produtos em destaque serão inseridos aqui -->
+                    </div>
+                </section>
+
+                <!-- Categorias de Produtos -->
+                <div id="categorias-produtos">
+                    <!-- Seções de categorias serão inseridas aqui -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Carrinho Lateral -->
+        <div id="cart-sidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> Seu Pedido</h3>
+                <button class="close-cart" onclick="toggleCart()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="cart-items" class="cart-items">
+                <!-- Itens do carrinho serão inseridos aqui -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <strong>Total: R$ <span id="cart-total">0,00</span></strong>
+                </div>
+                <button id="checkout-btn" class="checkout-btn" onclick="finalizarPedido()">
+                    <i class="fab fa-whatsapp"></i>
+                    Finalizar Pedido
+                </button>
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div id="overlay" class="overlay" onclick="toggleCart()"></div>
+
+        <!-- Modal de Produto -->
+        <div id="product-modal" class="modal">
+            <div class="modal-content product-modal-content">
+                <span class="close-modal" onclick="closeProductModal()">&times;</span>
+                <div id="modal-body">
+                    <!-- Conteúdo do modal será inserido aqui -->
                 </div>
             </div>
         </div>
-    </footer>
+
+        <!-- Modal de Acréscimos -->
+        <div id="acrescimos-modal" class="modal">
+            <div class="modal-content acrescimos-modal-content">
+                <span class="close-modal" onclick="closeAcrescimosModal()">&times;</span>
+                <div class="acrescimos-header">
+                    <h2><i class="fas fa-plus-circle"></i> Personalizar Produto</h2>
+                    <p>Selecione os acréscimos desejados</p>
+                </div>
+                <div class="acrescimos-body">
+                    <div class="produto-selecionado">
+                        <div class="produto-info">
+                            <img id="acrescimos-produto-img" src="/placeholder.svg" alt="" class="produto-img">
+                            <div class="produto-details">
+                                <h3 id="acrescimos-produto-nome"></h3>
+                                <p id="acrescimos-produto-desc"></p>
+                                <div class="produto-preco-base">
+                                    Preço base: R$ <span id="acrescimos-produto-preco">0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="acrescimos-section">
+                        <h3><i class="fas fa-plus"></i> Acréscimos Disponíveis</h3>
+                        <div id="acrescimos-lista-disponivel" class="acrescimos-lista-disponivel">
+                            <!-- Acréscimos serão inseridos aqui -->
+                        </div>
+                    </div>
+
+                    <div class="acrescimos-selecionados">
+                        <h3><i class="fas fa-list"></i> Acréscimos Selecionados</h3>
+                        <div id="acrescimos-lista" class="acrescimos-lista">
+                            <div class="nenhum-acrescimo">Nenhum acréscimo selecionado</div>
+                        </div>
+                    </div>
+
+                    <div class="quantidade-section">
+                        <label for="produto-quantidade">
+                            <i class="fas fa-hashtag"></i>
+                            Quantidade:
+                        </label>
+                        <div class="quantidade-controls">
+                            <button type="button" onclick="alterarQuantidadeModal(-1)">-</button>
+                            <input type="number" id="produto-quantidade" value="1" min="1" readonly>
+                            <button type="button" onclick="alterarQuantidadeModal(1)">+</button>
+                        </div>
+                    </div>
+
+                    <div class="observacoes-produto">
+                        <label for="produto-observacoes">
+                            <i class="fas fa-comment"></i>
+                            Observações (opcional):
+                        </label>
+                        <textarea id="produto-observacoes" placeholder="Ex: sem cebola, ponto da carne, etc..." rows="2"></textarea>
+                    </div>
+
+                    <div class="total-produto">
+                        <div class="total-info">
+                            <span class="total-label">Total:</span>
+                            <span class="total-valor">R$ <span id="total-produto-valor">0,00</span></span>
+                        </div>
+                    </div>
+
+                    <div class="acrescimos-actions">
+                        <button type="button" class="btn-secondary" onclick="closeAcrescimosModal()">
+                            <i class="fas fa-arrow-left"></i>
+                            Cancelar
+                        </button>
+                        <button type="button" class="btn-primary" onclick="adicionarProdutoComAcrescimos()">
+                            <i class="fas fa-cart-plus"></i>
+                            Adicionar ao Carrinho
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Checkout -->
+        <div id="checkout-modal" class="modal">
+            <div class="modal-content checkout-modal-content">
+                <span class="close-modal" onclick="closeCheckoutModal()">&times;</span>
+                <div class="checkout-header">
+                    <h2><i class="fas fa-shopping-cart"></i> Finalizar Pedido</h2>
+                    <p>Preencha os dados para finalizar seu pedido</p>
+                </div>
+                <div class="checkout-body">
+                    <form id="checkout-form" class="checkout-form">
+                        <!-- Nome do Cliente -->
+                        <div class="form-group">
+                            <label for="cliente-nome">
+                                <i class="fas fa-user"></i>
+                                Nome do Cliente *
+                            </label>
+                            <input type="text" id="cliente-nome" name="nome" required placeholder="Digite seu nome">
+                        </div>
+
+                        <!-- Tipo de Pedido -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-map-marker-alt"></i>
+                                Tipo de Pedido *
+                            </label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="tipo-pedido" value="mesa" onchange="handleTipoPedidoChange()">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-chair"></i>
+                                    Mesa
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="tipo-pedido" value="retirada" onchange="handleTipoPedidoChange()">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-walking"></i>
+                                    Retirada
+                                </label>
+                                <label class="radio-option" id="entrega-option">
+                                    <input type="radio" name="tipo-pedido" value="entrega" onchange="handleTipoPedidoChange()">
+                                    <span class="radio-custom"></span>
+                                    <i class="fas fa-truck"></i>
+                                    Entrega
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Número da Mesa (apenas para mesa) -->
+                        <div class="form-group" id="mesa-group" style="display: none;">
+                            <label for="numero-mesa">
+                                <i class="fas fa-hashtag"></i>
+                                Número da Mesa
+                            </label>
+                            <input type="number" id="numero-mesa" name="mesa" placeholder="Ex: 5" min="1">
+                        </div>
+
+                        <!-- Endereço de Entrega (apenas para entrega) -->
+                        <div class="form-group" id="endereco-group" style="display: none;">
+                            <label for="endereco-entrega">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Endereço de Entrega *
+                            </label>
+                            <textarea id="endereco-entrega" name="endereco" placeholder="Rua, número, bairro, complemento..." rows="3"></textarea>
+                            <small class="form-help">
+                                <i class="fas fa-info-circle"></i>
+                                Taxa de entrega: R$ <span id="taxa-entrega-display">0,00</span>
+                            </small>
+                        </div>
+
+                        <!-- Forma de Pagamento -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-credit-card"></i>
+                                Forma de Pagamento *
+                            </label>
+                            <div class="radio-group" id="pagamento-options">
+                                <!-- Opções serão inseridas via JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Troco (apenas para dinheiro) -->
+                        <div class="form-group" id="troco-group" style="display: none;">
+                            <label>
+                                <i class="fas fa-money-bill-wave"></i>
+                                Precisa de troco?
+                            </label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="precisa-troco" value="nao" onchange="handleTrocoChange()">
+                                    <span class="radio-custom"></span>
+                                    Não preciso de troco
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="precisa-troco" value="sim" onchange="handleTrocoChange()">
+                                    <span class="radio-custom"></span>
+                                    Sim, preciso de troco
+                                </label>
+                            </div>
+                            <div id="valor-troco-group" style="display: none; margin-top: 1rem;">
+                                <label for="valor-troco">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    Troco para quanto?
+                                </label>
+                                <input type="number" id="valor-troco" name="troco" placeholder="Ex: 50.00" step="0.01" min="0">
+                            </div>
+                        </div>
+
+                        <!-- Observações -->
+                        <div class="form-group">
+                            <label for="observacoes">
+                                <i class="fas fa-comment"></i>
+                                Observações (opcional)
+                            </label>
+                            <textarea id="observacoes" name="observacoes" placeholder="Alguma observação especial sobre seu pedido..." rows="2"></textarea>
+                        </div>
+
+                        <!-- Resumo do Pedido -->
+                        <div class="order-summary">
+                            <h3><i class="fas fa-receipt"></i> Resumo do Pedido</h3>
+                            <div id="checkout-items" class="checkout-items">
+                                <!-- Itens serão inseridos via JavaScript -->
+                            </div>
+                            <div class="checkout-totals">
+                                <div class="total-line">
+                                    <span>Subtotal:</span>
+                                    <span>R$ <span id="checkout-subtotal">0,00</span></span>
+                                </div>
+                                <div class="total-line" id="taxa-entrega-line" style="display: none;">
+                                    <span>Taxa de entrega:</span>
+                                    <span>R$ <span id="checkout-taxa">0,00</span></span>
+                                </div>
+                                <div class="total-line total-final">
+                                    <span><strong>Total:</strong></span>
+                                    <span><strong>R$ <span id="checkout-total-final">0,00</span></strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botões -->
+                        <div class="checkout-actions">
+                            <button type="button" class="btn-secondary" onclick="closeCheckoutModal()">
+                                <i class="fas fa-arrow-left"></i>
+                                Voltar
+                            </button>
+                            <button type="submit" class="btn-primary">
+                                <i class="fab fa-whatsapp"></i>
+                                Enviar Pedido
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-info">
+                        <h3 id="footer-nome">Nome da Empresa</h3>
+                        <p id="footer-endereco">Endereço</p>
+                        <p id="footer-telefone">Telefone</p>
+                    </div>
+                    <div class="footer-social">
+                        <a id="instagram-link" href="#" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a id="facebook-link" href="#" target="_blank">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+                    <div class="footer-payment">
+                        <h4>Formas de Pagamento</h4>
+                        <div id="payment-methods" class="payment-methods">
+                            <!-- Métodos de pagamento serão inseridos aqui -->
+                        </div>
+                    </div>
+                    <div class="footer-admin">
+                      <a href="admin.html" class="admin-link">
+                        <i class="fas fa-cog"></i>
+                        Painel Admin
+                      </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <!-- Scripts -->
     <script src="supabase-config.js"></script>
@@ -139,34 +391,46 @@
 
         // Inicializar aplicação
         document.addEventListener('DOMContentLoaded', async function() {
-            // Mostrar loading
-            showLoading('Carregando cardápio...');
-            
-            try {
-                // Inicializar Supabase e dados padrão
-                await window.supabaseConfig.inicializarDadosPadrao();
-                
-                // Configurar listeners em tempo real
-                window.supabaseConfig.configurarRealtimeListeners();
-                
-                // Carregar configurações do Supabase
-                await carregarConfiguracoes();
-                
-                // Recriar o HTML original
-                recreateHTML();
-                
-                // Reinicializar a aplicação
-                await inicializarApp();
-                
-                hideLoading();
-                
-                console.log('✅ Aplicação inicializada com sucesso!');
-            } catch (error) {
-                console.error('❌ Erro ao inicializar aplicação:', error);
-                hideLoading();
-                showError('Erro ao carregar o cardápio. Tente novamente.');
-            }
+            // Mostrar splash screen por 3 segundos
+            setTimeout(async () => {
+                try {
+                    // Inicializar Supabase e dados padrão
+                    await window.supabaseConfig.inicializarDadosPadrao();
+                    
+                    // Configurar listeners em tempo real
+                    window.supabaseConfig.configurarRealtimeListeners();
+                    
+                    // Carregar configurações do Supabase
+                    await carregarConfiguracoes();
+                    
+                    // Reinicializar a aplicação
+                    await inicializarApp();
+                    
+                    // Esconder splash e mostrar conteúdo
+                    hideSplashScreen();
+                    
+                    console.log('✅ Aplicação inicializada com sucesso!');
+                } catch (error) {
+                    console.error('❌ Erro ao inicializar aplicação:', error);
+                    hideSplashScreen();
+                    showError('Erro ao carregar o cardápio. Tente novamente.');
+                }
+            }, 3000); // 3 segundos
         });
+
+        function hideSplashScreen() {
+            const splashScreen = document.getElementById('splash-screen');
+            const mainContent = document.getElementById('main-content');
+            
+            // Fade out da splash screen
+            splashScreen.style.opacity = '0';
+            
+            setTimeout(() => {
+                splashScreen.style.display = 'none';
+                mainContent.classList.remove('main-content-hidden');
+                mainContent.classList.add('main-content-visible');
+            }, 500); // Aguardar animação de fade
+        }
 
         function showLoading(message) {
             document.body.innerHTML = `
@@ -463,7 +727,7 @@
                         ${CONFIG.configuracoes.mostraPrecos ? `
                             <div class="product-price">R$ ${produto.preco.toFixed(2).replace('.', ',')}</div>
                         ` : ''}
-                        <button class="add-to-cart-btn" onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.id})">
+                        <button class="add-to-cart-btn" onclick="event.stopPropagation(); openAcrescimosModal(${produto.id})">
                             <i class="fas fa-plus"></i>
                             Adicionar
                         </button>
@@ -498,6 +762,11 @@
             carregarCategorias();
         }
 
+        // Variáveis globais para acréscimos
+        let produtoSelecionado = null;
+        let acrescimosSelecionados = [];
+        let quantidadeProduto = 1;
+
         function openProductModal(produtoId) {
             const produto = CONFIG.produtos.find(p => p.id === produtoId);
             if (!produto) return;
@@ -515,7 +784,7 @@
                             <div class="modal-product-price">R$ ${produto.preco.toFixed(2).replace('.', ',')}</div>
                         ` : ''}
                         <div class="modal-actions">
-                            <button class="modal-add-btn" onclick="adicionarAoCarrinho(${produto.id}); closeProductModal();">
+                            <button class="modal-add-btn" onclick="openAcrescimosModal(${produto.id}); closeProductModal();">
                                 <i class="fas fa-plus"></i>
                                 Adicionar ao Pedido
                             </button>
@@ -531,37 +800,194 @@
             document.getElementById('product-modal').style.display = 'none';
         }
 
-        function adicionarAoCarrinho(produtoId) {
+        function openAcrescimosModal(produtoId) {
             const produto = CONFIG.produtos.find(p => p.id === produtoId);
             if (!produto) return;
 
-            const itemExistente = carrinho.find(item => item.id === produtoId);
+            produtoSelecionado = produto;
+            acrescimosSelecionados = [];
+            quantidadeProduto = 1;
+
+            const modal = document.getElementById('acrescimos-modal');
             
+            // Preencher informações do produto
+            document.getElementById('acrescimos-produto-img').src = produto.imagem;
+            document.getElementById('acrescimos-produto-img').alt = produto.nome;
+            document.getElementById('acrescimos-produto-nome').textContent = produto.nome;
+            document.getElementById('acrescimos-produto-desc').textContent = produto.descricao;
+            document.getElementById('acrescimos-produto-preco').textContent = produto.preco.toFixed(2).replace('.', ',');
+            document.getElementById('produto-quantidade').value = quantidadeProduto;
+            document.getElementById('produto-observacoes').value = '';
+
+            // Carregar acréscimos
+            loadAcrescimos();
+            
+            // Atualizar total
+            updateTotalProduto();
+            
+            modal.style.display = 'block';
+        }
+
+        function closeAcrescimosModal() {
+            document.getElementById('acrescimos-modal').style.display = 'none';
+            produtoSelecionado = null;
+            acrescimosSelecionados = [];
+            quantidadeProduto = 1;
+        }
+
+        function loadAcrescimos() {
+            const container = document.getElementById('acrescimos-lista-disponivel');
+            const acrescimosAtivos = CONFIG.acrescimos?.filter(acr => acr.ativo) || [];
+
+            if (acrescimosAtivos.length === 0) {
+                container.innerHTML = '<div class="nenhum-acrescimo">Nenhum acréscimo disponível</div>';
+                return;
+            }
+
+            container.innerHTML = acrescimosAtivos.map(acrescimo => `
+        <div class="acrescimo-item" onclick="toggleAcrescimo(${acrescimo.id})">
+            <div class="acrescimo-checkbox">
+                <input type="checkbox" id="acr-${acrescimo.id}" onclick="event.stopPropagation(); toggleAcrescimo(${acrescimo.id})">
+                <span class="checkbox-custom"></span>
+            </div>
+            <div class="acrescimo-info">
+                <span class="acrescimo-nome">${acrescimo.nome}</span>
+                <span class="acrescimo-preco">+R$ ${acrescimo.preco.toFixed(2).replace('.', ',')}</span>
+            </div>
+        </div>
+    `).join('');
+        }
+
+        function toggleAcrescimo(acrescimoId) {
+    const acrescimo = CONFIG.acrescimos?.find(a => a.id === acrescimoId);
+    if (!acrescimo) return;
+
+    const checkbox = document.getElementById(`acr-${acrescimoId}`);
+    const index = acrescimosSelecionados.findIndex(a => a.id === acrescimoId);
+
+    // Se o checkbox foi clicado diretamente, usar seu estado
+    // Se foi clicado no item, alternar o estado do checkbox
+    if (event.target.type !== 'checkbox') {
+        checkbox.checked = !checkbox.checked;
+    }
+
+    if (checkbox.checked && index === -1) {
+        // Adicionar acréscimo
+        acrescimosSelecionados.push({
+            id: acrescimo.id,
+            nome: acrescimo.nome,
+            preco: acrescimo.preco
+        });
+    } else if (!checkbox.checked && index !== -1) {
+        // Remover acréscimo
+        acrescimosSelecionados.splice(index, 1);
+    }
+
+    updateAcrescimosList();
+    updateTotalProduto();
+}
+
+        function updateAcrescimosList() {
+            const container = document.getElementById('acrescimos-lista');
+            
+            if (acrescimosSelecionados.length === 0) {
+                container.innerHTML = '<div class="nenhum-acrescimo">Nenhum acréscimo selecionado</div>';
+                return;
+            }
+
+            container.innerHTML = acrescimosSelecionados.map(acrescimo => `
+                <div class="acrescimo-selecionado">
+                    <span class="acrescimo-nome">${acrescimo.nome}</span>
+                    <span class="acrescimo-preco">+R$ ${acrescimo.preco.toFixed(2).replace('.', ',')}</span>
+                    <button class="remove-acrescimo" onclick="removeAcrescimo(${acrescimo.id})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeAcrescimo(acrescimoId) {
+            const checkbox = document.getElementById(`acr-${acrescimoId}`);
+            if (checkbox) {
+                checkbox.checked = false;
+            }
+            toggleAcrescimo(acrescimoId);
+        }
+
+        function alterarQuantidadeModal(delta) {
+            const novaQuantidade = quantidadeProduto + delta;
+            if (novaQuantidade >= 1) {
+                quantidadeProduto = novaQuantidade;
+                document.getElementById('produto-quantidade').value = quantidadeProduto;
+                updateTotalProduto();
+            }
+        }
+
+        function updateTotalProduto() {
+            if (!produtoSelecionado) return;
+
+            const precoBase = produtoSelecionado.preco;
+            const precoAcrescimos = acrescimosSelecionados.reduce((total, acr) => total + acr.preco, 0);
+            const precoUnitario = precoBase + precoAcrescimos;
+            const precoTotal = precoUnitario * quantidadeProduto;
+
+            document.getElementById('total-produto-valor').textContent = precoTotal.toFixed(2).replace('.', ',');
+        }
+
+        function adicionarProdutoComAcrescimos() {
+            if (!produtoSelecionado) return;
+
+            const observacoes = document.getElementById('produto-observacoes').value.trim();
+            const precoBase = produtoSelecionado.preco;
+            const precoAcrescimos = acrescimosSelecionados.reduce((total, acr) => total + acr.preco, 0);
+            const precoUnitario = precoBase + precoAcrescimos;
+
+            // Criar nome detalhado do produto
+            let nomeCompleto = produtoSelecionado.nome;
+            if (acrescimosSelecionados.length > 0) {
+                const nomesAcrescimos = acrescimosSelecionados.map(a => a.nome).join(', ');
+                nomeCompleto += ` (+ ${nomesAcrescimos})`;
+            }
+
+            // Verificar se já existe um item idêntico no carrinho
+            const itemExistente = carrinho.find(item => 
+                item.produtoId === produtoSelecionado.id &&
+                JSON.stringify(item.acrescimos) === JSON.stringify(acrescimosSelecionados) &&
+                item.observacoes === observacoes
+            );
+
             if (itemExistente) {
-                itemExistente.quantidade++;
+                itemExistente.quantidade += quantidadeProduto;
             } else {
                 carrinho.push({
-                    id: produto.id,
-                    nome: produto.nome,
-                    preco: produto.preco,
-                    quantidade: 1
+                    id: Date.now(), // ID único para o item do carrinho
+                    produtoId: produtoSelecionado.id,
+                    nome: nomeCompleto,
+                    nomeOriginal: produtoSelecionado.nome,
+                    preco: precoUnitario,
+                    precoBase: precoBase,
+                    quantidade: quantidadeProduto,
+                    acrescimos: [...acrescimosSelecionados],
+                    observacoes: observacoes
                 });
             }
 
             atualizarCarrinho();
-            mostrarNotificacao('Item adicionado ao carrinho!');
+            closeAcrescimosModal();
+            mostrarNotificacao(`${produtoSelecionado.nome} adicionado ao carrinho!`);
         }
 
-        function removerDoCarrinho(produtoId) {
-            carrinho = carrinho.filter(item => item.id !== produtoId);
+        // Atualizar função de remoção do carrinho para usar o ID único
+        function removerDoCarrinho(itemId) {
+            carrinho = carrinho.filter(item => item.id !== itemId);
             atualizarCarrinho();
         }
 
-        function alterarQuantidade(produtoId, novaQuantidade) {
-            const item = carrinho.find(item => item.id === produtoId);
+        function alterarQuantidade(itemId, novaQuantidade) {
+            const item = carrinho.find(item => item.id === itemId);
             if (item) {
                 if (novaQuantidade <= 0) {
-                    removerDoCarrinho(produtoId);
+                    removerDoCarrinho(itemId);
                 } else {
                     item.quantidade = novaQuantidade;
                     atualizarCarrinho();
@@ -569,6 +995,7 @@
             }
         }
 
+        // Atualizar função do carrinho para mostrar acréscimos
         function atualizarCarrinho() {
             const cartCount = document.getElementById('cart-count');
             const cartItems = document.getElementById('cart-items');
@@ -586,7 +1013,13 @@
                 cartItems.innerHTML = carrinho.map(item => `
                     <div class="cart-item">
                         <div class="cart-item-info">
-                            <h4>${item.nome}</h4>
+                            <h4>${item.nomeOriginal}</h4>
+                            ${item.acrescimos.length > 0 ? `
+                                <div class="cart-item-acrescimos">
+                                    ${item.acrescimos.map(acr => `<span class="acrescimo-tag">+${acr.nome}</span>`).join('')}
+                                </div>
+                            ` : ''}
+                            ${item.observacoes ? `<div class="cart-item-obs"><i class="fas fa-comment"></i> ${item.observacoes}</div>` : ''}
                             <div class="cart-item-price">R$ ${item.preco.toFixed(2).replace('.', ',')}</div>
                         </div>
                         <div class="cart-item-controls">
@@ -626,63 +1059,380 @@
                 return;
             }
 
-            let mensagem = `🍔 *Novo Pedido - ${CONFIG.empresa.nome}*\n\n`;
+            // Mostrar modal de checkout
+            showCheckoutModal();
+        }
+
+        function showCheckoutModal() {
+            const modal = document.getElementById('checkout-modal');
             
-            carrinho.forEach(item => {
-                mensagem += `• ${item.quantidade}x ${item.nome}\n`;
-                mensagem += `  R$ ${item.preco.toFixed(2).replace('.', ',')} cada\n\n`;
+            // Carregar opções de pagamento
+            loadPagamentoOptions();
+            
+            // Carregar resumo do pedido
+            loadCheckoutSummary();
+            
+            // Verificar se delivery está disponível
+            const entregaOption = document.getElementById('entrega-option');
+            if (!CONFIG.pagamento.delivery.ativo) {
+                entregaOption.style.display = 'none';
+            } else {
+                entregaOption.style.display = 'block';
+                document.getElementById('taxa-entrega-display').textContent = 
+                    CONFIG.pagamento.delivery.taxa.toFixed(2).replace('.', ',');
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal').style.display = 'none';
+            document.getElementById('checkout-form').reset();
+            
+            // Esconder grupos condicionais
+            document.getElementById('mesa-group').style.display = 'none';
+            document.getElementById('endereco-group').style.display = 'none';
+            document.getElementById('troco-group').style.display = 'none';
+    document.getElementById('valor-troco-group').style.display = 'none';
+    document.getElementById('taxa-entrega-line').style.display = 'none';
+}
+
+function loadPagamentoOptions() {
+    const container = document.getElementById('pagamento-options');
+    const opcoes = [];
+
+    if (CONFIG.pagamento.pix.ativo) {
+        opcoes.push(`
+            <label class="radio-option">
+                <input type="radio" name="forma-pagamento" value="pix" onchange="handlePagamentoChange()">
+                <span class="radio-custom"></span>
+                <i class="fas fa-qrcode"></i>
+                PIX
+            </label>
+        `);
+    }
+
+    if (CONFIG.pagamento.dinheiro.ativo) {
+        opcoes.push(`
+            <label class="radio-option">
+                <input type="radio" name="forma-pagamento" value="dinheiro" onchange="handlePagamentoChange()">
+                <span class="radio-custom"></span>
+                <i class="fas fa-money-bill-wave"></i>
+                Dinheiro
+            </label>
+        `);
+    }
+
+    if (CONFIG.pagamento.cartao.ativo) {
+        opcoes.push(`
+            <label class="radio-option">
+                <input type="radio" name="forma-pagamento" value="cartao" onchange="handlePagamentoChange()">
+                <span class="radio-custom"></span>
+                <i class="fas fa-credit-card"></i>
+                Cartão
+            </label>
+        `);
+    }
+
+    container.innerHTML = opcoes.join('');
+}
+
+function loadCheckoutSummary() {
+    const itemsContainer = document.getElementById('checkout-items');
+    const subtotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+    
+    // Mostrar itens
+    itemsContainer.innerHTML = carrinho.map(item => `
+        <div class="checkout-item">
+            <span class="item-name">${item.quantidade}x ${item.nome}</span>
+            <span class="item-price">R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}</span>
+        </div>
+    `).join('');
+    
+    // Atualizar totais
+    document.getElementById('checkout-subtotal').textContent = subtotal.toFixed(2).replace('.', ',');
+    document.getElementById('checkout-total-final').textContent = subtotal.toFixed(2).replace('.', ',');
+}
+
+function handleTipoPedidoChange() {
+    const tipoPedido = document.querySelector('input[name="tipo-pedido"]:checked')?.value;
+    const mesaGroup = document.getElementById('mesa-group');
+    const enderecoGroup = document.getElementById('endereco-group');
+    const taxaEntregaLine = document.getElementById('taxa-entrega-line');
+    
+    // Esconder todos os grupos primeiro
+    mesaGroup.style.display = 'none';
+    enderecoGroup.style.display = 'none';
+    taxaEntregaLine.style.display = 'none';
+    
+    // Mostrar grupo relevante
+    if (tipoPedido === 'mesa') {
+        mesaGroup.style.display = 'block';
+    } else if (tipoPedido === 'entrega') {
+        enderecoGroup.style.display = 'block';
+        taxaEntregaLine.style.display = 'flex';
+        
+        // Atualizar total com taxa de entrega
+        updateCheckoutTotal();
+    }
+    
+    // Atualizar total
+    updateCheckoutTotal();
+}
+
+function handlePagamentoChange() {
+    const formaPagamento = document.querySelector('input[name="forma-pagamento"]:checked')?.value;
+    const trocoGroup = document.getElementById('troco-group');
+    
+    if (formaPagamento === 'dinheiro') {
+        trocoGroup.style.display = 'block';
+    } else {
+        trocoGroup.style.display = 'none';
+        document.getElementById('valor-troco-group').style.display = 'none';
+    }
+}
+
+function handleTrocoChange() {
+    const precisaTroco = document.querySelector('input[name="precisa-troco"]:checked')?.value;
+    const valorTrocoGroup = document.getElementById('valor-troco-group');
+    
+    if (precisaTroco === 'sim') {
+        valorTrocoGroup.style.display = 'block';
+    } else {
+        valorTrocoGroup.style.display = 'none';
+    }
+}
+
+function updateCheckoutTotal() {
+    const subtotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+    const tipoPedido = document.querySelector('input[name="tipo-pedido"]:checked')?.value;
+    let taxaEntrega = 0;
+    
+    if (tipoPedido === 'entrega' && CONFIG.pagamento.delivery.ativo) {
+        taxaEntrega = CONFIG.pagamento.delivery.taxa;
+        document.getElementById('checkout-taxa').textContent = taxaEntrega.toFixed(2).replace('.', ',');
+    }
+    
+    const total = subtotal + taxaEntrega;
+    document.getElementById('checkout-total-final').textContent = total.toFixed(2).replace('.', ',');
+}
+
+// Event listener para o formulário de checkout
+document.addEventListener('DOMContentLoaded', function() {
+    // ... código existente ...
+    
+    // Adicionar event listener para o formulário de checkout
+    document.getElementById('checkout-form').addEventListener('submit', handleCheckoutSubmit);
+});
+
+function handleCheckoutSubmit(e) {
+    e.preventDefault();
+    
+    // Validar campos obrigatórios
+    const nome = document.getElementById('cliente-nome').value.trim();
+    const tipoPedido = document.querySelector('input[name="tipo-pedido"]:checked')?.value;
+    const formaPagamento = document.querySelector('input[name="forma-pagamento"]:checked')?.value;
+    
+    if (!nome) {
+        alert('Por favor, informe seu nome.');
+        return;
+    }
+    
+    if (!tipoPedido) {
+        alert('Por favor, selecione o tipo de pedido.');
+        return;
+    }
+    
+    if (!formaPagamento) {
+        alert('Por favor, selecione a forma de pagamento.');
+        return;
+    }
+    
+    // Validações específicas
+    if (tipoPedido === 'entrega') {
+        const endereco = document.getElementById('endereco-entrega').value.trim();
+        if (!endereco) {
+            alert('Por favor, informe o endereço de entrega.');
+            return;
+        }
+    }
+    
+    if (formaPagamento === 'dinheiro') {
+        const precisaTroco = document.querySelector('input[name="precisa-troco"]:checked')?.value;
+        if (!precisaTroco) {
+            alert('Por favor, informe se precisa de troco.');
+            return;
+        }
+        
+        if (precisaTroco === 'sim') {
+            const valorTroco = document.getElementById('valor-troco').value;
+            if (!valorTroco || parseFloat(valorTroco) <= 0) {
+                alert('Por favor, informe o valor para o troco.');
+                return;
+            }
+        }
+    }
+    
+    // Processar pedido
+    processarPedidoFinal();
+}
+
+function processarPedidoFinal() {
+    const nome = document.getElementById('cliente-nome').value.trim();
+    const tipoPedido = document.querySelector('input[name="tipo-pedido"]:checked').value;
+    const formaPagamento = document.querySelector('input[name="forma-pagamento"]:checked').value;
+    const observacoes = document.getElementById('observacoes').value.trim();
+    
+    let mensagem = `🍔 *Novo Pedido - ${CONFIG.empresa.nome}*\n\n`;
+    mensagem += `👤 *Cliente:* ${nome}\n`;
+    
+    // Tipo de pedido
+    const tipoIcons = {
+        'mesa': '🪑',
+        'retirada': '🚶‍♂️',
+        'entrega': '🚚'
+    };
+    
+    const tipoTextos = {
+        'mesa': 'Mesa',
+        'retirada': 'Retirada',
+        'entrega': 'Entrega'
+    };
+    
+    mensagem += `${tipoIcons[tipoPedido]} *Tipo:* ${tipoTextos[tipoPedido]}`;
+    
+    if (tipoPedido === 'mesa') {
+        const numeroMesa = document.getElementById('numero-mesa').value;
+        if (numeroMesa) {
+            mensagem += ` - Mesa ${numeroMesa}`;
+        }
+    } else if (tipoPedido === 'entrega') {
+        const endereco = document.getElementById('endereco-entrega').value.trim();
+        mensagem += `\n📍 *Endereço:* ${endereco}`;
+    }
+    
+    mensagem += `\n\n📋 *ITENS DO PEDIDO:*\n`;
+    
+    carrinho.forEach(item => {
+        mensagem += `• ${item.quantidade}x ${item.nomeOriginal}\n`;
+        
+        if (item.acrescimos.length > 0) {
+            item.acrescimos.forEach(acr => {
+                mensagem += `  + ${acr.nome} (+R$ ${acr.preco.toFixed(2).replace('.', ',')})\n`;
             });
+        }
+        
+        if (item.observacoes) {
+            mensagem += `  📝 ${item.observacoes}\n`;
+        }
+        
+        mensagem += `  💰 R$ ${item.preco.toFixed(2).replace('.', ',')} cada\n`;
+        mensagem += `  🔢 Subtotal: R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}\n\n`;
+    });
 
-            const total = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
-            mensagem += `💰 *Total: R$ ${total.toFixed(2).replace('.', ',')}*\n\n`;
-            
-            if (CONFIG.pagamento.delivery.ativo) {
-                mensagem += `🚚 Taxa de entrega: R$ ${CONFIG.pagamento.delivery.taxa.toFixed(2).replace('.', ',')}\n`;
-                mensagem += `⏰ Tempo estimado: ${CONFIG.pagamento.delivery.tempoEntrega}\n\n`;
+    const subtotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+    let taxaEntrega = 0;
+    
+    mensagem += `\n💰 *Subtotal:* R$ ${subtotal.toFixed(2).replace('.', ',')}\n`;
+    
+    if (tipoPedido === 'entrega' && CONFIG.pagamento.delivery.ativo) {
+        taxaEntrega = CONFIG.pagamento.delivery.taxa;
+        mensagem += `🚚 *Taxa de entrega:* R$ ${taxaEntrega.toFixed(2).replace('.', ',')}\n`;
+        mensagem += `⏰ *Tempo estimado:* ${CONFIG.pagamento.delivery.tempoEntrega}\n`;
+    }
+    
+    const total = subtotal + taxaEntrega;
+    mensagem += `💵 *TOTAL:* R$ ${total.toFixed(2).replace('.', ',')}\n\n`;
+    
+    // Forma de pagamento
+    const pagamentoIcons = {
+        'pix': '📱',
+        'dinheiro': '💵',
+        'cartao': '💳'
+    };
+    
+    const pagamentoTextos = {
+        'pix': 'PIX',
+        'dinheiro': 'Dinheiro',
+        'cartao': 'Cartão'
+    };
+    
+    mensagem += `${pagamentoIcons[formaPagamento]} *Pagamento:* ${pagamentoTextos[formaPagamento]}`;
+    
+    if (formaPagamento === 'pix' && CONFIG.pagamento.pix.chave) {
+        mensagem += `\n🔑 *Chave PIX:* ${CONFIG.pagamento.pix.chave}`;
+    } else if (formaPagamento === 'dinheiro') {
+        const precisaTroco = document.querySelector('input[name="precisa-troco"]:checked').value;
+        if (precisaTroco === 'sim') {
+            const valorTroco = document.getElementById('valor-troco').value;
+            mensagem += `\n💸 *Troco para:* R$ ${parseFloat(valorTroco).toFixed(2).replace('.', ',')}`;
+            const troco = parseFloat(valorTroco) - total;
+            mensagem += `\n↩️ *Troco:* R$ ${troco.toFixed(2).replace('.', ',')}`;
+        } else {
+            mensagem += `\n✅ *Não precisa de troco*`;
+        }
+    }
+    
+    if (observacoes) {
+        mensagem += `\n\n📝 *Observações:* ${observacoes}`;
+    }
+    
+    mensagem += `\n\n⏰ *Pedido realizado em:* ${new Date().toLocaleString('pt-BR')}`;
+    
+    const whatsappUrl = `https://wa.me/${CONFIG.configuracoes.numeroWhatsapp}?text=${encodeURIComponent(mensagem)}`;
+    window.open(whatsappUrl, '_blank');
+    
+    // Fechar modal e limpar carrinho
+    closeCheckoutModal();
+    carrinho = [];
+    atualizarCarrinho();
+    toggleCart(); // Fechar carrinho
+    
+    mostrarNotificacao('Pedido enviado com sucesso!', 'success');
+}
+
+function mostrarNotificacao(mensagem, tipo = 'success') {
+    // Criar elemento de notificação
+    const notificacao = document.createElement('div');
+    notificacao.className = `notification ${tipo}`;
+    notificacao.innerHTML = `
+        <i class="fas fa-${tipo === 'success' ? 'check-circle' : tipo === 'error' ? 'exclamation-circle'  : 'info-circle'}"></i>
+        <span>${mensagem}</span>
+    `;
+    
+    document.body.appendChild(notificacao);
+    
+    // Mostrar notificação
+    setTimeout(() => notificacao.classList.add('show'), 100);
+    
+    // Remover notificação após 3 segundos
+    setTimeout(() => {
+        notificacao.classList.remove('show');
+        setTimeout(() => {
+            if (document.body.contains(notificacao)) {
+                document.body.removeChild(notificacao);
             }
+        }, 300);
+    }, 3000);
+}
 
-            mensagem += `📍 Endereço de entrega: _Por favor, informe seu endereço_\n\n`;
-            mensagem += `💳 Forma de pagamento: _Por favor, informe como deseja pagar_`;
+// Fechar modal ao clicar fora
+window.onclick = function(event) {
+    const productModal = document.getElementById('product-modal');
+    const checkoutModal = document.getElementById('checkout-modal');
+    const acrescimosModal = document.getElementById('acrescimos-modal');
+    
+    if (event.target === productModal) {
+        closeProductModal();
+    } else if (event.target === checkoutModal) {
+        closeCheckoutModal();
+    } else if (event.target === acrescimosModal) {
+        closeAcrescimosModal();
+    }
+}
 
-            const whatsappUrl = `https://wa.me/${CONFIG.configuracoes.numeroWhatsapp}?text=${encodeURIComponent(mensagem)}`;
-            window.open(whatsappUrl, '_blank');
-        }
-
-        function mostrarNotificacao(mensagem, tipo = 'success') {
-            // Criar elemento de notificação
-            const notificacao = document.createElement('div');
-            notificacao.className = `notification ${tipo}`;
-            notificacao.innerHTML = `
-                <i class="fas fa-${tipo === 'success' ? 'check-circle' : tipo === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-                <span>${mensagem}</span>
-            `;
-            
-            document.body.appendChild(notificacao);
-            
-            // Mostrar notificação
-            setTimeout(() => notificacao.classList.add('show'), 100);
-            
-            // Remover notificação após 3 segundos
-            setTimeout(() => {
-                notificacao.classList.remove('show');
-                setTimeout(() => {
-                    if (document.body.contains(notificacao)) {
-                        document.body.removeChild(notificacao);
-                    }
-                }, 300);
-            }, 3000);
-        }
-
-        // Fechar modal ao clicar fora
-        window.onclick = function(event) {
-            const modal = document.getElementById('product-modal');
-            if (event.target === modal) {
-                closeProductModal();
-            }
-        }
-
-        // Atualizar horário a cada minuto
-        setInterval(verificarHorarioFuncionamento, 60000);
+// Atualizar horário a cada minuto
+setInterval(verificarHorarioFuncionamento, 60000);
     </script>
 </body>
 </html>
