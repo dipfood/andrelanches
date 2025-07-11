@@ -3,31 +3,35 @@
 -- Tabela de categorias
 CREATE TABLE categories (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
+  name VARCHAR(100) NOT NULL UNIQUE,
   description TEXT,
   active BOOLEAN DEFAULT true,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Adicionado updated_at
 );
 
 -- Tabela de produtos
 CREATE TABLE products (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(200) NOT NULL,
+  name VARCHAR(200) NOT NULL UNIQUE,
   description TEXT,
   price DECIMAL(10,2) NOT NULL,
   image_url TEXT,
   category_id INTEGER REFERENCES categories(id),
   active BOOLEAN DEFAULT true,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  has_addons BOOLEAN DEFAULT false,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Adicionado updated_at
 );
 
 -- Tabela de acréscimos (addons)
 CREATE TABLE addons (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
+  name VARCHAR(100) NOT NULL UNIQUE,
   price DECIMAL(10,2) NOT NULL,
   active BOOLEAN DEFAULT true,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Adicionado updated_at
 );
 
 -- Tabela de configurações do sistema
@@ -54,8 +58,83 @@ CREATE TABLE orders (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Tabela de dias de funcionamento
+CREATE TABLE working_days (
+  id SERIAL PRIMARY KEY,
+  day_of_week VARCHAR(10) UNIQUE NOT NULL, -- 'sunday', 'monday', etc.
+  is_working BOOLEAN DEFAULT true,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Inserir dias de funcionamento padrão (todos os dias como true)
+INSERT INTO working_days (day_of_week, is_working) VALUES
+('sunday', true),
+('monday', true),
+('tuesday', true),
+('wednesday', true),
+('thursday', true),
+('friday', true),
+('saturday', true)
+ON CONFLICT (day_of_week) DO NOTHING;
+
+-- Adicionar função para atualizar 'updated_at' automaticamente
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Criar triggers para as tabelas que precisam de 'updated_at'
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'set_timestamp_categories') THEN
+        CREATE TRIGGER set_timestamp_categories
+        BEFORE UPDATE ON categories
+        FOR EACH ROW
+        EXECUTE PROCEDURE update_updated_at_column();
+    END IF;
+END $$;
+
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'set_timestamp_products') THEN
+        CREATE TRIGGER set_timestamp_products
+        BEFORE UPDATE ON products
+        FOR EACH ROW
+        EXECUTE PROCEDURE update_updated_at_column();
+    END IF;
+END $$;
+
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'set_timestamp_addons') THEN
+        CREATE TRIGGER set_timestamp_addons
+        BEFORE UPDATE ON addons
+        FOR EACH ROW
+        EXECUTE PROCEDURE update_updated_at_column();
+    END IF;
+END $$;
+
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'set_timestamp_orders') THEN
+        CREATE TRIGGER set_timestamp_orders
+        BEFORE UPDATE ON orders
+        FOR EACH ROW
+        EXECUTE PROCEDURE update_updated_at_column();
+    END IF;
+END $$;
+
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'set_timestamp_working_days') THEN
+        CREATE TRIGGER set_timestamp_working_days
+        BEFORE UPDATE ON working_days
+        FOR EACH ROW
+        EXECUTE PROCEDURE update_updated_at_column();
+    END IF;
+END $$;
+
 -- Inserir configurações padrão
-INSERT INTO settings (key, value) VALUES 
+INSERT INTO settings (key, value) VALUES
 ('store_open', 'true'),
 ('opening_time', '08:00'),
 ('closing_time', '22:00'),
@@ -63,29 +142,33 @@ INSERT INTO settings (key, value) VALUES
 ('pix_key', 'seuemail@exemplo.com'),
 ('store_name', 'Meu Restaurante'),
 ('store_phone', '(11) 99999-9999'),
-('store_address', 'Rua Exemplo, 123');
+('store_address', 'Rua Exemplo, 123')
+ON CONFLICT (key) DO NOTHING;
 
 -- Adicionar configuração do WhatsApp
-INSERT INTO settings (key, value) VALUES ('whatsapp_number', '5511999999999');
+INSERT INTO settings (key, value) VALUES ('whatsapp_number', '5511999999999')
+ON CONFLICT (key) DO NOTHING;
 
--- Atualizar o telefone da loja para incluir código do país
+-- Atualizar o telefone da loja para incluir código do país (se necessário)
 UPDATE settings SET value = '5511999999999' WHERE key = 'store_phone';
 
 -- Inserir categorias de exemplo
-INSERT INTO categories (name, description) VALUES 
+INSERT INTO categories (name, description) VALUES
 ('Lanches', 'Hambúrgueres e sanduíches'),
 ('Bebidas', 'Refrigerantes, sucos e águas'),
 ('Sobremesas', 'Doces e sobremesas'),
-('Pratos Principais', 'Pratos completos');
+('Pratos Principais', 'Pratos completos')
+ON CONFLICT (name) DO NOTHING;
 
--- Inserir produtos de exemplo
-INSERT INTO products (name, description, price, category_id) VALUES 
-('Hambúrguer Clássico', 'Pão, carne, queijo, alface e tomate', 15.90, 1),
-('X-Bacon', 'Hambúrguer com bacon crocante', 18.90, 1),
-('Coca-Cola 350ml', 'Refrigerante gelado', 4.50, 2),
-('Suco de Laranja', 'Suco natural de laranja', 6.00, 2),
-('Pudim', 'Pudim de leite caseiro', 8.00, 3),
-('Prato Feito', 'Arroz, feijão, carne e salada', 22.90, 4);
+-- Inserir produtos de exemplo (com has_addons)
+INSERT INTO products (name, description, price, category_id, has_addons) VALUES
+('Hambúrguer Clássico', 'Pão, carne, queijo, alface e tomate', 15.90, 1, true),
+('X-Bacon', 'Hambúrguer com bacon crocante', 18.90, 1, true),
+('Coca-Cola 350ml', 'Refrigerante gelado', 4.50, 2, false),
+('Suco de Laranja', 'Suco natural de laranja', 6.00, 2, false),
+('Pudim', 'Pudim de leite caseiro', 8.00, 3, false),
+('Prato Feito', 'Arroz, feijão, carne e salada', 22.90, 4, true)
+ON CONFLICT (name) DO UPDATE SET description = EXCLUDED.description, price = EXCLUDED.price, category_id = EXCLUDED.category_id, has_addons = EXCLUDED.has_addons;
 
 -- Inserir acréscimos de exemplo
 INSERT INTO addons (name, price, active) VALUES
@@ -93,27 +176,12 @@ INSERT INTO addons (name, price, active) VALUES
 ('Queijo Extra', 2.50, true),
 ('Molho Especial', 1.50, true),
 ('Batata Frita Pequena', 7.00, true),
-('Refrigerante Lata', 5.00, true);
+('Refrigerante Lata', 5.00, true)
+ON CONFLICT (name) DO NOTHING;
 
 -- Adicionar configurações de cor padrão
-INSERT INTO settings (key, value) VALUES 
+INSERT INTO settings (key, value) VALUES
 ('header_color_start', '#667eea'),
 ('header_color_end', '#764ba2'),
 ('background_color', '#f8f9fa')
 ON CONFLICT (key) DO NOTHING;
-
--- Garantir que todas as configurações existam
-INSERT INTO settings (key, value) VALUES 
-('whatsapp_number', '5511999999999')
-ON CONFLICT (key) DO NOTHING;
-
--- Adicionar nova configuração para dias de funcionamento (todos os dias por padrão)
-INSERT INTO settings (key, value) VALUES 
-('active_days', '[0,1,2,3,4,5,6]') -- 0=Domingo, 1=Segunda, ..., 6=Sábado
-ON CONFLICT (key) DO NOTHING;
-
--- Atualizar configurações se necessário
-UPDATE settings SET value = 'true' WHERE key = 'store_open';
-UPDATE settings SET value = '08:00' WHERE key = 'opening_time';
-UPDATE settings SET value = '22:00' WHERE key = 'closing_time';
-UPDATE settings SET value = '5.00' WHERE key = 'delivery_fee';

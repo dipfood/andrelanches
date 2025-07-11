@@ -1,6 +1,7 @@
 // Configuração do Supabase - SUBSTITUA PELAS SUAS CREDENCIAIS
-const SUPABASE_URL = "YOUR_SUPABASE_URL"
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"
+const SUPABASE_URL = "https://ckydrwnnlcusczqcppxi.supabase.co"
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNreWRyd25ubGN1c2N6cWNwcHhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyNTY1NjMsImV4cCI6MjA2NzgzMjU2M30.KKvmpj0gb66BWLHlL6_YD_b0VAUIKP4rj75lhGeCklk"
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 // Variáveis globais
@@ -12,6 +13,7 @@ let currentCategory = "all"
 let allAddons = [] // Nova variável para todos os acréscimos ativos
 let currentProductInDetailModal = null // Armazena o produto atualmente no modal de detalhes
 let currentQuantityInDetailModal = 1 // Quantidade do produto no modal de detalhes
+let workingDays = [] // Nova variável para os dias de funcionamento
 
 // Inicialização
 document.addEventListener("DOMContentLoaded", () => {
@@ -75,6 +77,7 @@ async function initializeApp() {
 
   try {
     await loadSettings()
+    await loadWorkingDays() // Carregar dias de funcionamento
     applyThemeColors() // Aplica as cores do tema
 
     // Verificar se a loja está aberta
@@ -111,21 +114,22 @@ async function loadSettings() {
     data.forEach((setting) => {
       settings[setting.key] = setting.value
     })
-
-    // Parse active_days from string to array
-    if (settings.active_days) {
-      try {
-        settings.active_days = JSON.parse(settings.active_days)
-      } catch (e) {
-        console.error("Erro ao parsear active_days:", e)
-        settings.active_days = [] // Fallback para array vazio em caso de erro
-      }
-    } else {
-      settings.active_days = []
-    }
   } catch (error) {
     console.error("Erro ao carregar configurações:", error)
     throw error
+  }
+}
+
+// Carregar dias de funcionamento
+async function loadWorkingDays() {
+  try {
+    const { data, error } = await supabase.from("working_days").select("*")
+
+    if (error) throw error
+    workingDays = data || []
+  } catch (error) {
+    console.error("Erro ao carregar dias de funcionamento:", error)
+    workingDays = []
   }
 }
 
@@ -161,9 +165,9 @@ async function loadProducts() {
     const { data, error } = await supabase
       .from("products")
       .select(`
-              *,
-              categories (name)
-          `)
+                *,
+                categories (name)
+            `)
       .eq("active", true)
       .order("name")
 
@@ -188,27 +192,31 @@ async function loadAllAddons() {
   }
 }
 
-// Verificar se a loja está aberta
+// Verificar se a loja está aberta (agora inclui verificação de dia da semana)
 function isStoreOpen() {
-  // Primeiro, verifica o status geral da loja
+  // 1. Verificar status geral da loja (aberto/fechado)
   if (settings.store_open !== "true") {
     return false
   }
 
+  // 2. Verificar horário de funcionamento
   const now = new Date()
-  const currentDay = now.getDay() // 0 para Domingo, 1 para Segunda, ..., 6 para Sábado
   const currentTime = now.getHours() * 60 + now.getMinutes()
 
   const openingTime = timeToMinutes(settings.opening_time || "08:00")
   const closingTime = timeToMinutes(settings.closing_time || "22:00")
 
-  // Verifica se o dia atual está entre os dias ativos
-  if (!settings.active_days.includes(currentDay)) {
-    return false
-  }
+  const isWithinHours = currentTime >= openingTime && currentTime <= closingTime
 
-  // Se o dia estiver ativo, verifica o horário
-  return currentTime >= openingTime && currentTime <= closingTime
+  // 3. Verificar dia da semana
+  const daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
+  const currentDayIndex = now.getDay() // 0 for Sunday, 1 for Monday, etc.
+  const currentDayName = daysOfWeek[currentDayIndex]
+
+  const todayWorkingDay = workingDays.find((day) => day.day_of_week === currentDayName)
+  const isWorkingDay = todayWorkingDay ? todayWorkingDay.is_working : true // Default to true if not found
+
+  return isWithinHours && isWorkingDay
 }
 
 // Converter horário para minutos
@@ -262,24 +270,24 @@ function displayProducts() {
   container.innerHTML = filteredProducts
     .map(
       (product) => `
-    <div class="product-card">
-        <div class="product-image">
-            ${
-              product.image_url
-                ? `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">`
-                : "🍽️"
-            }
-        </div>
-        <div class="product-info">
-            <h3>${product.name}</h3>
-            <p>${product.description || ""}</p>
-            <div class="product-price">R$ ${Number.parseFloat(product.price).toFixed(2).replace(".", ",")}</div>
-            <button class="btn-add-cart" onclick="openProductDetailModal(${product.id})">
-                Adicionar ao Carrinho
-            </button>
-        </div>
-    </div>
-`,
+      <div class="product-card">
+          <div class="product-image">
+              ${
+                product.image_url
+                  ? `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">`
+                  : "🍽️"
+              }
+          </div>
+          <div class="product-info">
+              <h3>${product.name}</h3>
+              <p>${product.description || ""}</p>
+              <div class="product-price">R$ ${Number.parseFloat(product.price).toFixed(2).replace(".", ",")}</div>
+              <button class="btn-add-cart" onclick="openProductDetailModal(${product.id})">
+                  Adicionar ao Carrinho
+              </button>
+          </div>
+      </div>
+  `,
     )
     .join("")
 }
@@ -307,22 +315,30 @@ function openProductDetailModal(productId) {
     .replace(".", ",")
   document.getElementById("detail-quantity").textContent = currentQuantityInDetailModal
 
-  // Exibir acréscimos
+  // Exibir/Ocultar seção de acréscimos com base em product.has_addons
+  const addonsSection = document.querySelector(".addons-section")
   const addonsListContainer = document.getElementById("product-addons-list")
-  if (allAddons.length > 0) {
-    addonsListContainer.innerHTML = allAddons
-      .map(
-        (addon) => `
-        <label class="addon-item">
-            <input type="checkbox" value="${addon.id}">
-            <span>${addon.name}</span>
-            <span class="addon-price">R$ ${Number.parseFloat(addon.price).toFixed(2).replace(".", ",")}</span>
-        </label>
-    `,
-      )
-      .join("")
+
+  if (product.has_addons) {
+    addonsSection.style.display = "block"
+    if (allAddons.length > 0) {
+      addonsListContainer.innerHTML = allAddons
+        .map(
+          (addon) => `
+            <label class="addon-item">
+                <input type="checkbox" value="${addon.id}">
+                <span>${addon.name}</span>
+                <span class="addon-price">R$ ${Number.parseFloat(addon.price).toFixed(2).replace(".", ",")}</span>
+            </label>
+        `,
+        )
+        .join("")
+    } else {
+      addonsListContainer.innerHTML = "<p>Nenhum acréscimo disponível para este item.</p>"
+    }
   } else {
-    addonsListContainer.innerHTML = "<p>Nenhum acréscimo disponível.</p>"
+    addonsSection.style.display = "none"
+    addonsListContainer.innerHTML = "" // Limpa a lista de acréscimos
   }
 
   document.getElementById("product-detail-modal").style.display = "block"
@@ -403,19 +419,19 @@ function updateCartDisplay() {
       }
 
       return `
-    <div class="cart-item">
-        <div class="cart-item-info">
-            <h4>${item.name}</h4>
-            <p>R$ ${item.price.toFixed(2).replace(".", ",")} cada</p>
-            ${addonsHtml}
-        </div>
-        <div class="cart-item-controls">
-            <button class="quantity-btn" onclick="updateQuantity('${item.hash}', -1)" ${item.quantity <= 1 ? "disabled" : ""}>-</button>
-            <span class="quantity">${item.quantity}</span>
-            <button class="quantity-btn" onclick="updateQuantity('${item.hash}', 1)">+</button>
-        </div>
-    </div>
-`
+      <div class="cart-item">
+          <div class="cart-item-info">
+              <h4>${item.name}</h4>
+              <p>R$ ${item.price.toFixed(2).replace(".", ",")} cada</p>
+              ${addonsHtml}
+          </div>
+          <div class="cart-item-controls">
+              <button class="quantity-btn" onclick="updateQuantity('${item.hash}', -1)" ${item.quantity <= 1 ? "disabled" : ""}>-</button>
+              <span class="quantity">${item.quantity}</span>
+              <button class="quantity-btn" onclick="updateQuantity('${item.hash}', 1)">+</button>
+          </div>
+      </div>
+  `
     })
     .join("")
 
@@ -647,6 +663,16 @@ async function submitOrder(e) {
     document.getElementById("order-number").textContent = data[0].id
     document.getElementById("success-modal").style.display = "block"
 
+    // Salvar informações do cliente no localStorage para a próxima vez
+    localStorage.setItem("lastCustomerName", orderData.customer_name)
+    localStorage.setItem("lastCustomerPhone", orderData.customer_phone)
+    localStorage.setItem("lastDeliveryType", orderData.delivery_type)
+    if (orderData.delivery_type === "delivery" && orderData.customer_address) {
+      localStorage.setItem("lastCustomerAddress", orderData.customer_address)
+    } else {
+      localStorage.removeItem("lastCustomerAddress") // Limpa se não for entrega
+    }
+
     // Limpar carrinho
     clearCart()
 
@@ -839,6 +865,7 @@ function debugInfo() {
   console.log("Products:", products)
   console.log("Cart:", cart)
   console.log("Addons:", allAddons)
+  console.log("Working Days:", workingDays)
 }
 
 // Adicionar ao escopo global para debug
