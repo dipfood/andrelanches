@@ -129,6 +129,16 @@ body {
   margin-bottom: 15px;
 }
 
+/* NOVO: Contêiner para status e tempos estimados */
+.status-and-time-wrapper {
+  display: flex;
+  align-items: center; /* Alinha itens verticalmente no meio */
+  gap: 15px; /* Espaço entre o status e a caixa de tempo */
+  justify-content: center; /* Centraliza o bloco inteiro */
+  flex-wrap: wrap; /* Permite quebra de linha em telas menores */
+  margin-top: 15px; /* Espaço do info da loja */
+}
+
 .status-indicator {
   display: inline-flex;
   align-items: center;
@@ -148,6 +158,28 @@ body {
 .status-dot.open {
   background: #28a745;
   box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+}
+
+/* NOVO: Estilos para a caixa de tempo estimado */
+.time-estimate-box {
+  background: rgba(255, 255, 255, 0.2); /* Fundo branco ligeiramente transparente */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Borda clara */
+  padding: 8px 15px;
+  border-radius: 10px;
+  font-size: 0.9em;
+  color: white; /* Cor do texto */
+  text-align: left; /* Alinha o texto dentro da caixa */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  backdrop-filter: blur(3px); /* Efeito de desfoque */
+}
+
+.time-estimate-box p {
+  margin: 0; /* Remove margens padrão dos parágrafos */
+  line-height: 1.4;
+}
+
+.time-estimate-box p:first-child {
+  margin-bottom: 3px; /* Pequeno espaço entre retirada e entrega */
 }
 
 /* Carrinho */
@@ -688,6 +720,15 @@ body {
 
   .addons-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* Responsividade para o novo contêiner de status e tempo */
+  .status-and-time-wrapper {
+    flex-direction: column; /* Empilha verticalmente em telas pequenas */
+    gap: 10px;
+  }
+  .time-estimate-box {
+    text-align: center; /* Centraliza o texto quando empilhado */
   }
 }
 

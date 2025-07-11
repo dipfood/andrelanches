@@ -1,7 +1,7 @@
 // Configuração do Supabase - SUBSTITUA PELAS SUAS CREDENCIAIS
-const SUPABASE_URL = "https://ckydrwnnlcusczqcppxi.supabase.co"
+const SUPABASE_URL = "https://tytymgozlxyudodsygpz.supabase.co"
 const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNreWRyd25ubGN1c2N6cWNwcHhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyNTY1NjMsImV4cCI6MjA2NzgzMjU2M30.KKvmpj0gb66BWLHlL6_YD_b0VAUIKP4rj75lhGeCklk"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5dHltZ296bHh5dWRvZHN5Z3B6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyNjY5NjIsImV4cCI6MjA2Nzg0Mjk2Mn0.Lo4FDLEsIMhJZ8J_lSLo3JfB7p1mG5fAGB35lULyDG4"
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 // Variáveis globais
@@ -234,6 +234,21 @@ function displayStoreInfo() {
   if (settings.store_address) storeInfo.push(`📍 ${settings.store_address}`)
 
   document.getElementById("store-info").textContent = storeInfo.join(" • ")
+
+  // NOVO: Exibir tempos estimados de retirada e entrega
+  const estimatedPickupTimeDisplay = document.getElementById("estimated-pickup-time-display")
+  const estimatedDeliveryTimeDisplay = document.getElementById("estimated-delivery-time-display")
+
+  if (estimatedPickupTimeDisplay) {
+    estimatedPickupTimeDisplay.textContent = settings.estimated_pickup_time
+      ? `Tempo para retirada: ${settings.estimated_pickup_time}`
+      : ""
+  }
+  if (estimatedDeliveryTimeDisplay) {
+    estimatedDeliveryTimeDisplay.textContent = settings.estimated_delivery_time
+      ? `Tempo de entrega: ${settings.estimated_delivery_time}`
+      : ""
+  }
 }
 
 // Exibir categorias
@@ -270,24 +285,24 @@ function displayProducts() {
   container.innerHTML = filteredProducts
     .map(
       (product) => `
-      <div class="product-card">
-          <div class="product-image">
-              ${
-                product.image_url
-                  ? `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">`
-                  : "🍽️"
-              }
-          </div>
-          <div class="product-info">
-              <h3>${product.name}</h3>
-              <p>${product.description || ""}</p>
-              <div class="product-price">R$ ${Number.parseFloat(product.price).toFixed(2).replace(".", ",")}</div>
-              <button class="btn-add-cart" onclick="openProductDetailModal(${product.id})">
-                  Adicionar ao Carrinho
-              </button>
-          </div>
-      </div>
-  `,
+    <div class="product-card">
+        <div class="product-image">
+            ${
+              product.image_url
+                ? `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">`
+                : "🍽️"
+            }
+        </div>
+        <div class="product-info">
+            <h3>${product.name}</h3>
+            <p>${product.description || ""}</p>
+            <div class="product-price">R$ ${Number.parseFloat(product.price).toFixed(2).replace(".", ",")}</div>
+            <button class="btn-add-cart" onclick="openProductDetailModal(${product.id})">
+                Adicionar ao Carrinho
+            </button>
+        </div>
+    </div>
+`,
     )
     .join("")
 }
@@ -325,12 +340,12 @@ function openProductDetailModal(productId) {
       addonsListContainer.innerHTML = allAddons
         .map(
           (addon) => `
-            <label class="addon-item">
-                <input type="checkbox" value="${addon.id}">
-                <span>${addon.name}</span>
-                <span class="addon-price">R$ ${Number.parseFloat(addon.price).toFixed(2).replace(".", ",")}</span>
-            </label>
-        `,
+        <label class="addon-item">
+            <input type="checkbox" value="${addon.id}">
+            <span>${addon.name}</span>
+            <span class="addon-price">R$ ${Number.parseFloat(addon.price).toFixed(2).replace(".", ",")}</span>
+        </label>
+    `,
         )
         .join("")
     } else {
@@ -712,6 +727,14 @@ async function sendToWhatsApp(orderData, orderId) {
       message += `*Troco para:* R$ ${orderData.change_for.toFixed(2).replace(".", ",")}\n`
       message += `*Troco a ser dado:* R$ ${troco.toFixed(2).replace(".", ",")}\n`
     }
+
+    // NOVO: Adicionar tempo estimado com base no tipo de entrega
+    if (orderData.delivery_type === "delivery" && settings.estimated_delivery_time) {
+      message += `⏳ *Tempo Estimado de Entrega:* ${settings.estimated_delivery_time}\n`
+    } else if (orderData.delivery_type === "pickup" && settings.estimated_pickup_time) {
+      message += `⏳ *Tempo Estimado para Retirada:* ${settings.estimated_pickup_time}\n`
+    }
+
     message += `\n` // Linha em branco para separar
 
     message += `📋 *ITENS DO PEDIDO:*\n`

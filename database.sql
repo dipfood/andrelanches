@@ -7,7 +7,7 @@ CREATE TABLE categories (
   description TEXT,
   active BOOLEAN DEFAULT true,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Adicionado updated_at
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Tabela de produtos
@@ -21,7 +21,7 @@ CREATE TABLE products (
   active BOOLEAN DEFAULT true,
   has_addons BOOLEAN DEFAULT false,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Adicionado updated_at
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Tabela de acréscimos (addons)
@@ -31,7 +31,7 @@ CREATE TABLE addons (
   price DECIMAL(10,2) NOT NULL,
   active BOOLEAN DEFAULT true,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Adicionado updated_at
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Tabela de configurações do sistema
@@ -184,4 +184,11 @@ INSERT INTO settings (key, value) VALUES
 ('header_color_start', '#667eea'),
 ('header_color_end', '#764ba2'),
 ('background_color', '#f8f9fa')
+ON CONFLICT (key) DO NOTHING;
+
+-- REMOVIDO: estimated_delivery_time
+-- NOVO: Adicionar configurações para tempo estimado de retirada e entrega
+INSERT INTO settings (key, value) VALUES
+('estimated_pickup_time', '15-20 minutos'),
+('estimated_delivery_time', '30-45 minutos')
 ON CONFLICT (key) DO NOTHING;

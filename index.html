@@ -29,9 +29,16 @@
           <div class="container">
               <h1 id="store-name">Cardápio Digital</h1>
               <p id="store-info"></p>
-              <div class="status-indicator">
-                  <span class="status-dot open"></span>
-                  <span>Aberto</span>
+              <!-- NOVO: Contêiner para status e tempos estimados -->
+              <div class="status-and-time-wrapper">
+                  <div class="status-indicator">
+                      <span class="status-dot open"></span>
+                      <span>Aberto</span>
+                  </div>
+                  <div class="time-estimate-box">
+                      <p id="estimated-pickup-time-display"></p>
+                      <p id="estimated-delivery-time-display"></p>
+                  </div>
               </div>
           </div>
       </header>
