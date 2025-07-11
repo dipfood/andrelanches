@@ -1,6 +1,6 @@
 // Configuração do Supabase - SUBSTITUA PELAS SUAS CREDENCIAIS
-const SUPABASE_URL = "https://ckydrwnnlcusczqcppxi.supabase.co"
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNreWRyd25ubGN1c2N6cWNwcHhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyNTY1NjMsImV4cCI6MjA2NzgzMjU2M30.KKvmpj0gb66BWLHlL6_YD_b0VAUIKP4rj75lhGeCklk"
+const SUPABASE_URL = "YOUR_SUPABASE_URL"
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 // Variáveis globais
@@ -447,6 +447,27 @@ function openCheckoutModal() {
   document.getElementById("change-info").style.display = "none" // Esconde o campo de troco
   document.getElementById("delivery-fee-line").style.display = "none"
 
+  // Carregar informações do cliente do localStorage
+  const lastCustomerName = localStorage.getItem("lastCustomerName")
+  const lastCustomerPhone = localStorage.getItem("lastCustomerPhone")
+  const lastDeliveryType = localStorage.getItem("lastDeliveryType")
+  const lastCustomerAddress = localStorage.getItem("lastCustomerAddress")
+
+  if (lastCustomerName) {
+    document.getElementById("customer-name").value = lastCustomerName
+  }
+  if (lastCustomerPhone) {
+    document.getElementById("customer-phone").value = lastCustomerPhone
+  }
+  if (lastDeliveryType) {
+    document.getElementById("delivery-type").value = lastDeliveryType
+    // Chamar toggleAddressField para exibir/ocultar o campo de endereço corretamente
+    toggleAddressField()
+  }
+  if (lastCustomerAddress) {
+    document.getElementById("customer-address").value = lastCustomerAddress
+  }
+
   // Exibir itens do checkout
   displayCheckoutItems()
 
@@ -608,6 +629,16 @@ async function submitOrder(e) {
 
     // Limpar carrinho
     clearCart()
+
+    // Salvar informações do cliente no localStorage para a próxima vez
+    localStorage.setItem("lastCustomerName", orderData.customer_name)
+    localStorage.setItem("lastCustomerPhone", orderData.customer_phone)
+    localStorage.setItem("lastDeliveryType", orderData.delivery_type)
+    if (orderData.delivery_type === "delivery" && orderData.customer_address) {
+      localStorage.setItem("lastCustomerAddress", orderData.customer_address)
+    } else {
+      localStorage.removeItem("lastCustomerAddress") // Limpa se não for entrega
+    }
   } catch (error) {
     console.error("Erro ao submeter pedido:", error)
     alert("Erro ao enviar pedido. Tente novamente.")
