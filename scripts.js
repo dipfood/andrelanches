@@ -111,6 +111,18 @@ async function loadSettings() {
     data.forEach((setting) => {
       settings[setting.key] = setting.value
     })
+
+    // Parse active_days from string to array
+    if (settings.active_days) {
+      try {
+        settings.active_days = JSON.parse(settings.active_days)
+      } catch (e) {
+        console.error("Erro ao parsear active_days:", e)
+        settings.active_days = [] // Fallback para array vazio em caso de erro
+      }
+    } else {
+      settings.active_days = []
+    }
   } catch (error) {
     console.error("Erro ao carregar configurações:", error)
     throw error
@@ -149,9 +161,9 @@ async function loadProducts() {
     const { data, error } = await supabase
       .from("products")
       .select(`
-                *,
-                categories (name)
-            `)
+              *,
+              categories (name)
+          `)
       .eq("active", true)
       .order("name")
 
@@ -178,16 +190,24 @@ async function loadAllAddons() {
 
 // Verificar se a loja está aberta
 function isStoreOpen() {
+  // Primeiro, verifica o status geral da loja
   if (settings.store_open !== "true") {
     return false
   }
 
   const now = new Date()
+  const currentDay = now.getDay() // 0 para Domingo, 1 para Segunda, ..., 6 para Sábado
   const currentTime = now.getHours() * 60 + now.getMinutes()
 
   const openingTime = timeToMinutes(settings.opening_time || "08:00")
   const closingTime = timeToMinutes(settings.closing_time || "22:00")
 
+  // Verifica se o dia atual está entre os dias ativos
+  if (!settings.active_days.includes(currentDay)) {
+    return false
+  }
+
+  // Se o dia estiver ativo, verifica o horário
   return currentTime >= openingTime && currentTime <= closingTime
 }
 
@@ -242,24 +262,24 @@ function displayProducts() {
   container.innerHTML = filteredProducts
     .map(
       (product) => `
-      <div class="product-card">
-          <div class="product-image">
-              ${
-                product.image_url
-                  ? `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">`
-                  : "🍽️"
-              }
-          </div>
-          <div class="product-info">
-              <h3>${product.name}</h3>
-              <p>${product.description || ""}</p>
-              <div class="product-price">R$ ${Number.parseFloat(product.price).toFixed(2).replace(".", ",")}</div>
-              <button class="btn-add-cart" onclick="openProductDetailModal(${product.id})">
-                  Adicionar ao Carrinho
-              </button>
-          </div>
-      </div>
-  `,
+    <div class="product-card">
+        <div class="product-image">
+            ${
+              product.image_url
+                ? `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">`
+                : "🍽️"
+            }
+        </div>
+        <div class="product-info">
+            <h3>${product.name}</h3>
+            <p>${product.description || ""}</p>
+            <div class="product-price">R$ ${Number.parseFloat(product.price).toFixed(2).replace(".", ",")}</div>
+            <button class="btn-add-cart" onclick="openProductDetailModal(${product.id})">
+                Adicionar ao Carrinho
+            </button>
+        </div>
+    </div>
+`,
     )
     .join("")
 }
@@ -293,12 +313,12 @@ function openProductDetailModal(productId) {
     addonsListContainer.innerHTML = allAddons
       .map(
         (addon) => `
-          <label class="addon-item">
-              <input type="checkbox" value="${addon.id}">
-              <span>${addon.name}</span>
-              <span class="addon-price">R$ ${Number.parseFloat(addon.price).toFixed(2).replace(".", ",")}</span>
-          </label>
-      `,
+        <label class="addon-item">
+            <input type="checkbox" value="${addon.id}">
+            <span>${addon.name}</span>
+            <span class="addon-price">R$ ${Number.parseFloat(addon.price).toFixed(2).replace(".", ",")}</span>
+        </label>
+    `,
       )
       .join("")
   } else {
@@ -383,19 +403,19 @@ function updateCartDisplay() {
       }
 
       return `
-      <div class="cart-item">
-          <div class="cart-item-info">
-              <h4>${item.name}</h4>
-              <p>R$ ${item.price.toFixed(2).replace(".", ",")} cada</p>
-              ${addonsHtml}
-          </div>
-          <div class="cart-item-controls">
-              <button class="quantity-btn" onclick="updateQuantity('${item.hash}', -1)" ${item.quantity <= 1 ? "disabled" : ""}>-</button>
-              <span class="quantity">${item.quantity}</span>
-              <button class="quantity-btn" onclick="updateQuantity('${item.hash}', 1)">+</button>
-          </div>
-      </div>
-  `
+    <div class="cart-item">
+        <div class="cart-item-info">
+            <h4>${item.name}</h4>
+            <p>R$ ${item.price.toFixed(2).replace(".", ",")} cada</p>
+            ${addonsHtml}
+        </div>
+        <div class="cart-item-controls">
+            <button class="quantity-btn" onclick="updateQuantity('${item.hash}', -1)" ${item.quantity <= 1 ? "disabled" : ""}>-</button>
+            <span class="quantity">${item.quantity}</span>
+            <button class="quantity-btn" onclick="updateQuantity('${item.hash}', 1)">+</button>
+        </div>
+    </div>
+`
     })
     .join("")
 

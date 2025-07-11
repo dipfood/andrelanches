@@ -465,6 +465,40 @@ input:checked + .slider:before {
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
+/* Estilo para o novo grupo de checkboxes de dias */
+.days-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.days-checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: normal; /* Sobrescreve o font-weight do form-group label */
+  cursor: pointer;
+  padding: 5px 0;
+  margin-bottom: 0; /* Remove margin-bottom padrão */
+}
+
+.days-checkbox-group input[type="checkbox"] {
+  width: auto; /* Permite que o checkbox tenha seu tamanho natural */
+  height: auto;
+  margin: 0; /* Remove margens extras */
+  transform: scale(1.2); /* Aumenta um pouco o tamanho do checkbox */
+  accent-color: #007bff; /* Cor do checkbox */
+}
+
+/* Para fazer o form-group de dias ocupar a largura total em grid */
+.form-group.full-width {
+  grid-column: 1 / -1; /* Ocupa todas as colunas disponíveis no grid */
+}
+
 /* Modal */
 .modal {
   display: none;
@@ -615,6 +649,10 @@ input:checked + .slider:before {
     margin: 10% auto;
     padding: 20px;
     width: 95%;
+  }
+
+  .days-checkbox-group {
+    flex-direction: column;
   }
 }
 

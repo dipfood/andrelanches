@@ -164,6 +164,20 @@
                             <label>Cor de Fundo do Cardápio:</label>
                             <input type="color" id="background-color-setting">
                         </div>
+
+                        <!-- Novo campo para dias de funcionamento -->
+                        <div class="form-group full-width">
+                            <label>Dias de Funcionamento:</label>
+                            <div class="days-checkbox-group">
+                                <label><input type="checkbox" id="day-0" value="0"> Domingo</label>
+                                <label><input type="checkbox" id="day-1" value="1"> Segunda-feira</label>
+                                <label><input type="checkbox" id="day-2" value="2"> Terça-feira</label>
+                                <label><input type="checkbox" id="day-3" value="3"> Quarta-feira</label>
+                                <label><input type="checkbox" id="day-4" value="4"> Quinta-feira</label>
+                                <label><input type="checkbox" id="day-5" value="5"> Sexta-feira</label>
+                                <label><input type="checkbox" id="day-6" value="6"> Sábado</label>
+                            </div>
+                        </div>
                     </div>
                     
                     <button type="submit" class="btn-primary">Salvar Configurações</button>
@@ -265,8 +279,8 @@
     <script>
         // ===== CONFIGURAÇÃO DO SUPABASE =====
         // SUBSTITUA PELAS SUAS CREDENCIAIS
-        const SUPABASE_URL = 'https://ckydrwnnlcusczqcppxi.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNreWRyd25ubGN1c2N6cWNwcHhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyNTY1NjMsImV4cCI6MjA2NzgzMjU2M30.KKvmpj0gb66BWLHlL6_YD_b0VAUIKP4rj75lhGeCklk';
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
         
         // Verificar se as credenciais foram configuradas
         if (SUPABASE_URL === 'YOUR_SUPABASE_URL' || SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY') {
@@ -424,6 +438,18 @@
                     settings[setting.key] = setting.value;
                 });
 
+                // Parse active_days from string to array
+                if (settings.active_days) {
+                    try {
+                        settings.active_days = JSON.parse(settings.active_days);
+                    } catch (e) {
+                        console.error("Erro ao parsear active_days:", e);
+                        settings.active_days = []; // Fallback para array vazio em caso de erro
+                    }
+                } else {
+                    settings.active_days = [];
+                }
+
                 console.log('✅ Configurações carregadas:', settings);
             } catch (error) {
                 console.error('❌ Erro ao carregar configurações:', error);
@@ -461,6 +487,7 @@
                         *,
                         categories (name)
                     `)
+                    .eq('active', true) // Apenas produtos ativos
                     .order('name');
 
                 if (error) throw error;
@@ -481,6 +508,7 @@
                 const { data, error } = await supabase
                     .from('addons')
                     .select('*')
+                    .eq('active', true) // Apenas acréscimos ativos
                     .order('name');
 
                 if (error) throw error;
@@ -755,6 +783,11 @@
                 const element = document.getElementById(id);
                 if (element) element.value = value;
             });
+
+            // Preencher checkboxes de dias de funcionamento
+            document.querySelectorAll('.days-checkbox-group input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = settings.active_days.includes(parseInt(checkbox.value));
+            });
         }
 
         // ===== TOGGLE DA LOJA =====
@@ -1023,6 +1056,10 @@
         async function saveSettings(e) {
             e.preventDefault();
             
+            // Coletar dias de funcionamento
+            const activeDays = Array.from(document.querySelectorAll('.days-checkbox-group input[type="checkbox"]:checked'))
+                                .map(checkbox => parseInt(checkbox.value));
+
             const settingsData = [
                 { key: 'store_name', value: document.getElementById('store-name-setting')?.value || '' },
                 { key: 'store_phone', value: document.getElementById('store-phone-setting')?.value || '' },
@@ -1034,7 +1071,8 @@
                 { key: 'whatsapp_number', value: document.getElementById('whatsapp-number-setting')?.value || '' },
                 { key: 'header_color_start', value: document.getElementById('header-color-start-setting')?.value || '#667eea' },
                 { key: 'header_color_end', value: document.getElementById('header-color-end-setting')?.value || '#764ba2' },
-                { key: 'background_color', value: document.getElementById('background-color-setting')?.value || '#f8f9fa' }
+                { key: 'background_color', value: document.getElementById('background-color-setting')?.value || '#f8f9fa' },
+                { key: 'active_days', value: JSON.stringify(activeDays) } // Salvar como string JSON
             ];
 
             try {
@@ -1054,7 +1092,7 @@
                     if (error) throw error;
                 }
 
-                await loadSettings();
+                await loadSettings(); // Recarregar configurações para atualizar o estado global
                 
                 console.log('✅ Configurações salvas com sucesso!');
                 alert('Configurações salvas com sucesso!');

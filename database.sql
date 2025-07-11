@@ -107,6 +107,11 @@ INSERT INTO settings (key, value) VALUES
 ('whatsapp_number', '5511999999999')
 ON CONFLICT (key) DO NOTHING;
 
+-- Adicionar nova configuração para dias de funcionamento (todos os dias por padrão)
+INSERT INTO settings (key, value) VALUES 
+('active_days', '[0,1,2,3,4,5,6]') -- 0=Domingo, 1=Segunda, ..., 6=Sábado
+ON CONFLICT (key) DO NOTHING;
+
 -- Atualizar configurações se necessário
 UPDATE settings SET value = 'true' WHERE key = 'store_open';
 UPDATE settings SET value = '08:00' WHERE key = 'opening_time';
