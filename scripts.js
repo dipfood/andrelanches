@@ -114,6 +114,11 @@ async function loadSettings() {
     data.forEach((setting) => {
       settings[setting.key] = setting.value
     })
+    // Ensure boolean settings are correctly parsed
+    settings.store_open = settings.store_open === "true"
+    settings.enable_delivery = settings.enable_delivery === "true"
+    settings.enable_pickup = settings.enable_pickup === "true"
+    settings.enable_table_order = settings.enable_table_order === "true"
   } catch (error) {
     console.error("Erro ao carregar configurações:", error)
     throw error
@@ -164,10 +169,12 @@ async function loadProducts() {
   try {
     const { data, error } = await supabase
       .from("products")
-      .select(`
+      .select(
+        `
                 *,
                 categories (name)
-            `)
+            `,
+      )
       .eq("active", true)
       .order("name")
 
@@ -195,7 +202,7 @@ async function loadAllAddons() {
 // Verificar se a loja está aberta (agora inclui verificação de dia da semana)
 function isStoreOpen() {
   // 1. Verificar status geral da loja (aberto/fechado)
-  if (settings.store_open !== "true") {
+  if (!settings.store_open) {
     return false
   }
 
@@ -490,18 +497,53 @@ function openCheckoutModal() {
   }
 
   const modal = document.getElementById("checkout-modal")
+  const deliveryTypeSelect = document.getElementById("delivery-type")
 
   // Limpar formulário
   document.getElementById("checkout-form").reset()
   document.getElementById("address-group").style.display = "none"
   document.getElementById("pix-info").style.display = "none"
-  document.getElementById("change-info").style.display = "none" // Esconde o campo de troco
+  document.getElementById("change-info").style.display = "none"
   document.getElementById("delivery-fee-line").style.display = "none"
+
+  // Dynamically populate delivery type options
+  let optionsHtml = '<option value="">Selecione...</option>'
+  let enabledOptionsCount = 0
+  let firstEnabledOption = ""
+
+  if (settings.enable_delivery) {
+    optionsHtml += '<option value="delivery">Entrega</option>'
+    enabledOptionsCount++
+    if (!firstEnabledOption) firstEnabledOption = "delivery"
+  }
+  if (settings.enable_pickup) {
+    optionsHtml += '<option value="pickup">Retirada</option>'
+    enabledOptionsCount++
+    if (!firstEnabledOption) firstEnabledOption = "pickup"
+  }
+  if (settings.enable_table_order) {
+    optionsHtml += '<option value="table">Pedido na Mesa</option>'
+    enabledOptionsCount++
+    if (!firstEnabledOption) firstEnabledOption = "table"
+  }
+  deliveryTypeSelect.innerHTML = optionsHtml
+
+  // If only one option is enabled, pre-select it
+  if (enabledOptionsCount === 1) {
+    deliveryTypeSelect.value = firstEnabledOption
+  } else {
+    deliveryTypeSelect.value = localStorage.getItem("lastDeliveryType") || ""
+  }
+
+  // If no options are enabled, show an alert and prevent opening modal
+  if (enabledOptionsCount === 0) {
+    alert("Nenhum tipo de pedido está habilitado no momento. Por favor, tente mais tarde.")
+    return
+  }
 
   // Carregar informações do cliente do localStorage
   const lastCustomerName = localStorage.getItem("lastCustomerName")
   const lastCustomerPhone = localStorage.getItem("lastCustomerPhone")
-  const lastDeliveryType = localStorage.getItem("lastDeliveryType")
   const lastCustomerAddress = localStorage.getItem("lastCustomerAddress")
 
   if (lastCustomerName) {
@@ -510,11 +552,8 @@ function openCheckoutModal() {
   if (lastCustomerPhone) {
     document.getElementById("customer-phone").value = lastCustomerPhone
   }
-  if (lastDeliveryType) {
-    document.getElementById("delivery-type").value = lastDeliveryType
-    // Chamar toggleAddressField para exibir/ocultar o campo de endereço corretamente
-    toggleAddressField()
-  }
+  // Chamar toggleAddressField para exibir/ocultar o campo de endereço corretamente
+  toggleAddressField()
   if (lastCustomerAddress) {
     document.getElementById("customer-address").value = lastCustomerAddress
   }
@@ -713,7 +752,16 @@ async function sendToWhatsApp(orderData, orderId) {
     let message = `🛒 *NOVO PEDIDO #${orderId}*\n\n`
     message += `👤 *Cliente:* ${orderData.customer_name}\n`
     message += `📱 *Telefone:* ${orderData.customer_phone}\n`
-    message += `🚚 *Tipo:* ${orderData.delivery_type === "delivery" ? "Entrega" : "Retirada"}\n`
+
+    let deliveryTypeText = ""
+    if (orderData.delivery_type === "delivery") {
+      deliveryTypeText = "Entrega"
+    } else if (orderData.delivery_type === "pickup") {
+      deliveryTypeText = "Retirada"
+    } else if (orderData.delivery_type === "table") {
+      deliveryTypeText = "Pedido na Mesa"
+    }
+    message += `🚚 *Tipo:* ${deliveryTypeText}\n`
 
     if (orderData.customer_address) {
       message += `📍 *Endereço:* ${orderData.customer_address}\n`
