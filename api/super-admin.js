@@ -127,7 +127,7 @@ async function loadSystemSettings() {
         
         // Por enquanto, usar configurações padrão
         systemSettings = {
-            baseDomain: 'localhost:3000',
+            baseDomain: 'votecertonh.site',
             allowSelfRegistration: false,
             defaultPlan: 'basic'
         };
