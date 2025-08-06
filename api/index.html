@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Cardápio Digital</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="logo-container">
+                <img src="LOGODIPFOOD.png" alt="Logo" class="loading-logo">
+            </div>
+            <div class="loading-spinner"></div>
+            <p>Carregando cardápio...</p>
+        </div>
+    </div>
+
+    <!-- Mensagem de Loja Fechada -->
+    <div id="closed-message" class="closed-message" style="display: none;">
+        <div class="closed-content">
+            <h2>🕒 Loja Fechada</h2>
+            <p>Estamos fechados no momento.</p>
+            <p>Horário de funcionamento: <span id="opening-hours"></span></p>
+            <p>Volte em breve!</p>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div id="main-content" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="store-info">
+                    <h1 id="store-name">Cardápio Digital</h1>
+                    <p id="store-info"></p>
+                </div>
+                <div class="estimated-times">
+                    <p id="estimated-pickup-time-display"></p>
+                    <p id="estimated-delivery-time-display"></p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Categorias -->
+        <section class="categories-section">
+            <div class="container">
+                <div id="categories-container" class="categories-scroll">
+                    <!-- Categories will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Produtos -->
+        <section class="products-section">
+            <div class="container">
+                <div id="products-container" class="products-grid">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Resumo do Carrinho -->
+        <div id="cart-container" class="cart-summary" style="display: none;">
+            <div class="cart-header">
+                <h3>🛒 Seu Pedido</h3>
+                <button id="cart-close" class="btn-clear">Limpar</button>
+            </div>
+            <div id="cart-items" class="cart-items">
+                <!-- Cart items will be loaded here -->
+            </div>
+            <div class="cart-total">
+                <strong>Total: R$ <span id="cart-total">0,00</span></strong>
+            </div>
+            <button id="checkout-btn" class="btn-checkout">Finalizar Pedido</button>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes do Produto -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="product-detail">
+                <img id="modal-product-image" src="/placeholder.svg" alt="Produto" class="product-detail-image">
+                <div class="product-detail-info">
+                    <h2 id="modal-product-name"></h2>
+                    <p id="modal-product-description"></p>
+                    <div class="product-detail-price">
+                        R$ <span id="modal-product-price">0,00</span>
+                    </div>
+                    
+                    <div class="quantity-control">
+                        <button onclick="updateDetailQuantity(-1)">-</button>
+                        <span id="quantity-value">1</span>
+                        <button onclick="updateDetailQuantity(1)">+</button>
+                    </div>
+
+                    <div class="addons-section" style="display: none;">
+                        <h3>Acréscimos</h3>
+                        <div id="addons-list" class="addons-list">
+                            <!-- Addons will be loaded here -->
+                        </div>
+                    </div>
+
+                    <button id="add-to-cart-btn" class="btn-add-cart">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Checkout -->
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Finalizar Pedido</h2>
+            
+            <div class="checkout-items">
+                <h3>Itens do Pedido</h3>
+                <div id="checkout-items"></div>
+                
+                <div class="checkout-totals">
+                    <div class="total-line">
+                        <span>Subtotal:</span>
+                        <span>R$ <span id="checkout-subtotal">0,00</span></span>
+                    </div>
+                    <div id="delivery-fee-row" class="total-line" style="display: none;">
+                        <span>Taxa de Entrega:</span>
+                        <span>R$ <span id="checkout-delivery-fee">0,00</span></span>
+                    </div>
+                    <div class="total-line total-final">
+                        <span><strong>Total:</strong></span>
+                        <span><strong>R$ <span id="checkout-total">0,00</span></strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <form id="checkout-form">
+                <div class="form-group">
+                    <label for="customer-name">Nome *</label>
+                    <input type="text" id="customer-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="customer-phone">Telefone *</label>
+                    <input type="tel" id="customer-phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="delivery-type">Tipo de Pedido *</label>
+                    <select id="delivery-type" required onchange="toggleAddressField()">
+                        <option value="">Selecione...</option>
+                    </select>
+                </div>
+
+                <div id="address-group" class="form-group" style="display: none;">
+                    <label for="customer-address">Endereço de Entrega *</label>
+                    <textarea id="customer-address" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-method">Forma de Pagamento *</label>
+                    <select id="payment-method" required onchange="togglePaymentSpecificFields()">
+                        <option value="">Selecione...</option>
+                        <option value="pix">PIX</option>
+                        <option value="money">Dinheiro</option>
+                        <option value="card">Cartão</option>
+                    </select>
+                </div>
+
+                <div id="pix-info" class="payment-info" style="display: none;">
+                    <p><strong>Chave PIX:</strong> <span id="pix-key"></span></p>
+                    <p><small>Envie o comprovante via WhatsApp após o pagamento</small></p>
+                </div>
+
+                <div id="change-info" class="payment-info" style="display: none;">
+                    <label for="change-for-amount">Troco para (opcional):</label>
+                    <input type="number" id="change-for-amount" step="0.01" min="0">
+                </div>
+
+                <button type="submit" class="btn-submit">Enviar Pedido</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Sucesso -->
+    <div id="success-modal" class="modal">
+        <div class="modal-content success-content">
+            <h2>✅ Pedido Enviado!</h2>
+            <p>Seu pedido <strong>#<span id="order-number"></span></strong> foi enviado com sucesso!</p>
+            <p>Em breve entraremos em contato via WhatsApp.</p>
+            <button id="new-order-btn" class="btn-submit">Fazer Novo Pedido</button>
+        </div>
+    </div>
+
+    <!-- Error Messages -->
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <i class="toast-icon"></i>
+            <span class="toast-message"></span>
+        </div>
+    </div>
+
+    <!-- Tenant Resolver -->
+    <script src="tenant-resolver.js"></script>
+    <!-- Main Scripts -->
+    <script src="scripts-updated.js"></script>
+</body>
+</html>

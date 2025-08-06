@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin - Gerenciamento de Empresas</title>
+    <link rel="stylesheet" href="super-admin-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="super-admin-container">
+        <header class="super-admin-header">
+            <div class="header-content">
+                <h1>🏢 Super Admin</h1>
+                <p>Gerenciamento de Empresas</p>
+                <div class="header-actions">
+                    <button id="logout-btn" class="btn-logout">Sair</button>
+                </div>
+            </div>
+        </header>
+
+        <nav class="super-admin-nav">
+            <button class="nav-btn active" data-section="dashboard">Dashboard</button>
+            <button class="nav-btn" data-section="companies">Empresas</button>
+            <button class="nav-btn" data-section="analytics">Analytics</button>
+            <button class="nav-btn" data-section="settings">Configurações</button>
+        </nav>
+
+        <main class="super-admin-main">
+            <!-- Dashboard -->
+            <section id="dashboard" class="admin-section active">
+                <h2>Dashboard Geral</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🏢</div>
+                        <div class="stat-info">
+                            <h3>Total de Empresas</h3>
+                            <div class="stat-number" id="total-companies">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <h3>Empresas Ativas</h3>
+                            <div class="stat-number" id="active-companies">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-info">
+                            <h3>Pedidos Hoje</h3>
+                            <div class="stat-number" id="orders-today">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info">
+                            <h3>Receita Total</h3>
+                            <div class="stat-number" id="total-revenue">R$ 0,00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Atividade Recente</h3>
+                    <div id="recent-activity-list" class="activity-list">
+                        <!-- Atividades serão carregadas aqui -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Empresas -->
+            <section id="companies" class="admin-section">
+                <div class="section-header">
+                    <h2>Gerenciamento de Empresas</h2>
+                    <button id="add-company-btn" class="btn-primary">+ Nova Empresa</button>
+                </div>
+
+                <div class="companies-filters">
+                    <input type="text" id="company-search" placeholder="Pesquisar empresas..." class="search-input">
+                    <select id="status-filter" class="filter-select">
+                        <option value="">Todos os Status</option>
+                        <option value="active">Ativo</option>
+                        <option value="inactive">Inativo</option>
+                        <option value="suspended">Suspenso</option>
+                    </select>
+                    <select id="plan-filter" class="filter-select">
+                        <option value="">Todos os Planos</option>
+                        <option value="basic">Básico</option>
+                        <option value="premium">Premium</option>
+                        <option value="enterprise">Enterprise</option>
+                    </select>
+                </div>
+
+                <div id="companies-list" class="companies-grid">
+                    <!-- Empresas serão carregadas aqui -->
+                </div>
+            </section>
+
+            <!-- Analytics -->
+            <section id="analytics" class="admin-section">
+                <h2>Analytics</h2>
+                <div class="analytics-content">
+                    <div class="chart-container">
+                        <h3>Crescimento de Empresas</h3>
+                        <div id="companies-chart" class="chart-placeholder">
+                            Gráfico de crescimento será implementado aqui
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Receita por Plano</h3>
+                        <div id="revenue-chart" class="chart-placeholder">
+                            Gráfico de receita será implementado aqui
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Configurações -->
+            <section id="settings" class="admin-section">
+                <h2>Configurações do Sistema</h2>
+                <form id="system-settings-form" class="settings-form">
+                    <div class="form-group">
+                        <label>Domínio Base:</label>
+                        <input type="text" id="base-domain" value="localhost:3000" readonly>
+                        <small>Domínio base para os subdomínios das empresas</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Permitir Auto-Registro:</label>
+                        <label class="switch">
+                            <input type="checkbox" id="allow-self-registration">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Plano Padrão:</label>
+                        <select id="default-plan">
+                            <option value="basic">Básico</option>
+                            <option value="premium">Premium</option>
+                            <option value="enterprise">Enterprise</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Salvar Configurações</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal para Empresa -->
+    <div id="company-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="company-modal-title">Nova Empresa</h2>
+            <form id="company-form">
+                <input type="hidden" id="company-id">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nome da Empresa:</label>
+                        <input type="text" id="company-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Subdomínio:</label>
+                        <div class="subdomain-input">
+                            <input type="text" id="company-subdomain" required pattern="[a-z0-9][a-z0-9-]*[a-z0-9]" minlength="3">
+                            <span class="subdomain-suffix">.localhost:3000</span>
+                        </div>
+                        <small>Apenas letras minúsculas, números e hífens. Mínimo 3 caracteres.</small>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="company-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Telefone:</label>
+                        <input type="tel" id="company-phone">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Endereço:</label>
+                    <textarea id="company-address" rows="3"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Status:</label>
+                        <select id="company-status" required>
+                            <option value="active">Ativo</option>
+                            <option value="inactive">Inativo</option>
+                            <option value="suspended">Suspenso</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Plano:</label>
+                        <select id="company-plan" required>
+                            <option value="basic">Básico</option>
+                            <option value="premium">Premium</option>
+                            <option value="enterprise">Enterprise</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>URL do Logo:</label>
+                    <input type="url" id="company-logo">
+                </div>
+
+                <div class="admin-section-form">
+                    <h3>Administrador Principal</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nome do Admin:</label>
+                            <input type="text" id="admin-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email do Admin:</label>
+                            <input type="email" id="admin-email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Senha do Admin:</label>
+                        <input type="password" id="admin-password" required minlength="6">
+                        <small>Mínimo 6 caracteres</small>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('company-modal')">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar Empresa</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <h2>Confirmar Ação</h2>
+            <p id="confirm-message"></p>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" onclick="closeModal('confirm-modal')">Cancelar</button>
+                <button type="button" id="confirm-action-btn" class="btn-danger">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="super-admin.js"></script>
+</body>
+</html>
