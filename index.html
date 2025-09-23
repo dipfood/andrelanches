@@ -1,181 +1,65 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cardápio Digital</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check list P.P</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <!-- Tela de Carregamento com Logo -->
-  <div id="loading" class="loading">
-      <img src="/placeholder.svg?height=200&width=200" alt="Logo do Restaurante" class="splash-logo">
-      <div class="spinner"></div>
-      <p>Carregando cardápio...</p>
-  </div>
-
-  <div id="closed-message" class="closed-message" style="display: none;">
-      <div class="closed-content">
-          <h2>🕐 Estamos Fechados</h2>
-          <p>Nosso horário de funcionamento:</p>
-          <p id="opening-hours"></p>
-          <p>Volte em breve!</p>
-      </div>
-  </div>
-
-  <div id="main-content" style="display: none;">
-      <header class="header">
-          <div class="container">
-              <h1 id="store-name">Cardápio Digital</h1>
-              <p id="store-info"></p>
-              <!-- NOVO: Contêiner para status e tempos estimados -->
-              <div class="status-and-time-wrapper">
-                  <div class="status-indicator">
-                      <span class="status-dot open"></span>
-                      <span>Aberto</span>
-                  </div>
-                  <div class="time-estimate-box">
-                      <p id="estimated-pickup-time-display"></p>
-                      <p id="estimated-delivery-time-display"></p>
-                  </div>
-              </div>
-          </div>
-      </header>
-
-      <div class="container">
-          <div class="cart-summary" id="cart-summary" style="display: none;">
-              <div class="cart-header">
-                  <h3>🛒 Seu Pedido</h3>
-                  <button id="clear-cart" class="btn-clear">Limpar</button>
-              </div>
-              <div id="cart-items"></div>
-              <div class="cart-total">
-                  <strong>Total: R$ <span id="cart-total">0,00</span></strong>
-              </div>
-              <button id="checkout-btn" class="btn-checkout">Finalizar Pedido</button>
-          </div>
-
-          <div class="categories" id="categories"></div>
-          
-          <div class="products" id="products"></div>
-      </div>
-  </div>
-
-  <!-- Modal de Checkout -->
-  <div id="checkout-modal" class="modal">
-      <div class="modal-content">
-          <span class="close">&times;</span>
-          <h2>Finalizar Pedido</h2>
-          
-          <form id="checkout-form">
-              <div class="form-group">
-                  <label>Nome Completo:</label>
-                  <input type="text" id="customer-name" required>
-              </div>
-              
-              <div class="form-group">
-                  <label>Telefone:</label>
-                  <input type="tel" id="customer-phone" required>
-              </div>
-              
-              <div class="form-group">
-                  <label>Tipo de Entrega:</label>
-                  <select id="delivery-type" required>
-                      <option value="">Selecione...</option>
-                      <!-- Opções serão carregadas dinamicamente pelo JS -->
-                  </select>
-              </div>
-              
-              <div class="form-group" id="address-group" style="display: none;">
-                  <label>Endereço Completo:</label>
-                  <textarea id="customer-address" rows="3"></textarea>
-              </div>
-              
-              <div class="form-group">
-                  <label>Forma de Pagamento:</label>
-                  <select id="payment-method" required>
-                      <option value="">Selecione...</option>
-                      <option value="pix">PIX</option>
-                      <option value="money">Dinheiro</option>
-                      <option value="card">Cartão</option>
-                  </select>
-              </div>
-              
-              <div id="pix-info" class="pix-info" style="display: none;">
-                  <h4>Dados para PIX:</h4>
-                  <p><strong>Chave PIX:</strong> <span id="pix-key"></span></p>
-                  <p><small>Após o pagamento, envie o comprovante via WhatsApp</small></p>
-              </div>
-
-              <!-- Campo para Troco -->
-              <div id="change-info" class="form-group" style="display: none;">
-                  <label>Troco para (R$):</label>
-                  <input type="number" step="0.01" id="change-for-amount" placeholder="Ex: 50.00">
-                  <small>Deixe em branco se for pagar o valor exato.</small>
-              </div>
-              
-              <div class="order-summary">
-                  <h4>Resumo do Pedido:</h4>
-                  <div id="checkout-items"></div>
-                  <div class="checkout-totals">
-                      <div class="total-line">
-                          <span>Subtotal:</span>
-                          <span>R$ <span id="checkout-subtotal">0,00</span></span>
-                      </div>
-                      <div class="total-line" id="delivery-fee-line" style="display: none;">
-                          <span>Taxa de Entrega:</span>
-                          <span>R$ <span id="checkout-delivery-fee">0,00</span></span>
-                      </div>
-                      <div class="total-line total-final">
-                          <span><strong>Total:</strong></span>
-                          <span><strong>R$ <span id="checkout-total">0,00</span></strong></span>
-                      </div>
-                  </div>
-              </div>
-              
-              <button type="submit" class="btn-confirm">Confirmar Pedido</button>
-          </form>
-      </div>
-  </div>
-
-  <!-- Modal de Sucesso -->
-  <div id="success-modal" class="modal">
-      <div class="modal-content">
-          <h2>✅ Pedido Confirmado!</h2>
-          <p>Seu pedido foi recebido com sucesso!</p>
-          <p><strong>Número do Pedido:</strong> <span id="order-number"></span></p>
-          <p>Entraremos em contato em breve.</p>
-          <button id="new-order-btn" class="btn-confirm">Fazer Novo Pedido</button>
-      </div>
-  </div>
-
-  <!-- Novo Modal de Detalhes do Produto e Acréscimos -->
-  <div id="product-detail-modal" class="modal">
-      <div class="modal-content">
-          <span class="close">&times;</span>
-          <h2 id="detail-product-name"></h2>
-          <img id="detail-product-image" src="/placeholder.svg" alt="Imagem do Produto" class="product-detail-image">
-          <p id="detail-product-description"></p>
-          <p class="product-detail-price">R$ <span id="detail-product-price"></span></p>
-
-          <div class="addons-section">
-              <h3>Acréscimos (Opcional)</h3>
-              <div id="product-addons-list" class="addons-grid">
-                  <!-- Acréscimos serão carregados aqui -->
-              </div>
-          </div>
-          
-          <div class="product-detail-quantity-controls">
-              <button class="quantity-btn" onclick="updateDetailQuantity(-1)">-</button>
-              <span id="detail-quantity" class="quantity">1</span>
-              <button class="quantity-btn" onclick="updateDetailQuantity(1)">+</button>
-          </div>
-
-          <button id="add-to-cart-from-detail" class="btn-add-cart">Adicionar ao Carrinho</button>
-      </div>
-  </div>
-
-  <script src="scripts.js"></script>
+    <div class="container">
+        <header class="header">
+            <h1>Check list P.P</h1>
+        </header>
+        
+        <main class="main-content">
+            <div class="login-form">
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Usuário:</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Senha:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Entrar</button>
+                </form>
+                <div id="loginError" class="error-message" style="display: none;"></div>
+                
+                 Adicionando informações dos usuários disponíveis 
+                <div class="users-info">
+                    <h3>Usuários Disponíveis:</h3>
+                    <div class="users-grid">
+                        <div class="user-card">
+                            <strong>gerente</strong>
+                            <span>Administrador</span>
+                            <small>Acesso completo + admin</small>
+                        </div>
+                        <div class="user-card">
+                            <strong>carol</strong>
+                            <span>Usuário</span>
+                            <small>Acesso ao checklist</small>
+                        </div>
+                        <div class="user-card">
+                            <strong>victor</strong>
+                            <span>Usuário</span>
+                            <small>Acesso ao checklist</small>
+                        </div>
+                        <div class="user-card">
+                            <strong>eloane</strong>
+                            <span>Usuário</span>
+                            <small>Acesso ao checklist</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
 </body>
 </html>

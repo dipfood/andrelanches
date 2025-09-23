@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist - Check list P.P</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Check list P.P</h1>
+        </header>
+        
+        <main class="main-content">
+            <div class="user-info">
+                <div>
+                    <div><strong>Usuário acessado:</strong> <span id="currentUsername"></span></div>
+                    <div><strong>Data do Dia:</strong> <span id="currentDate"></span></div>
+                </div>
+                <div class="user-actions">
+                     Adicionando botão para gerente acessar admin 
+                    <button id="adminButton" onclick="window.location.href='admin.html'" class="btn-success" style="display: none;">
+                        Administração
+                    </button>
+                    <button onclick="auth.logout()" class="btn-secondary">Sair</button>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('all')">Todos</button>
+                <button class="tab" onclick="switchTab('completed')">Completos</button>
+                <button class="tab" onclick="switchTab('pending')">Pendentes</button>
+            </div>
+
+             Adicionando estatísticas do checklist 
+            <div class="stats-info">
+                <div class="stat-card">
+                    <span class="stat-number" id="totalItems">0</span>
+                    <span class="stat-label">Total</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="completedItems">0</span>
+                    <span class="stat-label">Completos</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="pendingItems">0</span>
+                    <span class="stat-label">Pendentes</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="progressPercent">0%</span>
+                    <span class="stat-label">Progresso</span>
+                </div>
+            </div>
+
+            <div id="checklistContainer">
+                <div id="loadingMessage">Carregando checklist...</div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="checklist.js"></script>
+</body>
+</html>
